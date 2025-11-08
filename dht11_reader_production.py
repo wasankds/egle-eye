@@ -4,14 +4,23 @@ Production DHT11 Sensor Reader using pigpio library in virtual environment
 Safe, stable, and production-ready implementation
 """
 
+""" 
+wasankds@pi3:~/egle-eye $ sudo /usr/local/bin/pigpiod
+wasankds@pi3:~/egle-eye $ ps aux | grep [p]igpiod
+root        1300 12.3  0.1  74924  1820 ?        SLsl 16:09   0:00 /usr/local/bin/pigpiod
+wasankds@pi3:~/egle-eye $ pgrep -a pigpiod
+1300 /usr/local/bin/pigpiod
+wasankds@pi3:~/egle-eye $ python3 dht11_reader_production.py
+"""
+
+from pathlib import Path
+from typing import Dict, Optional, Tuple
+from datetime import datetime
+import logging
+import signal
+import time
 import sys
 import json
-import time
-import signal
-import logging
-from datetime import datetime
-from typing import Dict, Optional, Tuple
-from pathlib import Path
 
 # Setup logging
 logging.basicConfig(
@@ -271,8 +280,8 @@ def main():
 
     # Configuration
     GPIO_PIN = 18
-    READING_INTERVAL = 5.0  # 5 seconds for production stability
-    MAX_RETRIES = 3
+    READING_INTERVAL = 8.0  # seconds between successful/failed read cycles
+    MAX_RETRIES = 5  # increase retries for flaky sensors
 
     logger.info(f"Starting DHT11 Production Reader on GPIO {GPIO_PIN}")
 
@@ -301,13 +310,18 @@ def main():
         try:
             reading_count += 1
 
-            # Try reading sensor with retries
+            # Try reading sensor with retries and exponential backoff
             humidity, temperature = None, None
-            for attempt in range(MAX_RETRIES):
+            for attempt in range(1, MAX_RETRIES + 1):
+                logger.debug(f"Reading attempt {attempt}/{MAX_RETRIES}")
                 humidity, temperature = dht11_sensor.read_sensor()
                 if humidity is not None and temperature is not None:
                     break
-                time.sleep(1)  # Wait between retries
+                # backoff between attempts (1s, 2s, 3s, ...)
+                backoff = 1 + (attempt - 1)
+                logger.debug(
+                    f"Read failed, backing off {backoff}s before retry")
+                time.sleep(backoff)
 
             timestamp = get_timestamp()
 
@@ -338,7 +352,7 @@ def main():
                     "type": "error",
                     "timestamp": timestamp,
                     "status": "error",
-                    "error": f"Sensor read failed (attempt {consecutive_errors})",
+                    "error": f"Sensor read failed after {MAX_RETRIES} attempts (consecutive errors {consecutive_errors})",
                     "reading_number": reading_count
                 })
 

@@ -93,9 +93,9 @@ function startSensor() {
         try {
           const sensorData = JSON.parse(line);
           global.latestData = sensorData;
-          // console.log(`📊 Data: ${sensorData.temperature}°C, ${sensorData.humidity}%`);
+          console.log(`📊 Data: ${sensorData.temperature}°C, ${sensorData.humidity}%`);
         } catch (error) {
-          // console.log('📝 Log:', line);
+          console.log('📝 Log:', line);
         }
       }
     }
