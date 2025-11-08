@@ -1,0 +1,31 @@
+/*** footer ***/
+footer{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;  
+
+  line-height: 0.8rem;
+  margin-top: 10px;
+}
+
+footer p{
+  text-align: center;
+}
+
+footer p *{
+  color: lightgray;
+}
+
+/**************** จอขนาดกลาง ****************/
+@media screen and (min-width: 768px) {
+  footer{
+    flex-direction: row;
+    gap: 10px;
+  }
+}
+
+/**************** จอขนาดเล็ก ****************/
+@media screen and (min-width: 1000px) {  
+  
+}

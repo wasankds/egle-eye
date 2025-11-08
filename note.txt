@@ -1,0 +1,99 @@
+https://github.com/wasankds/gfp.git
+
+
+echo "# gfp" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/wasankds/gfp.git
+git push -u origin mai
+
+
+
+git remote add origin https://github.com/wasankds/gfp.git
+git branch -M main
+git push -u origin main
+
+
+
+*********************************************************
+เมื่อมีคำเตือนเดี่ยวกับ deprecation
+ให้รัน node  แบบนี้
+มันจะแจ้งเตือนว่า module ไหนที่มีปัญหา 
+
+node --trace-deprecation app.js
+
+
+
+*********************************************************
+วันที่ 2025-06-17 ข้อมูลแปลกๆ
+วัน EN ไม่ตรงกับ วัน Thai ไม่ตรงกับ 
+
+
+
+*********************************************************
+*********************************************************
+******** Custom CDN *************************************
+*********************************************************
+*********************************************************
+
+
+*** FA ******************************************************
+<!-- 
+FA : ต้องดาวน์โหลดจาก FA 
+https://fontawesome.com/download
+ดาวน์โฆลดตัว Free For Web
+https://use.fontawesome.com/releases/v6.7.2/fontawesome-free-6.7.2-web.zip?_gl=1*t6ez0n*_ga*NTMwOTAwMjg0LjE3NTA4MjQ4NTU.*_ga_BPMS41FJD2*czE3NTA4MjQ4NTQkbzEkZzEkdDE3NTA4MjYxMjAkajU5JGwwJGgw
+-->
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"> -->
+<!-- ใช้ Custom -->
+<link rel="stylesheet" href="/css/fontawesome/css/all.min.css">
+
+
+
+*** jQuery ******************************************************
+<!-- jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.7.1.js" crossorigin="anonymous"></script> -->   
+<!-- ใช้ Custom -->
+<script src="/js/jquery.js"></script>
+
+
+
+*** Bootstrap ******************************************************
+<!-- Bootstrap -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script> -->
+<!-- ใช้ Custom : ต้องใช้ชื่อ bootstrap.min.css เท่านั้น -->
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<script src="/js/bootstrap.bundle.min.js"></script>
+
+
+
+*** FlatPickr ******************************************************
+<!-- FlatPickr -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> -->
+<!-- ใช้ Custom : ต้องใช้ชื่อ flatpickr.min.css เท่านั้น -->
+<link rel="stylesheet" href="/css/flatpickr.min.css">
+<script src="/js/flatpickr.js"></script>
+
+
+
+*** Data table ******************************************************
+<!-- Data table : ต้องอยู่ล่าง  -->
+<!-- 
+<link href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script>
+-->
+
+
+*** Sweat Alert 
+<!-- Sweet Alert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+

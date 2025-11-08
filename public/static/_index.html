@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DHT11 Sensor Monitor</title>
+
+  <% if(!global.IS_PRODUCTION) { %>
+  <!-- <link rel="stylesheet" href="/css/utils.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/fonts.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/alink.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/toast.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/footer.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/nav.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/pagination5btns3.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/tableFix1col.css?v=<%= time %>">  -->
+  <!-- <link rel="stylesheet" href="/css/flexNew.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/input.css?v=<%= time %>"> -->
+  <!-- <link rel="stylesheet" href="/css/same.css?v=<%= time %>"> -->
+  <link rel="stylesheet" href="/css/index.css?v=<%= time %>">
+  <% } else { %>
+  <link rel="stylesheet" href="/css-min/index.min.css?v=<%= time %>">
+  <% }  %>
+  
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>🌡️ DHT11 Sensor Monitor</h1>
+
+    <div class="sensor-card temperature">
+      <div class="label">🌡️ อุณหภูมิ</div>
+      <div class="value" id="temperature">--</div>
+      <div class="label">°C</div>
+    </div>
+
+    <div class="sensor-card humidity">
+      <div class="label">💧 ความชื้น</div>
+      <div class="value" id="humidity">--</div>
+      <div class="label">%</div>
+    </div>
+
+    <div class="status" id="status">
+      🔄 กำลังเชื่อมต่อ...
+    </div>
+
+    <div class="last-update">
+      อัปเดตล่าสุด: <span id="lastUpdate">--</span>
+    </div>
+  </div>
+
+  <!--  -->
+  <script type="text/javascript">
+    
+  </script>
+  <% if(!global.IS_PRODUCTION) { %>
+  <!-- <script type="text/javascript" src="/js/script_all.js?v=<%= time %>"></script> -->
+  <!-- <script type="text/javascript" src="/js/nav.js?v=<%= time %>"></script> -->
+  <!-- <script type="text/javascript" src="/js/notify.js"></script> -->
+  <script type="text/javascript" src="/js/index.js?v=<%= time %>"></script>
+  <% } else { %>
+  <script src="/js-min/index.obf.js"></script>
+  <% }  %>
+
+
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+main{
+  display: grid;
+  grid-template-columns: 100%;
+  padding: 10px;
+  min-height: 85vh;
+  align-content: start;
+}
+
+main h3{
+  margin-top: 12px;
+  margin-bottom: 8px;
+  color: dodgerblue;
+  font-size: 1.125rem;
+}
+
+main p{
+  font-size: 0.9rem;
+  line-height: 1.25rem;
+}
+
+
+main ul{ margin-left: 12px; padding-left: 7px;}
+main li{ 
+  margin-top: 5px; 
+  font-size: 0.9rem;
+  line-height: 1.25rem;
+}
+
+
+
+/*******************************************/
+/**************** จอขนาดกลาง ****************/
+/*******************************************/
+@media screen and (min-width: 768px) {
+  main{
+    padding: 15px 25px;
+  }
+}
+
+
+
+/*******************************************/
+/**************** จอขนาดใหญ่ ****************/
+/*******************************************/
+@media screen and (min-width: 1000px) {
+  main{
+    padding: 30px 50px;
+  }
+}
+
+
+
+
+

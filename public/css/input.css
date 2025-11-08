@@ -1,0 +1,172 @@
+:root {
+  --border-btn-color: #bbb;
+  --border-field-color: #ccc;  
+  --bg-focus-color : rgb(199, 229, 238);
+  --input-font-size : 0.9rem;
+  --input-placeholder-font-size : 0.85rem;
+  --lh-tb: 1.75rem;
+  --fs-label: 0.9rem;
+}
+
+
+/*** label บรรทัดที่มีจะควบคุมความสูงของทั้งแถวใน flex ***/
+main label{  
+  line-height: var(--lh-tb);  
+  font-size:  var(--fs-label);
+}
+
+
+/*** ปุ่ม ***/
+main button,
+main input[type="button"],
+main input[type="submit"]{
+  color: white;
+  border-radius: 3px;
+  border: 1px solid var(--border-btn-color);
+}
+main button:hover,
+main input[type="file"]:hover,
+main input[type="button"]:hover,
+main input[type="submit"]:hover{  
+  filter: brightness(115%);
+  cursor: pointer;
+}
+
+
+/*** ช่องกรอก ***/
+main select,
+main textarea,
+main input[type="date"],
+main input[type="number"],
+main input[type="search"],
+main input[type="text"],
+main input[type="password"],
+main input[type="email"]{
+  color: blue;
+  border: 1px solid var(--border-field-color);
+  background-color: white;
+  border-radius: 3px;
+  min-height: var(--lh-input);
+  font-size: var(--input-font-size);
+}
+main input[type="file"]{
+  color: blue;
+  border: 1px solid var(--border-field-color);
+  border-radius: 3px;
+  background-color: white;
+  line-height: var(--lh-input);
+  font-size: var(--input-font-size);
+}
+
+/*** ช่องกรอก hover ***/
+main select:hover,
+main textarea:hover,
+main input[type="date"]:hover,
+main input[type="number"]:hover,
+main input[type="search"]:hover,
+main input[type="text"]:hover,
+main input[type="password"]:hover,
+main input[type="email"]:hover{
+  border: 1px solid #666;
+  /* filter: brightness(115%); */
+}
+main input[type="file"]:hover{ /* ต้องแยกมาต่างหาก */
+  border: 1px solid #666;
+  /* filter: brightness(115%); */
+}
+
+
+
+
+/*** ช่องกรอก focus ***/
+main select:focus,
+main textarea:focus,
+main input[type="date"]:focus,
+main input[type="number"]:focus,
+main input[type="search"]:focus,
+main input[type="text"]:focus,
+main input[type="password"]:focus,
+main input[type="email"]:focus{
+  outline: none;
+  background-color: var(--bg-focus-color);
+}
+
+/*** readonly ***/
+main select:read-only{
+  background-image: none;
+  background-color: none;
+}
+main textarea:read-only,
+main input[type="date"]:read-only,
+main input[type="datetime-local"]:read-only,
+main input[type="number"]:read-only,
+main input[type="text"]:read-only,
+main input[type="password"]:read-only,
+main input[type="search"]:read-only,
+main input[type="email"]:read-only{
+  background-color: #eee;  /*  มีผลต่อสีพื้นหลัง */
+  color: darkblue!important;
+}
+
+/*** Disabled สำหรับทุก input ***/
+/*** Input ที่ disabled ข้อมูลจะไม่ถูกส่งข้อมูลไปให้ Server ***/
+main button:disabled,
+main select:disabled,
+main textarea:disabled,
+main input[type="date"]:disabled,
+main input[type="datetime-local"]:disabled,
+main input[type="number"]:disabled,
+main input[type="text"]:disabled,
+main input[type="button"]:disabled,
+main input[type="submit"]:disabled,
+main input[type="search"]:disabled,
+main input[type="email"]:disabled{
+  /* background-image: none; */
+  background-color: #eee;  /*  มีผลต่อสีพื้นหลัง */
+  color: #666!important;
+}
+
+
+/********** placeholder *******/
+::placeholder {
+  color: #bbb;
+  font-size: var(--input-placeholder-font-size);
+}
+
+
+
+
+
+
+
+
+/*** radio ****/
+/* ไม่มี readOnly เหมือนกับ select */
+input[type=radio] { accent-color: blue; }
+input[type=radio]:disabled{ 
+  cursor:not-allowed; 
+  accent-color: darkblue!important; 
+}
+input[type=radio]:read-only{ 
+  cursor:not-allowed; 
+  accent-color: darkblue!important; 
+}
+
+
+
+
+
+
+/********** คลาสปุ่ม *******/
+/* main .btn{
+  border: none;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: white!important;
+  line-height: 1.9rem;
+}
+main .btn[disabled]{
+  color: lightblue!important;
+  background-color: #484848!important;
+} */
+

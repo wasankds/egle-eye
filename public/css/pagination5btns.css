@@ -1,0 +1,76 @@
+/****** PAGINATION - แบบ 5ปุ่ม/select ********/
+.pg-ctn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pg-ctn:empty { display: none; }
+
+.pg-ctn input[type=submit]{ 
+  width: 100%;
+  padding: 4px;
+  color: white;
+  border: 1px solid var(--main-dark);
+  cursor: pointer;
+}
+.pg-ctn input[type=submit]:disabled{ 
+  background-color: gray;
+  cursor: not-allowed;
+}
+.pg-ctn select{ 
+  padding: 3px;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: 1px solid var(--main-dark);
+  background-color: skyblue; 
+}
+.pg-ctn .btn-pre{ background-color: cornflowerblue }
+.pg-ctn .btn-nxt{ background-color: cornflowerblue}
+.pg-ctn .btn-fst{ 
+  background-color: steelblue; 
+  border-radius: 30px 3px 3px 30px!important;
+}
+.pg-ctn .btn-lst{ 
+  background-color: steelblue; 
+  border-radius: 3px 30px 30px 3px!important;
+}
+
+.pg-ctn .rowg{
+  display: grid;
+  grid-template-columns: 100%;
+}
+
+.pg-ctn .rowg label{
+  text-align: center;
+  font-size: 0.75rem;
+  color: lightblue;
+}
+
+
+/**************** จอขนาดกลาง ****************/
+@media screen and (max-width: 768px) {
+  /* .pg-ctn input[type=submit]{ 
+    flex-basis: 13%; 
+  }
+  .pg-ctn select{ 
+    flex-basis: 18%; 
+  } */
+  .col-10 {flex-basis: 15%;max-width: 15%;}
+  .col-15 {flex-basis: 25%;max-width: 25%;}
+}
+
+/**************** จอขนาดเล็ก ****************/
+@media screen and (max-width: 480px) {
+  /* .pg-ctn input[type=submit]{ 
+    flex-basis: 15%; 
+  }
+  .pg-ctn select{ 
+    flex-basis: 20%; 
+  } */
+  .col-10 {flex-basis: 15%;max-width: 15%;}
+  .col-15 {flex-basis: 25%;max-width: 25%;}
+}
+
+
+

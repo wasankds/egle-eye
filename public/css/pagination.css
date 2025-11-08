@@ -1,0 +1,147 @@
+/****** PAGINATION *****/
+.pg-ctn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pg-ctn:empty { display: none; }
+.pg-ctn input[type=button]{ 
+  border: 1px solid black; 
+  border-radius: 3px;
+}
+.col-pg {  /* มีทุกปุ่ม */
+  flex-basis: 20%; 
+  overflow: hid5en; 
+  white-space: nowrap;
+}
+.pg-active{ /* มีเฉพาะ active */
+  flex-basis: 20%; 
+  background-color: DarkCyan;  
+  margin:0;
+  text-align:center;
+  border-radius:3px;
+  color:white;
+  font-weight:1000!important;
+  line-height: var(--lh-tb);
+}
+.pg{ /* มีทุกอันยกเว้น active */
+  background-color: var(--main-dark-color);
+  margin: 0;
+  text-align: center ;
+  border-radius: 3px;
+  line-height: var(--lh-tb);
+  color: lightblue;
+}
+
+.col-pg.pg:hover,
+.pg-active:hover{
+  cursor: pointer;  
+  filter: brightness(130%)!important;
+}
+
+
+/**************** จอขนาดกลาง ****************/
+@media screen and (max-width: 768px) {
+  .pg-ctn input[type=button]{ font-size: 0.8rem;}
+  .col-pg { flex-basis: 15%; }
+}
+
+/**************** จอขนาดเล็ก ****************/
+@media screen and (max-width: 480px) {
+  body{ font-size: 11px; }
+}
+
+
+
+
+
+
+/****** PAGINATION - แบบใหม่ ************/
+/* .pg-ctn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pg-ctn:empty { display: none; }
+.pg-ctn input[type=button]{ 
+  border: 1px solid black; 
+  border-radius: 3px;
+}
+.col-pg { 
+  flex-basis: 20%; 
+  overflow: hid5en; 
+  white-space: nowrap;
+}
+.pg-active{
+  flex-basis: 20%; 
+  background-color: DarkCyan!important;
+  margin:0;
+  text-align:center;
+  border-radius:3px;
+  color:white;
+  font-weight:1000!important;
+  line-height:var(--lh-tb);
+}
+.pg{
+  background-color: var(--main-dark-color)!important;
+  margin: 0;
+  text-align: center ;
+  border-radius: 3px;
+  line-height: var(--lh-tb);
+  color: lightblue;
+}
+.pg:hover, .pg-active:hover{
+  cursor: pointer;  
+  filter: brightness(130%)!important;
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+.pg-ctn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pg-ctn:empty { display: none; }
+
+.pg-ctn input[type=submit]{ 
+  flex-basis: 10%; 
+  padding: 4px;
+  color: white;
+}
+.pg-ctn select{ 
+  padding: 3px;
+  flex-basis: 15%; 
+}
+.pg-ctn .btn-pre{ background-color: rgb(0, 95, 95) }
+.pg-ctn .btn-nxt{ background-color: rgb(0, 95, 95) }
+.pg-ctn .btn-fst{ 
+  background-color: rgb(0, 67, 67); 
+  border-radius: 30px 3px 3px 30px!important;
+}
+.pg-ctn .btn-lst{ 
+  background-color: rgb(0, 67, 67); 
+  border-radius: 3px 30px 30px 3px!important;
+}
+
+
+@media screen and (max-width: 768px) {
+  .pg-ctn input[type=submit]{ flex-basis: 13%; }
+  .pg-ctn select{ flex-basis: 18%; }
+}
+
+@media screen and (max-width: 480px) {
+  .pg-ctn input[type=submit]{ flex-basis: 15%; }
+  .pg-ctn select{ flex-basis: 20%; }
+} */

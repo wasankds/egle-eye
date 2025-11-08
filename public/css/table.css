@@ -1,0 +1,26 @@
+/* 
+ */
+
+/*** สำหรับตาราง ***/
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th, td {
+  padding: 3px;
+  font-weight: 200;
+  border: 1px dotted gray;
+}
+th{
+  text-align: center;
+  border: 1px dotted gray;
+}
+tr:hover{
+  background-color: black;
+}
+
+/* ไม่เอา Scollbar */
+
+table {
+  overflow-x: visible; 
+}

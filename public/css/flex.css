@@ -1,0 +1,99 @@
+
+.row{ display: flex; flex-direction: row; }
+.row-wrap{ flex-wrap: wrap; }
+.col-01  { flex-basis:1%; max-width:1%;}
+.col-02  { flex-basis:2%; max-width:2%;}
+.col-03  { flex-basis:3%; max-width:3%;}
+.col-04  { flex-basis:4%; max-width:4%;}
+.col-05  { flex-basis:5%; max-width:5%;}
+.col-06  { flex-basis:6%; max-width:6%;}
+.col-07  { flex-basis:7%; max-width:7%;}
+.col-08  { flex-basis:8%; max-width:8%;}
+.col-09  { flex-basis:9%; max-width:9%;}
+.col-10  { flex-basis:10%; max-width:10%;overflow: hidden;white-space: nowrap;}
+.col-11  { flex-basis:11%; max-width:11%;overflow: hidden;white-space: nowrap;}
+.col-12  { flex-basis:12%; max-width:12%;overflow: hidden;white-space: nowrap;}
+.col-13  { flex-basis:13%; max-width:13%;overflow: hidden;white-space: nowrap;}
+.col-14  { flex-basis:14%; max-width:14%;overflow: hidden;white-space: nowrap;}
+.col-15  { flex-basis:15%; max-width:15%;overflow: hidden;white-space: nowrap;}
+.col-16  { flex-basis:16%; max-width:16%;overflow: hidden;white-space: nowrap;}
+.col-17  { flex-basis:17%; max-width:17%;overflow: hidden;white-space: nowrap;}
+.col-18  { flex-basis:18%; max-width:18%;overflow: hidden;white-space: nowrap;}
+.col-19  { flex-basis:19%; max-width:19%;overflow: hidden;white-space: nowrap;}
+.col-20  { flex-basis:20%; max-width:20%;overflow: hidden;white-space: nowrap;}
+.col-21  { flex-basis:21%; max-width:21%;overflow: hidden;white-space: nowrap;}
+.col-22  { flex-basis:22%; max-width:22%;overflow: hidden;white-space: nowrap;}
+.col-23  { flex-basis:23%; max-width:23%;overflow: hidden;white-space: nowrap;}
+.col-24  { flex-basis:24%; max-width:24%;overflow: hidden;white-space: nowrap;}
+.col-25  { flex-basis:25%; max-width:25%;overflow: hidden;white-space: nowrap;}
+.col-26  { flex-basis:26%; max-width:26%;overflow: hidden;white-space: nowrap;}
+.col-27  { flex-basis:27%; max-width:27%;overflow: hidden;white-space: nowrap;}
+.col-28  { flex-basis:28%; max-width:28%;overflow: hidden;white-space: nowrap;}
+.col-29  { flex-basis:29%; max-width:29%;overflow: hidden;white-space: nowrap;}
+.col-30  { flex-basis:30%; max-width:30%;overflow: hidden;white-space: nowrap;}
+.col-31  { flex-basis:31%; max-width:31%;overflow: hidden;white-space: nowrap;}
+.col-32  { flex-basis:32%; max-width:32%;overflow: hidden;white-space: nowrap;}
+.col-33  { flex-basis:33%; max-width:33%;overflow: hidden;white-space: nowrap;}
+.col-34  { flex-basis:34%; max-width:34%;overflow: hidden;white-space: nowrap;}
+.col-35  { flex-basis:35%; max-width:35%;overflow: hidden;white-space: nowrap;}
+.col-36  { flex-basis:36%; max-width:36%;overflow: hidden;white-space: nowrap;}
+.col-37  { flex-basis:37%; max-width:37%;overflow: hidden;white-space: nowrap;}
+.col-38  { flex-basis:38%; max-width:38%;overflow: hidden;white-space: nowrap;}
+.col-39  { flex-basis:39%; max-width:39%;overflow: hidden;white-space: nowrap;}
+.col-40  { flex-basis:40%; max-width:40%;overflow: hidden;white-space: nowrap;}
+.col-41  { flex-basis:41%; max-width:41%;overflow: hidden;white-space: nowrap;}
+.col-42  { flex-basis:42%; max-width:42%;overflow: hidden;white-space: nowrap;}
+.col-43  { flex-basis:43%; max-width:43%;overflow: hidden;white-space: nowrap;}
+.col-44  { flex-basis:44%; max-width:44%;overflow: hidden;white-space: nowrap;}
+.col-45  { flex-basis:45%; max-width:45%;overflow: hidden;white-space: nowrap;}
+.col-46  { flex-basis:46%; max-width:46%;overflow: hidden;white-space: nowrap;}
+.col-47  { flex-basis:47%; max-width:47%;overflow: hidden;white-space: nowrap;}
+.col-48  { flex-basis:48%; max-width:48%;overflow: hidden;white-space: nowrap;}
+.col-49  { flex-basis:49%; max-width:49%;overflow: hidden;white-space: nowrap;}
+.col-50  { flex-basis:50%; max-width:50%;overflow: hidden;white-space: nowrap;}
+.col-51  { flex-basis:51%; max-width:51%;overflow: hidden;white-space: nowrap;}
+.col-52  { flex-basis:52%; max-width:52%;overflow: hidden;white-space: nowrap;}
+.col-53  { flex-basis:53%; max-width:53%;overflow: hidden;white-space: nowrap;}
+.col-54  { flex-basis:54%; max-width:54%;overflow: hidden;white-space: nowrap;}
+.col-55  { flex-basis:55%; max-width:55%;overflow: hidden;white-space: nowrap;}
+.col-56  { flex-basis:56%; max-width:56%;overflow: hidden;white-space: nowrap;}
+.col-57  { flex-basis:57%; max-width:57%;overflow: hidden;white-space: nowrap;}
+.col-58  { flex-basis:58%; max-width:58%;overflow: hidden;white-space: nowrap;}
+.col-59  { flex-basis:59%; max-width:59%;overflow: hidden;white-space: nowrap;}
+.col-60  { flex-basis:60%; max-width:60%;overflow: hidden;white-space: nowrap;}
+.col-61  { flex-basis:61%; max-width:61%;overflow: hidden;white-space: nowrap;}
+.col-62  { flex-basis:62%; max-width:62%;overflow: hidden;white-space: nowrap;}
+.col-63  { flex-basis:63%; max-width:63%;overflow: hidden;white-space: nowrap;}
+.col-64  { flex-basis:64%; max-width:64%;overflow: hidden;white-space: nowrap;}
+.col-65  { flex-basis:65%; max-width:65%;overflow: hidden;white-space: nowrap;}
+.col-66  { flex-basis:66%; max-width:66%;overflow: hidden;white-space: nowrap;}
+.col-67  { flex-basis:67%; max-width:67%;overflow: hidden;white-space: nowrap;}
+.col-68  { flex-basis:68%; max-width:68%;overflow: hidden;white-space: nowrap;}
+.col-69  { flex-basis:69%; max-width:69%;overflow: hidden;white-space: nowrap;}
+.col-70  { flex-basis:70%; max-width:70%;overflow: hidden;white-space: nowrap;}
+.col-71  { flex-basis:71%; max-width:71%;overflow: hidden;white-space: nowrap;}
+.col-72  { flex-basis:72%; max-width:72%;overflow: hidden;white-space: nowrap;}
+.col-73  { flex-basis:73%; max-width:73%;overflow: hidden;white-space: nowrap;}
+.col-74  { flex-basis:74%; max-width:74%;overflow: hidden;white-space: nowrap;}
+.col-75  { flex-basis:75%; max-width:75%;overflow: hidden;white-space: nowrap;}
+.col-76  { flex-basis:76%; max-width:76%;overflow: hidden;white-space: nowrap;}
+.col-77  { flex-basis:77%; max-width:77%;overflow: hidden;white-space: nowrap;}
+.col-78  { flex-basis:78%; max-width:78%;overflow: hidden;white-space: nowrap;}
+.col-79  { flex-basis:79%; max-width:79%;overflow: hidden;white-space: nowrap;}
+.col-80  { flex-basis:80%; max-width:80%;overflow: hidden;white-space: nowrap;}
+.col-81  { flex-basis:81%; max-width:81%;overflow: hidden;white-space: nowrap;}
+.col-82  { flex-basis:82%; max-width:82%;overflow: hidden;white-space: nowrap;}
+.col-83  { flex-basis:83%; max-width:83%;overflow: hidden;white-space: nowrap;}
+.col-84  { flex-basis:84%; max-width:84%;overflow: hidden;white-space: nowrap;}
+.col-85  { flex-basis:85%; max-width:85%;overflow: hidden;white-space: nowrap;}
+.col-86  { flex-basis:86%; max-width:86%;overflow: hidden;white-space: nowrap;}
+.col-87  { flex-basis:87%; max-width:87%;overflow: hidden;white-space: nowrap;}
+.col-88  { flex-basis:88%; max-width:88%;overflow: hidden;white-space: nowrap;}
+.col-89  { flex-basis:89%; max-width:89%;overflow: hidden;white-space: nowrap;}
+.col-90  { flex-basis:90%; max-width:90%;overflow: hidden;white-space: nowrap;}
+.col-91  { flex-basis:91%; max-width:91%;overflow: hidden;white-space: nowrap;}
+.col-92 { flex-basis:92%; max-width:92%;overflow: hidden;white-space: nowrap;}
+.col-93 { flex-basis:93%; max-width:93%;overflow: hidden;white-space: nowrap;}
+.col-94  { flex-basis:94%; max-width:94%;overflow: hidden;white-space: nowrap;}
+.col-95  { flex-basis:95%; max-width:95%;overflow: hidden;white-space: nowrap;}
+.col-100 { flex-basis:100%; max-width:100%;overflow:wrap;white-space: wrap;}

@@ -1,0 +1,44 @@
+main{
+  display: grid;
+  grid-template-columns: 100%;
+  padding: 5px;
+  min-height: 85vh;
+  align-content: start;
+}
+
+.toolbar-ctn{
+  padding: 5px ;
+  background-color: #ddd;
+  border-left: 1px solid  #ccc;
+  border-right: 1px solid  #ccc;
+  border-top: 1px solid  #ccc;
+  border-radius: 5px 5px 0 0 ;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-body{
+  padding: 5px;
+  background-color: white;
+  border: 1px solid  #ccc;
+  border-radius: 0 0 5px 5px;
+}
+
+
+/*******************************************/
+/**************** จอขนาดกลาง ****************/
+/*******************************************/
+/* @media screen and (min-width: 768px) { } */
+
+
+
+/*******************************************/
+/**************** จอขนาดใหญ่ ****************/
+/*******************************************/
+/* @media screen and (min-width: 1000px) { } */
+
+
+
+

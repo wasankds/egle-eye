@@ -1,0 +1,275 @@
+/* ออกแบบสำหรับหน้าจอขนาดเล็กเป็นหลัก  */
+html{ 
+  color:var(--font-main-color); 
+}
+body{    
+  margin: auto;
+  font-size: 15px;
+  /* background-color: cornflowerblue; */
+  background-color: #555;
+}
+
+.header-title{
+  margin: 0 auto;
+  padding: 7px 0;
+  border-bottom: 3px solid #333;
+  border-radius: 0;
+}
+
+main{
+  width: 100%;
+  margin: auto;
+  background-color: white;
+  border-radius: 0;
+}
+
+/**************** จอขนาดกลาง ****************/
+@media screen and (min-width: 768px) {
+  html{  font-size: 15px;  }
+  
+  .header-title{ border-radius: 7px 7px 0 0; }
+  main {
+    margin: 0 auto;
+    border-radius: 0 0 7px 7px;
+  }
+
+  header,
+  nav,
+  main {
+    max-width: 768px;
+  }
+}
+
+
+/**************** จอขนาดใหญ่ ****************/
+@media screen and (min-width: 1000px) {
+  html{  font-size: 16px;  }
+
+  header,
+  nav,
+  main { max-width: 1000px; }
+}
+
+
+
+
+/****** ลายน้ำ ******/
+/* .watermark {
+  position: relative;
+  z-index: 3;
+}
+.watermark::before {
+  content: "ห้ามส่งให้ลูกค้า";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  font-size: 7rem;
+  color: rgba(0,0,0,0.1);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+} */
+
+
+/***** หน้ากระดาษโดยรวม ******/
+/* .paper-ctn{   
+  color: black; 
+  background-color: white;
+  padding: 0px; 
+}
+
+#paperForm{
+  max-width: calc(var(--a4-width-size) - 3cm); 
+  margin: auto;
+}
+.paper-ctn input[type=text],
+.paper-ctn input[type=number]{ 
+  width: 100%;  
+  border: none;
+  border-radius: 0px!important;
+} */
+
+/****** CTN (ชื่อเอกสาร) ******/
+/* คลาส doc-bill สำหรับบิลเงินสด  */
+/* #docTitleCtn{ position: relative; } */
+
+
+/* ค้นหาลูกค้า */
+/* #searchCustomerCtn ,
+#searchCustomerCtn.doc-bill{
+  position: absolute;
+  margin-top: 5px;
+}
+#searchCustomerCtn{ top:0; left: 0px; }
+#searchCustomerCtn.doc-bill{ top:10px; left: 5px; } */
+
+
+/* ปุ่มล้างลูกค้า */
+/* #docTitleCtn #btnClearCustomer{
+  color:orange!important;
+  border: 1px dashed #ccc;
+  border-radius: 3px;  
+  padding: 0.25rem 0.3rem;   
+  font-size: 0.85rem; 
+}
+#docTitleCtn #btnClearCustomer:disabled{
+  color:#ccc!important;
+  border: 1px dashed #ccc!important;
+}
+#docTitleCtn #btnClearCustomer.doc-bill{
+  color: white;
+  background-color: blue!important;
+} */
+
+/* โมดอล */
+/* #docTitleCtn .modalCtn{
+  border: 1px dashed #ccc;
+  border-radius: 3px;
+  background-color: white!important;  
+}
+#docTitleCtn .modalCtn input.doc-bill{
+  border: none;
+  outline: none;
+  color: white;
+  background-color: blue!important;
+} */
+
+/* สถานะเอกสาร */
+/* #docStatusNumber{
+  max-width:100px;
+  margin-top: 5px;
+  position:absolute;
+  border-radius:3px!important;
+}
+#docStatusNumber{ top:0; right:0; }
+#docStatusNumber:disabled{
+  color:#ccc!important;
+  border: 1px dashed #ccc!important;
+} */
+
+/* #docStatusNumber.doc-bill{ 
+  top:10px;
+  right:5px; 
+} */
+
+
+
+/****** ลูกค้า ******/
+/* #customerCtn.rowg{
+  display: grid;
+  grid-template-columns: 70% 30% ;
+  align-items: start;
+  padding: 7px 0;
+}
+#customerCtn .colg-1{ grid-area: 1/1/2/2;overflow: hidden; white-space: nowrap;}
+#customerCtn .colg-2{ grid-area: 1/2/2/3;overflow: hidden; white-space: nowrap;}
+
+#customerLeftCtn,
+#customerRightCtn{ margin-bottom: 3px; }
+#customerLeftCtn .row p{ font-size: 0.85rem; }
+#customerLeftCtn .row input{
+  padding-left: 3px;
+  font-weight: bold;
+  border-bottom: 1px dashed black;
+  text-align: left;
+} */
+
+/* ขวา */
+/* #customerRightCtn .row p{
+  padding-right: 3px;
+  font-size: 0.85rem;
+  text-align: right;
+}
+#customerRightCtn .row input{
+  padding-left: 3px;
+  font-weight: bold;
+  border-bottom: 1px dashed black;
+  text-align: center;
+}
+ */
+
+
+
+
+
+/****** โซนผลรวม : คอลัมน์ 1 ******/ 
+/* หมายเหตุเอกสาร */
+/* #docRemark{
+  resize:none;
+  overflow: hidden;
+  line-height: 1rem;
+  border: none;
+  padding: 5px 5px 5px 0;
+  font-size: 0.80rem; 
+} */
+
+/* มีเฉพาะใน receipt */
+/* #docRemarkCtn p{
+  font-size: 0.80rem; 
+  line-height: 1.3rem;  
+}
+#paymentMethodCtn div { margin-left: 10px; }
+#paymentMethodCtn div input[type="radio"] { 
+  vertical-align: middle; 
+  cursor: pointer;
+}
+#paymentMethodCtn div label { 
+  vertical-align: middle; 
+  font-size: 0.8rem;
+}
+ */
+
+
+/****** โซนผลรวม : คอลัมน์ 2 ******/ 
+/* #columnTotalCtn .row p{
+  line-height: 1.1rem;
+  text-align: right;
+  padding-top: 3px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+#columnTotalCtn .row input{
+  text-align: right;
+  padding-right: 3px;
+  font-weight: bold;
+} */
+
+
+
+
+/****** ผู้เสนอราคา ******/ 
+/* #proposerLabel{
+  font-size: 0.85rem;
+  line-height: 1rem;
+  text-align: center;
+}
+#proposerImageSignatureCtn { 
+  min-height: 66px; 
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#proposerImageSignatureCtn img{ 
+  width:auto; 
+  height: 60px; 
+}
+#proposerFullnameCtn{
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px dashed black;
+  align-items: center;
+  flex-basis: 100%;
+}
+
+#proposerFullnameCtn input,
+#proposerFullnameCtn span{
+  margin-top: 0px; 
+}
+#proposerFullnameCtn input{
+  text-align: center;
+  font-weight: bold;
+}
+ */
+

@@ -1,0 +1,29 @@
+ol.sub-number {
+  counter-reset: item;
+  margin-left:0 ;
+}
+ol.sub-number li.sub {
+  display: block;
+}
+ol.sub-number li.sub:before {
+  content: counters(item, ".") ". ";
+  counter-increment: item;
+}
+
+/* No Dot */
+ol.sub-number ol.sub-number li.sub:before {
+  content: counters(item, ".") " ";
+  counter-increment: item;
+}
+
+/* Etc */
+ol.sub-number ol.sub-number {
+  padding-left: 0.65em;
+}
+
+
+ul.sub{
+  padding-left: 1.7em;
+}
+
+

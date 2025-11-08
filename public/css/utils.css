@@ -1,0 +1,608 @@
+:root {
+  --main-light: white;
+  --main-color: whitesmoke ;
+  --main-mid: lightcyan;
+  --main-dark: skyBlue;
+  --main-darker: rgb(100, 100, 100);
+  --main-darkest:  rgb(50, 50, 50);
+
+  --br-main: 5px;
+  --br-top: 5px 5px 0 0;
+  --br-bottom: 0 0 5px 5px;
+
+  --lh-tb: 1.75rem;
+  --lh-label: 2rem;
+  --lh-input: 1.55rem;
+  --lh-p: 1.75rem;
+
+  --font-main-color: #333;  
+  --red:red;    /* --red:rgb(255, 130, 130); */
+  --a4-width-size: 842px;
+  --a4-height-size: 595px;
+  --fs-label: 0.9rem;
+  --fs-table: 0.825rem;
+}
+* { 
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+
+/****** bootstrap like ******/
+.d-flex { display: flex; }
+.align-items-center { align-items: center; }
+.flex-start { align-items: flex-start; }
+.justify-content-center { justify-content: center; }
+.justify-content-between { justify-content: space-between; }
+.justify-content-around { justify-content: space-around; }
+.justify-content-end { justify-content: flex-end; }
+
+
+.btn {
+  border: none;
+  border: 1px solid #888;
+  border-radius: 3px;
+  color: white;
+}
+.btn[disabled]{ 
+  color: lightblue!important;
+  background-color: #aaa!important;
+}
+.btn-sm{ padding: 0.3rem 0.4rem; font-size: 0.8rem;}
+.btn-md{ padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+.btn-lg{ padding: 0.5rem 1rem; font-size: 1rem; }
+.btn-primary { background-color: blue; color: white; }
+.btn-secondary { background-color: gray; color: white; }
+.btn-success { background-color: green; color: white; }
+.btn-danger { background-color: red; color: white; }
+.btn-warning { background-color: orange; color: white; }
+.btn-info { background-color: lightblue; color: black; }
+.btn-light { background-color: lightgray; color: black; }
+.btn-dark { background-color: black; color: white; }
+.btn-link { background-color: transparent; color: blue; text-decoration: underline; }
+.btn-muted { background-color: lightgray; color: black; }
+
+
+
+/*** ขนาด Font ***/
+.fs-ss{ font-size: 0.60rem; }
+.fs-s{ font-size: 0.70rem; }
+.fs-sm{ font-size: 0.80rem; }
+.fs-m{ font-size: 0.85rem; }
+.fs-sn{ font-size: 0.90rem;}
+.fs-n{ font-size: 0.95rem;}
+.fs-sl{ font-size: 1.0rem;}
+.fs-l{ font-size: 1.15rem;}
+.fs-x{ font-size: 1.25rem; }
+.fs-xl{ font-size: 1.30rem; }
+.fs-xxl{ font-size: 1.75rem; }
+.fs-3xl{ font-size: 2.0rem; }
+/*** การวางแนวข้อความ ***/
+.al-r{ text-align: right; }
+.al-l{ text-align: left; }
+.al-c{ text-align: center; }
+/*** Margin ***/
+.mg-t-s{ margin-top: 3px!important;}
+.mg-t-m{ margin-top: 5px!important;}
+.mg-t-l{ margin-top: 7px!important;}
+.mg-t-xl{ margin-top: 12px!important;}
+.mg-t-xxl{ margin-top: 20px!important;}
+.mg-b-s{ margin-bottom: 3px!important;}
+.mg-b-m{ margin-bottom: 5px!important;}
+.mg-b-l{ margin-bottom: 7px!important;}
+.mg-b-xl{ margin-bottom: 12px!important;}
+.mg-b-xxl{ margin-bottom: 20px!important;}
+.mg-l-s{ margin-left: 3px!important;}
+.mg-l-m{ margin-left: 5px!important;}
+.mg-l-l{ margin-left: 7px!important;}
+.mg-l-xl{ margin-left: 12px!important;}
+.mg-l-xxl{ margin-left: 20px!important;}
+.mg-r-s{ margin-right: 3px!important;}
+.mg-r-m{ margin-right: 5px!important;}
+.mg-r-l{ margin-right: 7px!important;}
+.mg-r-xl{ margin-right: 12px!important;}
+.mg-r-xxl{ margin-right: 20px!important;}
+/*** Padding ***/
+.pd-n{padding:0px!important;}
+.pd-s{ padding: 3px!important;}
+.pd-m{ padding: 5px!important;}
+.pd-l{ padding: 7px!important;}
+.pd-xl{ padding: 10px!important;}
+.pd-t-s{ padding-top: 3px!important;}
+.pd-t-m{ padding-top: 5px!important;}
+.pd-t-l{ padding-top: 7px!important;}
+.pd-t-xl{ padding-top: 10px!important;}
+.pd-t-xxl{ padding-top: 15px!important;}
+.pd-b-s{ padding-bottom: 3px!important;}
+.pd-b-m{ padding-bottom: 5px!important;}
+.pd-b-l{ padding-bottom: 7px!important;}
+.pd-b-xl{ padding-bottom: 10px!important;}
+.pd-b-xxl{ padding-bottom: 15px!important;}
+.pd-l-s{ padding-left: 3px!important;}
+.pd-l-m{ padding-left: 5px!important;}
+.pd-l-l{ padding-left: 7px!important;}
+.pd-l-xl{ padding-left: 10px!important;}
+.pd-l-xxl{ padding-left: 15px!important;}
+.pd-r-s{ padding-right: 3px!important;}
+.pd-r-m{ padding-right: 5px!important;}
+.pd-r-l{ padding-right: 7px!important;}
+.pd-r-xl{ padding-right: 10px!important;}
+.pd-r-xxl{ padding-right: 15px!important;}
+/*** กลุ่มเว้นย่อหน้า ***/
+.ident-s{ text-indent: 10px!important;}
+.ident-m{ text-indent: 20px!important;}
+.ident-l{ text-indent: 30px!important;}
+.ident-xl{ text-indent: 40px!important;}
+.ident-xxl{ text-indent: 50px!important;}
+.ident-3xl{ text-indent: 60px!important;}
+.ident-4xl{ text-indent: 70px!important;}
+
+/*** กลุ่มเส้นขอบ ***/
+.bd-n{border: none}
+/*** กลุ่มเส้นขอบ ***/
+.ba{border: 1px solid #ccc!important;}
+.bl{ border-left: 1px solid #ccc!important; }
+.br{ border-right: 1px solid #ccc!important; }
+.bt{border-top: 1px solid #ccc!important;}
+.bb{border-bottom: 1px solid #ccc!important;}
+/*** กลุ่มเส้นขอบ ***/
+.ba-6{border: 1px solid #666!important;}
+.bl-6{ border-left: 1px solid #666!important; }
+.br-6{ border-right: 1px solid #666!important; }
+.bt-6{border-top: 1px solid #666!important;}
+.bb-6{border-bottom: 1px solid #666!important;}
+/*** กลุ่มเส้นขอบ ***/
+.ba-7{border: 1px solid #777!important;}
+.bl-7{ border-left: 1px solid #777!important; }
+.br-7{ border-right: 1px solid #777!important; }
+.bt-7{border-top: 1px solid #777!important;}
+.bb-7{border-bottom: 1px solid #777!important;}
+/*** กลุ่มเส้นขอบ ***/
+.ba-8{border: 1px solid #888!important;}
+.bl-8{ border-left: 1px solid #888!important; }
+.br-8{ border-right: 1px solid #888!important; }
+.bt-8{border-top: 1px solid #888!important;}
+.bb-8{border-bottom: 1px solid #888!important;}
+/*** กลุ่มเส้นขอบ ***/
+.bl-d{ border-left: 1px dashed #ccc!important; }
+.br-d{ border-right: 1px dashed #ccc!important; }
+.bt-d{border-top: 1px dashed #ccc!important;}
+.bb-d{border-bottom: 1px dashed #ccc!important;}
+.ba-d{border: 1px dashed #ccc!important;}
+/*** กลุ่มเส้นขอบ ***/
+.ba2{border: 1px dashed lightgray!important;}
+.bl2{border-left: 1px dashed lightgray!important; }
+.br2{border-right: 1px dashed lightgray!important; }
+.bt2{border-top: 1px dashed lightgray!important;}
+.bb2{border-bottom: 1px dashed lightgray!important;}
+/*** กลุ่มเส้นขอบ ***/
+.ba2-d{border: 1px dashed lightgray!important;}
+.bl2-d{ border-left: 1px dashed lightgray!important; }
+.br2-d{ border-right: 1px dashed lightgray!important; }
+.bt2-d{border-top: 1px dashed lightgray!important;}
+.bb2-d{border-bottom: 1px dashed lightgray!important;}
+/*** กลุ่มเส้นขอบ ***/
+.ba-thick{border: 3px solid #333!important;}
+.bl-thick{border-left: 3px solid #333!important; }
+.br-thick{border-right: 3px solid #333!important; }
+.bt-thick{border-top: 3px solid #333!important;}
+.bb-thick{border-bottom: 3px solid #333!important;}
+/*** กลุ่มเส้นขอบ ***/
+.bdr3{border-radius: 3px}
+.bdr5{border-radius: 5px}
+.bdr3-top{border-radius: 3px 3px 0 0 }
+.bdr3-bottom{border-radius: 0 0 3px 3px}
+.bdr3-left{border-radius: 3px 0 0 3px}
+.bdr3-right{border-radius: 0 3px 3px 0}
+.bdr5-top{border-radius: 5px 5px 0 0 }
+.bdr5-bottom{border-radius: 0 0 5px 5px}
+.bdr5-left{border-radius: 5px 0 0 5px}
+.bdr5-right{border-radius: 0 5px 5px 0}
+/*** กลุ่มเส้นขอบ ***/
+.ba-k{border: 1px solid black!important;}
+.bl-k{ border-left: 1px solid black!important; }
+.br-k{ border-right: 1px solid black!important; }
+.bt-k{border-top: 1px solid black!important;}
+.bb-k{border-bottom: 1px solid black!important;}
+.ba2-k{border: 2px solid black!important;}
+.bl2-k{ border-left: 2px solid black!important; }
+.br2-k{ border-right: 2px solid black!important; }
+.bt2-k{border-top: 2px solid black!important;}
+.bb2-k{border-bottom: 2px solid black!important;}
+.bl-k-d{ border-left: 1px dashed black!important; }
+.br-k-d{ border-right: 1px dashed black!important; }
+.bt-k-d{border-top: 1px dashed black!important;}
+.bb-k-d{border-bottom: 1px dashed black!important;}
+.ba-k-d{border: 1px dashed black!important;}
+.ba-k-db{border: 3px double black!important;}
+.bl-k-db{ border-left: 3px double black!important; }
+.br-k-db{ border-right: 3px double black!important; }
+.bt-k-db{border-top: 3px double black!important;}
+.bb-k-db{border-bottom: 3px double black!important;}
+/*** Background ***/
+.bg-transparent{background-color: transparent!important;}
+.bg-line-swap{ background-color: #eee ; }
+.bg-line-swap-main{ background-color: #ddd ; }
+.bg-line-swap-dark{ background-color: #ccc ; }
+.bg-lired{ background-color: lightcoral; }
+.bg-red{ background-color: red; }
+.bg-black{ background-color: black; }
+.bg-111{ background-color: #111; }
+.bg-222{ background-color: #222; }
+.bg-333{ background-color: #333; }
+.bg-444{ background-color: #444; }
+.bg-555{ background-color: #555; }
+.bg-666{ background-color: #666; }
+.bg-777{ background-color: #777; }
+.bg-888{ background-color: #888; }
+.bg-999{ background-color: #999; }
+.bg-aaa{ background-color: #aaa; }
+.bg-bbb{ background-color: #bbb; }
+.bg-ccc{ background-color: #ccc; }
+.bg-ddd{ background-color: #ddd; }
+.bg-eee{ background-color: #eee; }
+.bg-blue{ background-color: blue; }
+.bg-yellow{ background-color: yellow; }
+.bg-liyellow{ background-color: lightyellow; }
+.bg-orange{ background-color: orange; }
+.bg-gold{ background-color: gold; }
+.bg-goldenrod{ background-color: goldenrod; }
+.bg-dkorange{ background-color: darkorange; }
+.bg-khaki{ background-color: Khaki; }
+.bg-pink{ background-color: pink; }
+.bg-plum{ background-color: plum; }
+.bg-mediumturquoise{ background-color: mediumturquoise; }
+.bg-magenta{ background-color: magenta; }
+.bg-mgt{ background-color: magenta; }
+.bg-dkmgt{ background-color: darkmagenta; }
+.bg-white{ background-color: white!important; }
+.bg-lightgray{ background-color: lightgray; }
+.bg-liblue{ background-color: lightblue; }
+.bg-ligray{ background-color: lightgray; }
+.bg-greenyellow{ background-color: GreenYellow; }
+.bg-gy{ background-color: yellowgreen; }
+.bg-yg{ background-color: yellowgreen; }
+.bg-lime{ background-color: lime; }
+.bg-ligreen{ background-color: lightgreen; }
+.bg-green{ background-color: green; }
+.bg-grey{ background-color: grey; }
+.bg-gray{ background-color: gray; }
+.bg-ligray{ background-color: lightgray; }
+.bg-forestgreen { background-color: forestgreen; }
+.bg-mediumspringgreen{ background-color: MediumSpringGreen; }
+.bg-mediumseagreen{ background-color: MediumSeaGreen; }
+.bg-lightslategrey{ background-color: LightSlateGrey; }
+.bg-aquamarine{ background-color: Aquamarine; }
+.bg-darkcyan{ background-color: darkcyan; }
+.bg-dkcyan{ background-color: darkcyan; }
+.bg-cyan{ background-color: cyan; }
+.bg-aqua{ background-color: Aqua; }
+.bg-deepskyblue{ background-color: DeepSkyBlue; }
+.bg-cornflowerblue{ background-color: CornflowerBlue; }
+.bg-cornblue{ background-color: CornflowerBlue; }
+.bg-dgblue{ background-color: dodgerblue; }
+.bg-dodgerblue{ background-color: dodgerblue; }
+.bg-steelblue{ background-color: steelblue; }
+.bg-lislateblue{ background-color: lightsteelblue; }
+.bg-slateblue{ background-color: slateblue; }
+.bg-main{ background-color:var(--main-color) }
+.bg-main-color{ background-color:var(--main-color) }
+.bg-main-mid{ background-color:var(--main-mid)}
+.bg-main-dark{ background-color: var(--main-dark); }
+.bg-main-darker{ background-color:var(--main-darker) }
+/* สำหรับปุ่ม */
+.bg-table-th{  background-color: #ddd!important; }
+.bg-comment{  background-image: linear-gradient(cornflowerblue, royalblue); }
+.bg-reset{  background-image: linear-gradient(rgb(185, 0, 185), rgb(89, 0, 89)); color: white; }
+.bg-submit{ background-image:linear-gradient(darkcyan, rgb(0, 80, 80)); }
+.bg-get{ background-image: linear-gradient(  darkgoldenrod, rgb(84, 60, 0) ); color: white; }
+.bg-btn-course{ background-image: linear-gradient( var(--main-mid), var(--main-darker) ); color: white; }
+.bg-btn-course-active{ background-image: linear-gradient(steelblue, royalblue ); color: white; }
+.bg-rename{ background-image:linear-gradient(darkcyan, rgb(0, 80, 80));}
+.bg-move{ background-image:linear-gradient(darkorange,rgb(134, 73, 0));}
+.bg-list{ background-image:linear-gradient( HotPink, rgb(140, 30, 85));}
+.bg-preview{ background-image:linear-gradient( DarkKhaki, rgb(86, 83, 42)); }
+.bg-link{ background-image:linear-gradient(darkcyan, rgb(0, 80, 80)); }
+.bg-login{ background-image:linear-gradient(cornflowerblue, royalblue); }
+.bg-download{  background-image: linear-gradient(LightSkyBlue, cornflowerblue); }
+.bg-load{  background-image: linear-gradient(cornflowerblue, royalblue); }
+.bg-load-emoji{  background-color: cornflowerblue}
+.bg-load-inactive{ background-color:var(--main-darker) }
+.bg-load-inactive{ 
+  background-image: linear-gradient(cornflowerblue, royalblue);
+}
+.bg-load-active{
+  background-image: linear-gradient( blue, darkblue);
+  pointer-events: none; /* ป้องกันการคลิก */
+}
+
+
+.bg-reload{ background-image: linear-gradient(orchid, darkmagenta);}
+.bg-save{ background-image: linear-gradient(rgb(115, 187, 115), darkgreen);}
+.bg-add{ background-image:linear-gradient(RoyalBlue, rgb(5, 8, 15)); }
+.bg-new{ background-image:linear-gradient(royalblue, darkblue); }
+.bg-update{ background-image:linear-gradient(royalblue, darkblue); }
+.bg-register{ background-image: linear-gradient(rgb(115, 187, 115), darkgreen);}
+.bg-swap{ background-image:linear-gradient(rgb(118, 191, 194),steelblue); }
+.bg-copy{ background-image:linear-gradient(rgb(118, 191, 194),steelblue); }
+.bg-edit{ background-image:linear-gradient(yellow,darkgoldenrod); }
+.bg-edit-active{ background-image:linear-gradient(rgb(33, 195, 165),rgb(21, 125, 106)) }
+.bg-delete{ background-image:linear-gradient(red,darkred) }
+/* .bg-print{ background-image: linear-gradient(rgb(113, 151, 38), rgb(68, 85, 38)); color: white; } */
+.bg-print{ background-image: linear-gradient(lightSeaGreen, SeaGreen); color: white; }
+.bg-change{ background-image: linear-gradient(magenta, rgb(137, 0, 137))}
+.bg-search{ background-image: linear-gradient(rgb(75, 203, 197), rgb(42, 99, 96)); }
+.bg-fs{ background-color: #263F3F; }
+.bg-check{ background-image: linear-gradient(orange, darkgoldenrod);}
+.bg-cancel{ background-image: linear-gradient(orange, darkgoldenrod);}
+.bg-import{  background-image: linear-gradient(RoyalBlue, rgb(41, 58, 108)); color: white; }
+.bg-switch{  background-image: linear-gradient(plum, HotPink); color: white; }
+.bg-clear{  background-image: linear-gradient(rgb(185, 0, 185), rgb(89, 0, 89)); color: white; }
+.bg-report{ background-image: linear-gradient(HotPink, rgb(140, 30, 85));}
+.bg-view{ background-image: linear-gradient( rgb(0, 200, 167), rgb(0, 135, 112) ); color: white; }
+.bg-create{ background-image: linear-gradient(rgb(235, 179, 37), rgb(130, 96, 10)); color: white; }
+.bg-send{ background-image: linear-gradient(rgb(167, 129, 243), rgb(88, 68, 127)); color: white; }
+.bg-close{  background-image: linear-gradient(rgb(209, 140, 44), rgb(144, 98, 25)); color: white; }
+.bg-finish{  background-image: linear-gradient(forestgreen, rgb(0, 105, 0)); color: white; }
+.bg-open{ background-color: RoyalBlue;}
+.bg-borrow{ background-color: RoyalBlue;}
+.bg-locate{ background-image: linear-gradient(rgb(0, 160, 117), rgb(85, 117, 29)); color: white; }
+.bg-scan{ background-color: orchid; color: white; }
+.bg-minus{ background-image: linear-gradient(rgb(209, 44, 44), rgb(144, 25, 25)); color: white; }
+.bg-undo{ background-image: linear-gradient(darkcyan, #004443); color: white; }
+.bg-dn{ background-image: linear-gradient(violet, rgb(151, 53, 193)); color: white; }
+.bg-up{ background-image:linear-gradient(rgb(42, 188, 232), rgb(38, 95, 121)); color: white; }
+.bg-play{ background-image:linear-gradient(rgb(42, 188, 232), rgb(38, 95, 121)); color: white; }
+.bg-upload{ background-image:linear-gradient(rgb(42, 188, 232), rgb(38, 95, 121)); color: white; }
+.bg-calendar{ background-image:linear-gradient(rgb(83, 221, 138), rgb(60, 163, 101)); color: white; }
+.bg-dashed{
+  background-color: white; 
+  border: 1px solid #ccc;
+  color: #666!important;
+}
+/***  ***/
+.dp-n{ display: none!important; }
+/*** Font Color ***/
+.fc-white{ color: white!important; }
+.fc-lavender{ color: Lavender; }
+.fc-black{ color: black; }
+.fc-gray{ color: gray; }
+.fc-ligray{ color: lightgray; }
+.fc-dkgrey{ color: DarkGrey; }
+.fc-dimgray{ color: DimGray; }
+.fc-silver{ color: Silver; }
+.fc-deepskyblue{ color: DeepSkyBlue; }
+.fc-steelblue{ color: steelblue; }
+.fc-slateblue{ color: slateblue; }
+.fc-cornblue{ color: cornflowerblue; }
+.fc-cadetblue{ color: CadetBlue; }
+.fc-dodgerblue{ color: DodgerBlue; }
+.fc-cyan{ color: cyan; }
+.fc-licyan{ color: lightcyan; }
+.fc-darkcyan{ color: darkcyan; }
+.fc-dkcyan{ color: darkcyan; }
+.fc-dkturquoise{ color: DarkTurquoise; }
+.fc-blue{ color: blue; }
+.fc-liblue{ color: lightblue; }
+.fc-liskyblue{ color: LightSkyBlue; }
+.fc-skyblue{ color: skyblue; }
+.fc-khaki{ color: Khaki; }
+.fc-yellow{ color: yellow; }
+.fc-gold{ color: Gold; }
+.fc-goldrod{ color: GoldenRod; }
+.fc-yg{ color: yellowgreen ; }
+.fc-gy{ color: greenyellow; }
+.fc-lawngreen{ color: LawnGreen ; }
+.fc-lime{ color: lime ; }
+.fc-limegreen{ color: limegreen ; }
+.fc-palegreen{ color: PaleGreen ; }
+.fc-ligreen{ color: lightgreen; }
+.fc-forestgreen{ color: forestgreen; }
+.fc-lired{ color: var(--red); font-weight: 400;}
+.fc-gold{ color: Gold; }
+.fc-red{ color: var(--red);}
+.fc-pink{ color: pink; }
+.fc-plum{ color: Plum; }
+.fc-hotpink{ color: HotPink; }
+.fc-orchid{ color: Orchid; }
+.fc-magenta{ color: magenta; }
+.fc-darkorchid{ color: DarkOrchid; }
+.fc-mgt{ color: magenta; }
+.fc-green{ color: green; }
+.fc-darkgreen{ color: darkgreen; }
+.fc-msg{ color: MediumSeaGreen; }
+.fc-orange{ color: orange;  }
+.fc-dkorange{ color: darkorange; }
+.fc-orangered{ color: orangered;  }
+.fc-888{ color: #888; }
+.fc-999{ color: #999; }
+.fc-aaa{ color: #aaa; }
+.fc-bbb{ color: #bbb; }
+.fc-ccc{ color: #ccc; }
+.fc-ddd{ color: #ddd; }
+.fc-eee{ color: #eee; }
+.fc-sort{ color: lime; opacity: 1;}
+.fc-111{ color: #111; }
+.fc-222{ color: #222; }
+.fc-333{ color: #333; }
+.fc-444{ color: #444; }
+.fc-555{ color: #555; }
+.fc-666{ color: #666; }
+.fc-777{ color: #777; }
+.fc-888{ color: #888; }
+.fc-999{ color: #999; }
+.fc-aaa{ color: #aaa; }
+.fc-bbb{ color: #bbb; }
+.fc-ccc{ color: #ccc; }
+.fc-ddd{ color: #ddd; }
+.fc-eee{ color: #eee; }
+.fc-up{ color: green; }
+.fc-down{ color: darkorchid; }
+
+
+/***  box  */
+.box-lime{ color: lime!important; padding: 0 3px; border: 1px solid lime; border-radius: 3px;}
+.box-lime:hover{ background-color: darkgreen}
+.box-green{ color: green!important; padding: 0 3px; border: 1px solid green; border-radius: 3px;}
+.box-green:hover{ background-color: darkgreen}
+.box-yellow{ color: yellow!important; padding: 0 3px; border: 1px solid yellow; border-radius: 3px;}
+.box-yellow:hover{ background-color: rgb(72, 40, 0);}
+.box-liblue{ color: lightblue!important; padding: 0 3px; border: 1px solid lightblue; border-radius: 3px;}
+.box-liblue:hover{background-color: darkblue}
+.box-blue{ color: blue!important; padding: 0 3px; border: 1px solid blue; border-radius: 3px;}
+.box-blue:hover{background-color: darkblue}
+.box-red{ color: var(--red)!important; padding: 0 3px; border: 1px solid var(--red); border-radius: 3px;}
+.box-red:hover{background-color:darkred}
+.box-download{ 
+  color: limegreen!important; padding: 3px 12px; border: 1px solid green; border-radius: 30px;
+  background-color: var(--main-darker);
+}
+.box-download:hover{ filter: brightness(150%);}
+.box-button{
+  background-color:#444;
+  text-align: center;
+  border: none;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 0 5px;
+  cursor: pointer;
+}
+.box-button:hover{ filter:brightness(130%) }
+.box-black{ color: black!important; padding: 0 3px; border: 1px solid black; border-radius: 3px;}
+
+
+/*** ใช้เท่าที่จำเป็น ***/
+.lh-7xs{ line-height: 0.6rem;}
+.lh-6xs{ line-height: 0.7rem;}
+.lh-5xs{ line-height: 0.8rem;}
+.lh-4xs{ line-height: 0.9rem;}
+.lh-3xs{ line-height: 1rem;}
+.lh-2xs{ line-height: 1.15rem;}
+.lh-xs{ line-height: 1.2rem;}
+.lh-s{ line-height: 1.5rem;}
+.lh-xn{ line-height: 1.6rem;}
+.lh-n{ line-height: 1.75rem;}
+.lh-m{ line-height: 2.00rem;}
+.lh-l{ line-height: 2.50rem;}
+.lh-xl{ line-height: 3rem;}
+/*  */
+.lh-tb{ line-height: var(--lh-tb)!important; }
+.lh-label{ line-height: var(--lh-label)!important; }
+.lh-input{ line-height: var(--lh-input)!important; }
+.lh-p{ line-height: var(--lh-p)!important; }
+
+
+
+/******  **************************/
+.clickable{ cursor: pointer; }
+.clickable:hover{ filter: brightness(130%); }
+
+
+/******  **************************/
+.dp-n{ display: none!important;}
+.vd-n{
+  background-color: yellow!important;
+  border: 1px solid red!important;
+}
+
+/* สถานะเอกสาร */
+.status-create{ background-color: lightblue!important; }
+.status-finish{ background-color: lightgreen!important; }
+.status-cancel{ background-color: lightcoral!important; }
+
+
+/*  */
+.fw-b{font-weight: bold;}
+.fx-x{ text-decoration: line-through; }
+.strike{ text-decoration: line-through!important; }
+.underline{ text-decoration: underline; }
+.nowrap{ text-wrap: nowrap; }
+.ov-hidden{ overflow: hidden; }
+.overflow-hidden{ overflow: hidden; }
+
+/*  */
+.w-100{ width: 100%!important; }
+.h-100{ height: 100%!important; }
+.w-50{ width: 50%; }
+.w-40{ width: 40%; }
+.w-30{ width: 30%; }
+.w-20{ width: 20%; }
+.w-10{ width: 10%; }
+.w-5{ width: 5%; }
+
+.fi{ font-style: italic;}
+ 
+/********* ห้ามเลือก ***************/
+.select-none{
+  user-select: none; 
+  -webkit-user-select: none; 
+  -moz-user-select: none; 
+  -ms-user-select: none;
+    pointer-events: none; 
+    background: #f5f5f5;
+}
+
+/*  */
+.img{
+  max-width: 100%; 
+  height: auto;
+}
+
+/***  ***/
+kbd {
+  color: white;
+  border-radius: 3px;
+  background-color: grey;
+  padding: 1px 3px;
+  margin: 0 1px;
+  font-family: 'Roboto', sans-serif ;
+}
+
+
+/********************************************
+*********************************************
+*********************************************
+ input number ถ้าไม่เอา arrow ให้ใส่คลาส no-arrow
+ input search ถ้าไม่เอา arrow ให้ใส่คลาส no-x
+*********************************************
+*********************************************  
+********************************************/
+input[type=number].no-arrow{
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type=number].no-arrow::-webkit-inner-spin-button,
+input[type=number].no-arrow::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* input search ถ้าไม่เอา x ให้ใส่คลาส no-x */
+input[type=search].no-x{
+  -webkit-appearance: none;
+  appearance: none;
+  }
+input[type=search].no-x::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+
+
+/********* Fieldset ************/
+/* fieldset{
+  border: none;
+  border-radius: 5px;
+
+  margin-inline-start: 2px;
+  margin-inline-end: 2px;
+  padding-block-start: 0.25em;
+  padding-block-end: 0.25em;
+  padding-inline-start: 0.75em;
+  padding-inline-end: 0.75em;
+  margin: 0;
+}
+fieldset legend { padding: 0 5px; } */
+/* fieldset:last-child{ margin-top: 50px; } */

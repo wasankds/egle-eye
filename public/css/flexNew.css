@@ -1,0 +1,126 @@
+
+
+
+
+.flex-row{ display: flex; flex-direction: row; }
+.flex-main{ display: flex; flex-direction: column; flex-wrap: nowrap ;}
+/* .flex-swap{ display: flex; flex-direction: column; ;} */
+.flex-column{ display: flex; flex-direction: row; }
+
+
+/* คลาสที่ขึ้นต้นด้วย flex-, col- */
+[class^="flex-"], 
+[class^="col-"] { overflow: hidden; white-space: nowrap; }
+
+/*  */
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-0-5, 
+.col-1-5, .col-2-5, .col-3-5, .col-4-5, .col-5-5, .col-6-5, .col-7-5, .col-8-5, .col-9-5{
+  flex-basis: 100%;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+/* แบ่งจอเล็ก/ใหญ่เท่ากันหมด*/
+.col-sm-0-5 { flex-basis:5%; max-width:5%; min-width:5%;}
+.col-sm-1 { flex-basis:10%; max-width:10%; min-width:10%;}
+.col-sm-1-5 { flex-basis:15%; max-width:15%; min-width:15%;}
+.col-sm-2 { flex-basis:20%; max-width:20%; min-width:20%;}
+.col-sm-2-5 { flex-basis:25%; max-width:25%; min-width:25%;}
+.col-sm-3 { flex-basis:30%; max-width:30%; min-width:30%;}
+.col-sm-3-5 { flex-basis:35%; max-width:35%; min-width:35%;}
+.col-sm-4 { flex-basis:40%; max-width:40%; min-width:40%;}
+.col-sm-4-5 { flex-basis:45%; max-width:45%; min-width:45%;}
+.col-sm-5 { flex-basis:50%; max-width:50%; min-width:50%;}
+.col-sm-5-5 { flex-basis:55%; max-width:55%; min-width:55%;}
+.col-sm-6 { flex-basis:60%; max-width:60%; min-width:60%;}
+.col-sm-6-5 { flex-basis:65%; max-width:65%; min-width:65%;}
+.col-sm-7 { flex-basis:70%; max-width:70%; min-width:70%;}
+.col-sm-7-5 { flex-basis:75%; max-width:75%; min-width:75%;}
+.col-sm-8 { flex-basis:80%; max-width:80%; min-width:80%;}
+.col-sm-8-5 { flex-basis:85%; max-width:85%; min-width:85%;}
+.col-sm-9 { flex-basis:90%; max-width:90%; min-width:90%;}
+.col-sm-9-5 { flex-basis:95%; max-width:95%; min-width:95%;}
+.col-sm-f { flex-basis:100%; max-width:100%; min-width:100%;}
+.col-sm-w100{ flex-basis:100%;} /* kp0[g9H,skd,u9y;vnjoq0tclf'9y;vnjoq0o8i[ */
+.col-sm-fit { flex-basis:fit-content; max-width:fit-content; min-width:fit-content;}
+.col-sm-auto { flex-basis:auto; max-width:auto;}
+.flex-1 { flex-grow: 1; }
+.flex-2 { flex-grow: 2; }
+.flex-3 { flex-grow: 3; }
+.flex-4 { flex-grow: 4; }
+.flex-5 { flex-grow: 5; }
+.flex-6 { flex-grow: 6; }
+.flex-7 { flex-grow: 7; }
+.flex-8 { flex-grow: 8; }
+.flex-9 { flex-grow: 9; }
+.flex-10 { flex-grow: 10; }
+
+
+
+/* label จอเล็กจัดชิดซ้าย */
+label.justify { text-align: left }
+/* hide-xs ใช้ซ่อนเมื่อหน้าจอเล็ก */
+.hide-xs{ display: none !important; }
+
+/*** กลุ่มที่มี label และ input 2 ตัว ***/
+.input-group{ display: flex;  flex-direction: column; }
+.input-group-column{ display: flex;  flex-direction: column;  }
+.input-group-row{ display: flex;  flex-direction: row;  }
+/* .input-group label{ flex: none; } */
+
+.input-group textarea,
+.input-group input,
+.input-group select{ flex: 1;} /* แบ่งเท่ากัน */
+
+.flex-nowarp{ flex-wrap: nowrap; overflow: hidden; white-space: nowrap; }
+.space-between{
+  justify-content: space-between;
+  align-items: center;
+}
+.gap-0{ gap: 0; }
+.gap-1{ gap: 3px; }
+.gap-2{ gap: 5px; }
+
+
+
+/*  */
+@media screen and (min-width: 768px) {
+
+  .flex-main{ flex-direction: row; flex-wrap: wrap; }
+  .flex-column{ flex-direction: row; flex-wrap: nowrap;}
+
+  label.justify { text-align: right }
+  .hide-xs{ display: inline-block !important; }
+
+  .col-0-5 { flex-basis:5%; max-width:5%;}
+  .col-1 { flex-basis:10%; max-width:10%;}
+  .col-1-5 { flex-basis:15%; max-width:15%;}
+  .col-2 { flex-basis:20%; max-width:20%;}
+  .col-2-5 { flex-basis:25%; max-width:25%;}
+  .col-3 { flex-basis:30%; max-width:30%;}
+  .col-3-5 { flex-basis:35%; max-width:35%;}
+  .col-4 { flex-basis:40%; max-width:40%;}
+  .col-4-5 { flex-basis:45%; max-width:45%;}
+  .col-5 { flex-basis:50%; max-width:50%;}
+  .col-5-5 { flex-basis:55%; max-width:55%;}
+  .col-6 { flex-basis:60%; max-width:60%;}
+  .col-6-5 { flex-basis:65%; max-width:65%;}
+  .col-7 { flex-basis:70%; max-width:70%;}
+  .col-7-5 { flex-basis:75%; max-width:75%;}
+  .col-8 { flex-basis:80%; max-width:80%;}
+  .col-8-5 { flex-basis:85%; max-width:85%;}
+  .col-9 { flex-basis:90%; max-width:90%;}
+  .col-9-5 { flex-basis:95%; max-width:95%;}
+  .col-f { flex-basis:100%; max-width:100%;}
+  .col-auto { flex-basis:auto; max-width:auto;}
+
+
+
+}
+
+/*  */
+@media screen and (min-width: 1000px) {
+
+}
+
+

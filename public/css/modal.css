@@ -1,0 +1,30 @@
+
+
+
+/******************************************
+            Modal
+******************************************/
+.modalCtn .modal{
+  display:none;
+  position: absolute;
+  z-index:999;
+}
+.modalCtn input[type=text]{ 
+  width: 100%!important;
+  height: 100%!important;
+}
+.modalCtn .modal.show{ display:block; }
+.modalCtn .modal .modal-list p{
+  font-size: 0.8rem;
+  line-height: 1.5rem;
+  border-bottom: 1px dashed lightgray;
+  color : white;
+  cursor : pointer;
+  padding: 0px 5px;
+  background: #4977d0;
+}
+.modalCtn .modal .modal-list p:hover{
+  filter: brightness(115%);
+}
+/* .modalCtn .col-modal-list-1{ flex-basis: 93%; text-align: left;}
+.modalCtn .col-modal-list-2{ flex-basis: 7; text-align: right;} */

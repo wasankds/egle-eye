@@ -1,0 +1,59 @@
+/*** pagination ***/
+.pg-ctn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 300px;
+  min-height: 25px;
+}
+.pg-ctn form, 
+.pg-ctn form input,
+.pg-ctn form select{ 
+  width: 100%!important; 
+  height: 100%!important;  
+}
+.pg-ctn form input:disabled,
+.pg-ctn form select:disabled{ 
+  background-color: #aaa;
+  cursor: not-allowed;
+  /* min-height: 30px; */
+}
+.pg-ctn:empty { display: none; }
+.pg-ctn .col-pg-rim{ flex-basis: 18%; }
+.pg-ctn .col-pg-mid{ flex-basis: 18%; }
+.pg-ctn .col-pg-select{ flex-basis: 28%;}
+.pg-ctn .col-pg-select select{ 
+  background-color: whitesmoke;
+}
+/* สีปุ่ม */
+.pg-ctn .btn-pre{ background-color: cornflowerblue }
+.pg-ctn .btn-nxt{ background-color: cornflowerblue}
+.pg-ctn .btn-fst{ 
+  background-color: lightskyblue; 
+  border-radius: 30px 3px 3px 30px!important;
+  color: var(--font-main-color)!important;
+}
+.pg-ctn .btn-lst{ 
+  background-color: lightskyblue; 
+  border-radius: 3px 30px 30px 3px!important;
+  color: var(--font-main-color)!important;
+}
+
+
+/*******************************************/
+/**************** จอขนาดกลาง ****************/
+/*******************************************/
+@media screen and (min-width: 768px) {
+  .pg-ctn{
+    max-width: 300px;
+  }
+}
+
+
+/*******************************************/
+/**************** จอขนาดใหญ่ ****************/
+/*******************************************/
+@media screen and (min-width: 1000px) {
+  
+}
+

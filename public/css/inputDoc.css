@@ -1,0 +1,123 @@
+:root {
+  --btn-border-color: #888;
+  --input-font-size: 0.9rem;
+  --input-placeholder-size: 0.875rem;
+  --input-line-height: 1.55rem;
+}
+
+label{ 
+  line-height: var(--input-line-height);
+  font-size: var(--input-font-size);
+}
+
+::placeholder {
+  color: #ccc;
+  font-size: var(--input-placeholder-size);
+}
+
+/*** ปุ่ม ***/
+input[type=button],
+input[type=submit],
+button{
+  border: 1px solid var(--btn-border-color);
+}
+input[type=submit]:hover, 
+input[type=button]:hover,
+button:hover{
+  filter: brightness(130%); cursor: pointer; 
+}
+input[type=button]:disabled,
+input[type=submit]:disabled,
+button:disabled{ 
+  color: #ccc!important;
+  /* border: 1px dashed #888!important; */
+  background-color: #eee!important;
+  cursor:not-allowed!important;
+}
+
+
+/***  ช่องกรอก  ***/
+input[type=text],
+input[type=number],
+input[type=date],
+input[type=search],
+input[type=password],
+textarea, 
+select{
+  color: blue!important;
+  border: 1px solid var(--btn-border-color);
+  line-height: var(--input-line-height);
+} 
+/*** Input : hover ***/
+input[type=submit]:hover, 
+input[type=button]:hover,
+button:hover{
+  filter: brightness(115%); cursor: pointer; 
+}
+
+/*** ช่องกรอก:FOCUS ***/
+select:focus,
+textarea:focus,
+input[type=text]:focus,
+input[type=number]:focus,
+input[type=date]:focus,
+input[type=search]:focus,
+input[type=password]:focus {
+  background-color: white;
+  outline: none!important;
+}
+
+/*** ช่องกรอก:DISABLED ***/
+input[type=text]:disabled,
+input[type=submit]:disabled,
+input[type=password]:disabled,
+input[type=search]:disabled,
+input[type=number]:disabled,
+input[type=search]:disabled{ 
+  /* color: #ccc!important; */ /* ไปใช้ของ readonly */
+  background-color: #eee!important;
+  cursor:not-allowed;
+}
+textarea:disabled,
+select:disabled{
+  /* color: #ccc!important; */ /* ไปใช้ของ readonly */
+  background-color: #eee!important;
+  cursor:not-allowed;
+  opacity: 1; /* ค่าของ Browser ทำจางไว้ */
+}
+
+
+/*** สำหรับช่องกรอก : READONLY ***/
+/* select ไม่มี read-only */
+textarea:read-only,
+input[type=text]:read-only,
+input[type=number]:read-only, 
+input[type=date]:read-only,
+input[type=password]:read-only,
+input[type=search]:read-only{
+  color: darkblue!important;
+  background-color: #eee;
+}
+
+/*** radio ***/
+input[type="radio"]{
+  vertical-align: middle; 
+  cursor: pointer;
+  accent-color: blue !important;
+}
+input[type="radio"]:disabled{
+  cursor: not-allowed;
+}
+
+
+/*** โซนการจ่ายเงินและภาษีมูลค่าเพิ่ม ***/
+/* #paymentMethodCtn div input[type="radio"],
+#selectVatCalculatingCtn div input[type="radio"] { 
+  vertical-align: middle; 
+  cursor: pointer;
+  accent-color: blue !important;
+}
+#paymentMethodCtn label,
+#selectVatCalculatingCtn label {
+  vertical-align: middle; 
+} */

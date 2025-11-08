@@ -1,0 +1,89 @@
+
+/****** Toast และ Notify **************************/
+.green {
+  border-top: 3px solid lime;
+  border-bottom: 3px solid lime;
+  background-color: darkgreen;
+  color: white!important;
+  font-weight: bold;
+}
+.yellow {
+  border-top: 3px solid darkgoldenrod;
+  border-bottom: 3px solid darkgoldenrod;
+  background-color: yellow;
+  color:black!important;
+  font-weight: bold;
+}
+.blue {
+  border-top: 3px solid Navy;
+  border-bottom: 3px solid Navy;
+  background-color: DodgerBlue;
+  color: white!important;
+  font-weight: bold;
+}
+.red {
+  border-top: 3px solid red;
+  border-bottom: 3px solid red;
+  background-color: darkred!important;
+  color: white!important;
+  font-weight: bold;
+}
+
+/* ต้องตั้งเวลา 3.0 ให้ตรงกับ  showToast */
+/* @keyframes fadein { from { bottom: 0;opacity: 0;} to {bottom: 90px; opacity: 1;} }
+@keyframes fadeout { from { bottom: 90px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+@-webkit-keyframes fadein { from { bottom: 0;opacity: 0;} to {bottom: 90px; opacity: 1;} }
+@-webkit-keyframes fadeout { from { bottom: 90px; opacity: 1;} to {bottom: 0; opacity: 0;} } */
+
+
+/****** Notify **************************/
+.page-notify {
+  text-align: center;
+  position: absolute;
+  z-index: 999;
+  left: 0;
+  bottom: 90px;
+  width: 100%;
+  padding: 15px 5px;
+  line-height: 1.75rem;
+  animation : none ;
+  visibility : "visible";
+  animation : fadeNotifyIn 0.5s, fadeNotifyOut 0.5s 4s;
+}
+.page-notify p{ margin-bottom: 0; } /* แก้ bootstrap */
+@keyframes fadeNotifyIn { from { bottom: 0;opacity: 0;} to { bottom: 90px; opacity: 1;} }
+@keyframes fadeNotifyOut { from { bottom: 90px; opacity: 1;} to { bottom: 0; opacity: 0;} }
+@-webkit-keyframes fadeNotifyIn { from { bottom: 0; opacity: 0;} to { bottom: 90px; opacity: 1;} }
+@-webkit-keyframes fadeNotifyOut { from { bottom: 90px; opacity: 1;} to {   bottom: 0;    opacity: 0;} }
+
+
+
+/****** Toast **************************/
+.toast{
+  text-align: center;
+  position: absolute;
+  z-index: 999;
+  left: 0;
+  bottom: 90px;
+  width: 100%;
+  padding: 15px 5px;
+  line-height: 1.75rem;
+  animation : none ;
+  visibility : "visible";
+  animation : fadeToastIn 0.5s, fadeToastOut 0.5s 4s;
+}
+@keyframes fadeToastIn { from { bottom: 0;opacity: 0;} to { bottom: 90px; opacity: 1;} }
+@keyframes fadeToastOut { from { bottom: 90px; opacity: 1;} to { bottom: 0; opacity: 0;} }
+@-webkit-keyframes fadeToastIn {
+  from { bottom: 0;    opacity: 0;}
+  to {   bottom: 90px; opacity: 1;}
+}
+@-webkit-keyframes fadeToastOut {
+  from { bottom: 90px; opacity: 1;}
+  to {   bottom: 0;    opacity: 0;}
+}
+
+
+
+.dp-n{ display: none!important;}
+

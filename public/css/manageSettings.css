@@ -1,0 +1,57 @@
+main{
+  display: grid;
+  grid-template-columns: 100%;
+  padding: 7px 5px;
+  min-height: 85vh; 
+  align-content: start; 
+}
+
+
+/************ Style the tab /*************/
+.tab {
+  overflow: hidden;
+  display: flex;
+}
+.tab .tabMenu {
+  color: #333;
+  background-color: transparent ;
+  border-left: 1px solid #666;
+  border-top: 1px solid #666;  
+  border-right: 1px solid #666;
+  border-bottom: none;
+  
+  padding: 5px 7px;
+  border-radius: 5px 5px 0 0;
+  transition: 0.1s;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.tab .tabMenu.bg-tab1{
+  background-color: cornflowerblue;
+  color: white;
+}
+.tab .tabMenu:hover { filter: brightness(120%); }
+.tabcontent {
+  display: none;
+  padding: 0.75rem;
+  border: 1px solid #666;
+}
+
+
+
+
+/**************** จอขนาดกลาง ****************/
+@media screen and (min-width: 768px) {
+  main{ padding: 15px 10px; }
+}
+
+
+/**************** จอขนาดใหญ่ ****************/
+@media screen and (min-width: 1000px) { 
+  main{ padding: 30px 20px; }
+}
+
+
+
+
+
