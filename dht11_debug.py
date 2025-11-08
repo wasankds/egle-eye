@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Simple diagnostic for DHT11 using pigpio.
 Triggers the sensor and logs GPIO edge timings so you can see if the sensor responds.
@@ -9,6 +10,7 @@ Usage on Pi (ensure pigpiod is running):
 This will print a short sequence of edge events (level and microsecond ticks) after a trigger.
 If you see no edges after the trigger, the sensor didn't respond.
 """
+
 import time
 import pigpio
 import sys
