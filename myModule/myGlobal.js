@@ -10,6 +10,7 @@ global.SYS_VERSION = '1.1.1'
 global.SYS_OWNER_FULLNAME = 'นายวสันต์ คุณดิลกเศวต'
 global.SYS_OWNER_EMAIL = 'wasankds@gmail.com'
 global.SYS_OWNER_PHONE = '081-459-8343'
+global.PY_FILE_DHT11 =  process.env.PY_FILE_DHT11
 // Database
 global.dbName = process.env.DB_NAME
 global.dbColl_settings = 'settings'

@@ -25,9 +25,11 @@ const app = express();
 const server = createServer(app)
 const io = new Server(server)
 global.io = io;
-const filePy = process.env.IS_PRODUCTION == 1 ? 'dht11_reader_production.py' : 'dht11_random.py';
+
+// keep reference to spawned python process so we can stop it on shutdown
+
 // ตัวแปรเก็บข้อมูลล่าสุด
-let latestData = {
+const latestData = {
   temperature: 0,
   humidity: 0,
   timestamp: 0
@@ -68,16 +70,18 @@ server.listen(PORT, () => {
 
 //=====================================
 // -  เริ่มต้น Python sensor process
+let sensorProcess = null;
 function startSensor() {
   // console.log('🚀 Starting Python sensor...');
 
   // เริ่มต้น process ของ Python sensor
   // - python เหมือนพิมพ์ใน command line
-  // - [filePy] คือ arguments ส่งให้ python
+  // - [global.PY_FILE_DHT11] คือ arguments ส่งให้ python
   // *** รวมกันได้ "python sensor.py" ใน command line
   // - ซึ่ง python จะอ่านข้อมูลทุก 3 วินาทีอยู่แล้ว 
   // 
-  const sensorProcess = spawn('python', [filePy]);
+  // assign to outer-scope variable so other functions can access it
+  sensorProcess = spawn('python', [global.PY_FILE_DHT11]);
 
   //=== รับข้อมูลจาก stdout - python print() จะส่งมาทางนี้
   // stdout ย่อมาจาก Standard Output (ช่องทางส่งข้อมูลมาตรฐาน)
@@ -103,6 +107,8 @@ function startSensor() {
   // ตรวจสอบว่า process ปิดตัวลงหรือไม่
   sensorProcess.on('close', (code) => {
     console.log(`❌ Sensor process closed: ${code}`);
+    // clear reference when process exits
+    sensorProcess = null;
   });
 }
 
@@ -112,6 +118,27 @@ process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 function gracefulShutdown() {
   console.log('🛑 Shutting down gracefully...');
-  sensorManager.stop();
-  server.close();
+  // stop python sensor process if running
+  try {
+    if (sensorProcess) {
+      if (!sensorProcess.killed) {
+        sensorProcess.kill();
+        // console.log('🧵 Sent kill signal to sensor process');
+      }
+    }
+  } catch (err) {
+    // console.log('⚠️ Error while stopping sensor process:', err);
+  }
+
+  // close HTTP server then exit
+  server.close(() => {
+    // console.log('HTTP server closed');
+    process.exit(0);
+  });
+
+  // fallback: force exit if close hangs
+  setTimeout(() => {
+    // console.log('Forcing shutdown');
+    process.exit(1);
+  }, 3000);
 }

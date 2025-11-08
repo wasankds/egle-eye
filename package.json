@@ -28,8 +28,7 @@
     "kill-mac": "pkill -9 node",
     "kill-linux": "pkill -9 node",
     "node-v": "node --version",
-    "git1": "git add . && git commit -m \"%date% %time%\" && git push origin main",
-    "use-nvm": "nvm use 22.16.0"
+    "git1": "git add . && git commit -m \"%date% %time%\" && git push origin main"
   },
   "dependencies": {
     "axios": "^1.8.4",
