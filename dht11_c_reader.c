@@ -29,8 +29,7 @@ void alertFunc(int gpio, int level, uint32_t tick)
   events++;
 }
 
-int main()
-{
+int main(){
   if (gpioInitialise() < 0)
   {
     fprintf(stderr, "pigpio init failed\n");
