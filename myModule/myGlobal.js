@@ -99,8 +99,8 @@ global.NAV_USERS = [ // ผู้ใช้งาน
   {
     path: '/manage/users',
     title: PAGE_MANAGE_USERS,
-    menuColor : 'menu-silver',
-    icon: 'fas fa-users',
+    menuColor : 'menu-silver',    
+    icon: 'fas fa-users-cog',    // // icon: 'fas fa-users',
     userAuthorities: ['O','A'],
     separator: false
   },

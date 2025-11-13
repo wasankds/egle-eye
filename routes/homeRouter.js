@@ -42,8 +42,7 @@ router.get(PATH_TERM, mainAuth.isAuth,  async (req, res) => {
       title: global.PAGE_TERM ,
       time: myDateTime.getDate(),
       msg: req.flash('msg'),
-      user: myUsers.getSessionData(req),
-      // settings : await myModule.getSettings(),
+      user : await lowDb.getSessionData(req) ,
     })
     res.send(html)
   } catch (error) {

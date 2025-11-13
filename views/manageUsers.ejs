@@ -76,26 +76,26 @@
 
           <!-- ล้างฟอร์ม -->
           <button class="btn btn-sm bg-clear" id="btnClearForm" title="ล้างฟอร์ม">
-            <i class="fas fa-broom"></i>
-            <!-- ล้างฟอร์ม -->
+            <i class="fas fa-broom pd-r-s"></i>ล้างฟอร์ม
           </button>
 
           <!-- สร้างใหม่ ให้ล้างฟอร์มไปเลย -->
           <button class="btn btn-sm bg-new" id="btnCreateNew" title="สร้างผู้ใช้ใหม่ทันที หลังล็อกอินต้องเปลี่ยนรหัสผ่านทันที">
+            <i class="fas fa-user-plus pd-r-s"></i>เพิ่มผู้ใช้ใหม่
             <!-- <i class="fas fa-user-shield"></i> สร้างแอดมิน -->
-            <i class="fas fa-user-plus"></i>
             <!-- <i class="fas fa-user-friends"></i> เพิ่มสมาชิก -->
             <!-- <i class="fas fa-user-edit"></i> ลงทะเบียนผู้ใช้ -->
             <!-- สร้างใหม่ -->
           </button>
 
-          <button class="btn btn-sm bg-print" title="พิมพ์"
-                  onclick="event.preventDefault();printUsersJs(event)">
+          <!-- 
+          <button class="btn btn-sm bg-print" title="พิมพ์" onclick="event.preventDefault();printUsersJs(event)">
             <i class="fas fa-print"></i>
-          </button>
+          </button> 
+          -->
 
           <button type="submit" class="btn btn-sm bg-save" title="บันทึก">
-            <i class="fas fa-save"></i>
+            <i class="fas fa-save pd-r-s"></i>บันทึก
           </button>
         </div>
 
@@ -403,7 +403,6 @@
     var PATH_MAIN = `<%= PATH_MAIN %>` ;     
     var PATH_NEW = `<%= PATH_NEW %>` ;
     var PREFIX = '<%= PREFIX %>' ; 
-    // var PATH_PRINT = `<= PATH_PRINT >` ;    
     var USER_AUTHORITIES = JSON.parse(`<%- USER_AUTHORITIES_JSON %>`) ;
   </script>
   <% if(!IS_PRODUCTION) { %>

@@ -11,64 +11,19 @@
       "userStatus": "active",
       "userPassword": "$2b$12$GNEpYJq5s3spnAazy/IK7uVJrqSZ6TdWwP1eP9MOfjRXtWS3a2WPm",
       "dateTimeCanDelete": "2025-12-13 15:37"
-    },
-    {
-      "userId": 101,
-      "userEmail": "user_101@gmail.com",
-      "username": "user_101",
-      "userPrefix": "",
-      "userFirstname": "user_101",
-      "userLastname": "",
-      "userAuthority": "U",
-      "userStatus": "active",
-      "userPassword": "$2b$12$3qXj4NabBVkZE26gIUqPiO1ahmS2rLBbKmk5hZVr0GyBRJ/zDaCxy",
-      "dateTimeCanDelete": "2026-01-12 19:13"
-    },
-    {
-      "userId": 102,
-      "userEmail": "user_102@gmail.com",
-      "username": "user_102",
-      "userPrefix": "",
-      "userFirstname": "user_102",
-      "userLastname": "",
-      "userAuthority": "U",
-      "userStatus": "active",
-      "userPassword": "$2b$12$nrvsHOQfVSDro6yj1/hTdefUACTK4LgBxGZdPnb5IanCNgrjhyXEy",
-      "dateTimeCanDelete": "2026-01-12 19:13"
-    },
-    {
-      "userId": 103,
-      "userEmail": "user_103@gmail.com",
-      "username": "user_103",
-      "userPrefix": "",
-      "userFirstname": "user_103",
-      "userLastname": "",
-      "userAuthority": "U",
-      "userStatus": "active",
-      "userPassword": "$2b$12$Gts.F1Q6LNw/.8ldbxdZgeKVrDwlyRY9px39rCtZLuyIBYihR3mty",
-      "dateTimeCanDelete": "2026-01-12 19:13"
     }
   ],
   "sessions": [
     {
-      "sid": "L6uoI0x6F-7CAjn1qO23ghHbbxfLNP19",
+      "sid": "M5erOSLevrM7tSzW5_7qhOH0Wd7hVGn8",
       "session": {
         "cookie": {
           "originalMaxAge": 2592000000,
-          "expires": "2025-12-13T12:12:37.696Z",
+          "expires": "2025-12-13T12:19:33.283Z",
           "httpOnly": false,
           "path": "/"
         },
-        "flash": {},
-        "isAuth": true,
-        "userId": 100,
-        "userAuthority": "O",
-        "username": "wasankds",
-        "userEmail": "wasankds@gmail.com",
-        "userPrefix": "Mr",
-        "userFirstname": "Wasan",
-        "userLastname": "Khunnadiloksawet",
-        "userFullname": "Mr Wasan Khunnadiloksawet"
+        "flash": {}
       }
     }
   ],
