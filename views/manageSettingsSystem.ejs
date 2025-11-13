@@ -67,25 +67,27 @@
 
         <!-- EMAIL_WHOSEND -->
         <div class="input-group mg-t-l">
-          <label title="EMAIL_WHOSEND">ชื่อสำหรับส่งอีเมล</label> 
+          <label title="EMAIL_WHOSEND">
+            <i class="fas fa-envelope"></i> ชื่อสำหรับส่งอีเมล
+          </label> 
           <input class="pd-l-m mg-t-m" type="email"
                 value="<%= settingsSystem?.EMAIL_WHOSEND ?? '' %>"
                 id="EMAIL_WHOSEND" name="EMAIL_WHOSEND" 
-                required placeholder="เช่น your-email@gmail.com">
+                placeholder="เช่น your-email@gmail.com">
         </div>
 
-        <!-- EMAIL_PASS -->
+        <!-- EMAIL_APP_PASSWORD -->
         <div class="input-group mg-t-xl">
-          <label class="lh-xs" title="EMAIL_PASS">
+          <label class="lh-xs" title="EMAIL_APP_PASSWORD">
+            <i class="fas fa-key"></i>
             <span>รหัสส่งอีเมลสำหรับแอปพลิเคชัน </span><br>
             <span class="fs-s fc-gray">(บัญชี GMail/Google Workspace เท่านั้น)</span>
           </label> 
           <input class="pd-l-m mg-t-m" type="text" minlength="19" 
                 title="รหัสผ่านสำหรับแอปพลิเคชัน (Application Password) ของบัญชี GMail/Google Workspace"
-                value="<%= settingsSystem?.EMAIL_PASS ?? '' %>"
-                id="EMAIL_PASS" name="EMAIL_PASS" 
-                required 
-                pattern="[0-9a-zA-Z]{4}\s[0-9a-zA-Z]{4}\s[0-9a-zA-Z]{4}\s[0-9a-zA-Z]{4}"
+                value="<%= settingsSystem?.EMAIL_APP_PASSWORD ?? '' %>"
+                id="EMAIL_APP_PASSWORD" name="EMAIL_APP_PASSWORD" 
+                pattern="<%= global.EMAIL_APP_PASSWORD_STRING %>"
                 placeholder="เช่น xxxx xxxx xxxx xxxx">
         </div>
 
@@ -98,15 +100,42 @@
 
         <!-- TELEGRAM_BOT_TOKEN -->
         <div class="input-group mg-t-l">
-          <label title="TELEGRAM_BOT_TOKEN">* โทเคนบ็อตส่งข้อความของเทเลแกรม</label> 
-          <input class="pd-l-m" type="text" 
-                required
+          <label title="TELEGRAM_BOT_TOKEN">
+            <i class="fab fa-telegram-plane"></i>
+            โทเคนบ็อตส่งข้อความของเทเลแกรม
+          </label> 
+          <input class="pd-l-m" type="text"                
                 name="TELEGRAM_BOT_TOKEN" id="TELEGRAM_BOT_TOKEN" 
-                pattern="<%= global.TELEGRAM_BOT_TOKEN_PATTERN %>"
+                pattern="<%= global.TELEGRAM_BOT_TOKEN_PATTERN_STRING %>"
                 title="<%= global.TELEGRAM_BOT_TOKEN_DESCRIPTION %>"
                 value="<%= settingsSystem?.TELEGRAM_BOT_TOKEN ?? '' %>"
                 placeholder="รูปแบบ: 1234567890:AAH...">
-        </div>       
+        </div>  
+
+        <!-- TELEGRAM_GROUP_CHAT_ID -->
+         <div class="input-group mg-t-l">
+          <label class="pd-r-s al-l" title="ไอดีกลุ่มเทเลแกรม">
+            <i class="fab fa-telegram-plane"></i> ไอดีกลุ่มเทเลแกรม
+          </label>
+          <input class="pd-l-m al-l" type="number" 
+                 placeholder="Telegram Group Chat ID เช่น -123456789 "
+                 title="ไอดีกลุ่ม Telegram เช่น -123456789"
+                 name="TELEGRAM_GROUP_CHAT_ID" 
+                 pattern="^-?[0-9]{9,}$" 
+                 value="<%= settingsSystem?.TELEGRAM_GROUP_CHAT_ID ?? '' %>">
+        </div>
+
+        <!-- TELEGRAM_BOT_NOTE -->
+        <div class="input-group mg-t-l">
+          <label title="TELEGRAM_BOT_NOTE">
+            <i class="fas fa-book"></i> โน๊ต
+          </label> 
+          <textarea class="pd-l-m" rows="3"
+                name="TELEGRAM_BOT_NOTE" 
+                id="TELEGRAM_BOT_NOTE"                 
+                style="resize: vertical;"
+                ><%= settingsSystem?.TELEGRAM_BOT_NOTE ?? '' %></textarea>
+        </div>  
 
 
         <!-- Buttons/Save -->

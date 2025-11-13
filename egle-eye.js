@@ -21,9 +21,9 @@ global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
 global.myModuleFolder = global.IS_PRODUCTION ? 'myModule-min' : 'myModule'
 const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
-// import { LowdbSessionStore } from './myModule/LowDB.js';
+// import { LowDbSessionStore } from './myModule/LowDB.js';
 // import { EncryptedJSONFile } from './myModule/Crypto.js';
-const LowdbSessionStore = await import(`./${myModuleFolder}/LowDB.js`).then(mod => mod.LowdbSessionStore);
+const LowDbSessionStore = await import(`./${myModuleFolder}/LowDB.js`).then(mod => mod.LowDbSessionStore);
 const EncryptedJSONFile = await import(`./${myModuleFolder}/Crypto.js`).then(mod => mod.EncryptedJSONFile);
 await import(`./${myModuleFolder}/myGlobal.js`)
 //===
@@ -61,7 +61,7 @@ app.use(session({
   },
   resave: false, // ต้องเป็น false เพื่อป้องกันการบันทึก session ซ้ำๆ
   saveUninitialized: true, // ต้องเป็น true เพื่อให้สามารถใช้ flash ได้
-  store: new LowdbSessionStore(db)
+  store: new LowDbSessionStore(db)
 
 }))
 app.set('view engine', 'ejs')
@@ -72,6 +72,10 @@ app.use(express.static(global.folderPublic))
 app.use((await import(`./${routesFolder}/startAppRouter.js`)).default) 
 app.use((await import(`./${routesFolder}/homeRouter.js`)).default) 
 app.use((await import(`./${routesFolder}/loginRouter.js`)).default) 
+app.use((await import(`./${routesFolder}/manageSettingsRouter.js`)).default) 
+app.use((await import(`./${routesFolder}/manageSettingsSystemRouter.js`)).default) 
+app.use((await import(`./${routesFolder}/manageSessionsRouter.js`)).default) 
+app.use((await import(`./${routesFolder}/manageUsersRouter.js`)).default) 
 //=== socket.io เชื่อมต่อกับ client
 io.on('connection', (socket) => {
   console.log('🔗 New client connected:', socket.id);

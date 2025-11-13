@@ -4,12 +4,10 @@ const router = express.Router()
 import mainAuth from "../authorize/mainAuth.js" 
 const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
-const myUsers = await import(`../${global.myModuleFolder}/myUsers.js`)
+const lowDb = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/'
-const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_TERM = '/term-and-conditions'
-// const PATH_API_DATA = '/api/data'
-// const LowdbSessionStore = await import(`../${global.myModuleFolder}/LowDB.js`).then(mod => mod.LowdbSessionStore);
+const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 
 //=============================================
 // 
@@ -22,7 +20,7 @@ router.get(PATH_MAIN, mainAuth.isAuth,  async (req, res) => {
       title: global.PAGE_HOME ,
       time : myDateTime.getDate(),
       msg: req.flash('msg'),
-      user : await myUsers.getSessionData(req) ,
+      user : await lowDb.getSessionData(req) ,
       PREFIX,
       PATH_TERM ,
     })

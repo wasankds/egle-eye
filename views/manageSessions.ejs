@@ -28,8 +28,9 @@
 
 <body>
   
+  
   <%- include('partials/nav.ejs') %>
-  <%- include('partials/notify.ejs', {msg:msg}) %> 
+  <%- include('partials/notify.ejs') %> 
 
   <header class="header-title bg-forestgreen">
     <p class="al-c fc-white">
@@ -134,7 +135,7 @@
             <td class="al-c">
               <form class="" action="<%= PATH_DELETE %>" method="post">
                 <!-- hidden-loop -->
-                <input type="hidden" name="_id" value="<%= obj._id %>">
+                <input type="hidden" name="sid" value="<%= obj.sid %>">
                 <!-- hidden -->
                 <input type="hidden" name="rpp" value="<%= rpp %>">
                 <input type="hidden" name="page" value="<%= page %>">

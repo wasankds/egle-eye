@@ -27,20 +27,44 @@
                 required 
                 onchange="toActive(this)"
                 name="AUTO_BACKUP_DATABASE" id="AUTO_BACKUP_DATABASE">
-          <option value="0" <%= settings?.AUTO_BACKUP_DATABASE === '0' ? 'selected' : '' %>>ปิด</option>
-          <option value="1" <%= settings?.AUTO_BACKUP_DATABASE === '1' ? 'selected' : '' %>>เปิด</option>
+          <option value="0" <%= settings?.AUTO_BACKUP_DATABASE === 0 ? 'selected' : '' %>>ปิด</option>
+          <option value="1" <%= settings?.AUTO_BACKUP_DATABASE === 1 ? 'selected' : '' %>>เปิด</option>
         </select> 
-        <!-- 
-        <div class="col-sm-4 pd-l-l pd-r-s">
-          <label title="AUTO_BACKUP_TIME">เวลา</label> 
-          <select class="al-c pd-l-xl pd-r-xl" 
-                  required 
-                  name="AUTO_BACKUP_TIME" id="AUTO_BACKUP_TIME">
-            <option value="22:00" <= settings?.AUTO_BACKUP_TIME === '22:00' ? 'selected' : '' >>22:00</option>
-            <option value="23:00" <= settings?.AUTO_BACKUP_TIME === '23:00' ? 'selected' : '' >>23:00</option>
-          </select> 
-        </div> 
-        -->
+      </div>
+    </div>
+
+
+    <!-- แจ้งเตือนทาง telegram เมื่อ ล็อกอิน -->
+    <%
+      const color_loginNotifyTelegram = settings?.LOGIN_NOTIFY_TELEGRAM === 1 ? 'bg-green' : 'bg-red';
+    %>
+    <div class="input-group mg-t-l">
+      <label title="LOGIN_NOTIFY_TELEGRAM">* ส่งเทเลแกรมแจ้งเตือน เมื่อล็อกอิน <span class="fc-gray">(ต้องตั้งค่าระบบด้วย) </span></label> 
+      <div class="flex-row">
+        <select class="col-sm-1 al-c fc-white <%= color_loginNotifyTelegram %>" 
+                required 
+                onchange="toActive(this)"
+                name="LOGIN_NOTIFY_TELEGRAM" id="LOGIN_NOTIFY_TELEGRAM">
+          <option value="0" <%= settings?.LOGIN_NOTIFY_TELEGRAM == 0 ? 'selected' : '' %>>ปิด</option>
+          <option value="1" <%= settings?.LOGIN_NOTIFY_TELEGRAM == 1 ? 'selected' : '' %>>เปิด</option>
+        </select> 
+      </div>
+    </div>
+
+    <!-- แจ้งเตือนทางอิเมล์ เมื่อ ล็อกอิน -->
+    <%
+      const color_loginNotifyEmail = settings?.LOGIN_NOTIFY_EMAIL === 1 ? 'bg-green' : 'bg-red';
+    %>
+    <div class="input-group mg-t-l">
+      <label title="LOGIN_NOTIFY_EMAIL">* ส่งอิเมล์แจ้งเตือน เมื่อล็อกอิน <span class="fc-gray">(ต้องตั้งค่าระบบด้วย) </span></label> 
+      <div class="flex-row">
+        <select class="col-sm-1 al-c fc-white <%= color_loginNotifyEmail %>" 
+                required 
+                onchange="toActive(this)"
+                name="LOGIN_NOTIFY_EMAIL" id="LOGIN_NOTIFY_EMAIL">
+          <option value="0" <%= settings?.LOGIN_NOTIFY_EMAIL === 0 ? 'selected' : '' %>>ปิด</option>
+          <option value="1" <%= settings?.LOGIN_NOTIFY_EMAIL === 1 ? 'selected' : '' %>>เปิด</option>
+        </select> 
       </div>
     </div>
    

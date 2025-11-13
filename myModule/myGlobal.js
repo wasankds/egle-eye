@@ -58,7 +58,9 @@ global.PASSWORD_PATTERN_REGEX = new RegExp(global.PASSWORD_PATTERN_STRING)
 global.PASSWORD_DESCRIPTION = "รหัสผ่านอย่างน้อย 6 ตัวอักษร ต้องมีตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และอักขระพิเศษ อย่างน้อยอย่างละ 1 ตัว เช่น ! @ # $ % ^ & _ -"
 global.EMAIL_PATTERN_STRING = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 global.EMAIL_PATTERN_REGEX = new RegExp(global.EMAIL_PATTERN_STRING)
-
+global.EMAIL_APP_PASSWORD_STRING = "[0-9a-zA-Z]{4}\\s[0-9a-zA-Z]{4}\\s[0-9a-zA-Z]{4}\\s[0-9a-zA-Z]{4}"
+global.EMAIL_APP_PASSWORD_REGEX = new RegExp(global.EMAIL_APP_PASSWORD_STRING)
+global.EMAIL_APP_PASSWORD_DESCRIPTION = "รหัสผ่านแอปพลิเคชันอีเมล์ 16 ตัวอักษร แบ่งเป็น 4 กลุ่ม กลุ่มละ 4 ตัวอักษร คั่นด้วยช่องว่าง เช่น xxxx xxxx xxxx xxxx"
 global.PHONE_PATTERN_STRING = "^[0-9]{9,10}$"
 global.PHONE_PATTERN_REGEX = new RegExp(global.PHONE_PATTERN_STRING)
 global.PHONE_DESCRIPTION = "เบอร์โทรศัพท์ 9-10 หลัก"
@@ -77,6 +79,7 @@ global.folderForms = pathToFolder('views','forms')
 global.folderData = pathToFolder('data')
 global.file404 = pathToFolder('public','static', '404.html')
 global.fileDb = pathToFolder('data', 'db.json')
+global.folderBackup = pathToFolder('backup')
 
 
 

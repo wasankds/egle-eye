@@ -3,7 +3,7 @@
 import session from 'express-session';
 
 // Custom lowdb session store
-export class LowdbSessionStore extends session.Store {
+export class LowDbSessionStore extends session.Store {
 
   // 
   constructor(db) {
@@ -54,6 +54,30 @@ export class LowdbSessionStore extends session.Store {
  
 }
 
+
+// จับข้อมูล User จากฐาน session
+export async function getSessionData(req) {
+  // if (!global.db) {
+  //   // กรณี db ยังไม่พร้อม
+  //   return Promise.resolve({
+  //     isAuth: false,
+  //     userId: null,
+  //     userAuthority: null,
+  //     username: null,
+  //     userEmail: null,
+  //     userFullname: null,
+  //   });
+  // }
+  const sessionStore = new LowDbSessionStore(global.db);
+  return sessionStore.getSessionById(req.sessionID).then(sessionData => ({
+    isAuth: sessionData?.isAuth || false,
+    userId: sessionData?.userId || null,
+    userAuthority: sessionData?.userAuthority || null,
+    username: sessionData?.username || null,
+    userEmail: sessionData?.userEmail || null,
+    userFullname: sessionData?.userFullname || null,
+  }));
+}
 
 
 

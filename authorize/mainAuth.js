@@ -1,23 +1,4 @@
-// import fs from 'fs';
-// import path from 'path';
-// import * as myDateTime from "../mymodule/myDateTime.js"
-// import * as myUsers from "../mymodule/myUsers.js"
-// import { UserManager } from '../myModule/UserManager.js';
-// import { LowdbSessionStore } from '../myModule/LowDB.js';
-// import { EncryptedJSONFile } from '../myModule/Crypto.js';
-// import path from 'path';
-const LowdbSessionStore = await import(`../${global.myModuleFolder}/LowDB.js`).then(mod => mod.LowdbSessionStore);
-// const EncryptedJSONFile = await import(`../${global.myModuleFolder}/Crypto.js`).then(mod => mod.EncryptedJSONFile);
-// const UserManager = await import(`../${global.myModuleFolder}/userManager.js`).then(mod => mod.UserManager);
-
-// let userManager;
-// if(global.DB_ENCRYPTED == 1) {
-//   const adapter = new EncryptedJSONFile(path.join(process.cwd(), 'data', 'db.json'));
-//   const db = global.db || new Low(adapter, { users: [], sessions: [] });
-//   userManager = new UserManager(db);
-// } else {
-//   userManager = new UserManager(global.db);
-// }
+const { LowDbSessionStore } = await import(`../${global.myModuleFolder}/LowDB.js`) ; 
 
 const auth = {
 
@@ -26,8 +7,9 @@ const auth = {
   // - ถ้ายังให้ไปที่หน้า Login
   isAuth : async (req, res, next) => {
     try {
-      const store = new LowdbSessionStore(global.db);
+      const store = new LowDbSessionStore(global.db);
       const sessionData = await store.getSessionById(req.sessionID);
+      // console.log("auth.isAuth ===>", req.session.isAuth)
       if (sessionData && req.session.isAuth) {
         next();
       } else {
@@ -45,7 +27,7 @@ const auth = {
   //=== ถ้า Login แล้ว ถ้าจะมาที่หน้า login อีก -> ให้ไปที่หน้าแรกเลย
   isLogged: async (req, res, next) => {
     try {
-      const store = new LowdbSessionStore(global.db);
+      const store = new LowDbSessionStore(global.db);
       const sessionData = await store.getSessionById(req.sessionID);
       if (sessionData && req.session.isAuth) {
         req.flash('msg', { class: "blue", text: 'คุณ Login เรียบร้อยแล้ว', });
@@ -59,72 +41,44 @@ const auth = {
     }
   },
   
-  // //=================================
-  // // Login ในฐานะ Owner หรือไม่
-  // isO : async (req, res, next) => {
-  //   const userAuthority = req.session.userAuthority
-  //   const authorizeArr = ["O"]
-  //   if (userAuthority && authorizeArr.includes(userAuthority)) {
-  //     next()
-  //   } else {
-  //     req.flash('msg', { class: "red",text: 'เฉพาะผู้ใช้งานระดับ O เท่านั้น'});
-  //     res.redirect("/")
-  //   }
-  // },
+  //=================================
+  // Login ในฐานะ Owner หรือไม่
+  isO : async (req, res, next) => {
+    try {
+      const store = new LowDbSessionStore(global.db);
+      const sessionData = await store.getSessionById(req.sessionID);
+      const authorizeArr = ["O"];
+      if (sessionData && sessionData.isAuth && authorizeArr.includes(sessionData.userAuthority)) {
+        next();
+      } else {
+        req.flash('msg', { class: "red", text: 'เฉพาะผู้ใช้งานระดับ O เท่านั้น' });
+        res.redirect("/");
+      }
+    } catch (err) {
+      console.error("Error reading db.json:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 
-
-
-  // // //=================================
-  // // // - ไม่ได้ใช้แล้ว
-  // // isOS : async (req, res, next) => {
-  // //   const userAuthority = req.session.userAuthority
-  // //   const authorizeArr = ["O", "S"]
-  // //   if (userAuthority && authorizeArr.includes(userAuthority)) {
-  // //     next()
-  // //   } else {
-  // //     req.flash('msg', { class: "red",text: 'เฉพาะผู้ใช้งานระดับ O/S เท่านั้น'});
-  // //     res.redirect("/")
-  // //   }
-  // // },
-
-  // //=================================
-  // // Login ในฐานะ Admin/Owner หรือไม่
-  // //
-  // isOA: async (req, res, next) => {
-  //   const userAuthority = req.session.userAuthority
-  //   const authorizeArr = ["O","A"]
-  //   if (userAuthority && authorizeArr.includes(userAuthority)) {
-  //     next()
-  //   } else {
-  //     req.flash('msg', { class: "red",text: 'เฉพาะผู้ใช้งานระดับ O/A เท่านั้น'})
-  //     res.redirect("/")
-  //   }
-  // },
-
-  // logger: async (req, res, next) => {
-  //   // const url_parts = url.parse(req.url, true)
-  //   const host = req.get('host')
-  //   const path = req.originalUrl
-  //   const nowLocal = myDateTime.nowLocal()
-  //   const client = new MongoClient(dbUrl);
-  //   const main = async () => {
-  //     await client.connect();
-  //     const db = client.db(dbName);
-  //     const collection = db.collection(dbColl_visits);
-  //     await collection.insertOne({
-  //       host: host,
-  //       path: path,
-  //       nowLocal: nowLocal,
-  //     });
-  //   };
-  //   main().then(() => {
-  //           next()
-  //         }).catch((err) => {
-  //           next(err)
-  //         }).finally(() => {
-  //           client.close()
-  //         })
-  // },
+  //=================================
+  // Login ในฐานะ Admin/Owner หรือไม่
+  //
+  isOA: async (req, res, next) => {
+    try {
+      const store = new LowDbSessionStore(global.db);
+      const sessionData = await store.getSessionById(req.sessionID);
+      const authorizeArr = ["O", "A"];
+      if (sessionData && sessionData.isAuth && authorizeArr.includes(sessionData.userAuthority)) {
+        next();
+      } else {
+        req.flash('msg', { class: "red", text: 'เฉพาะผู้ใช้งานระดับ O/A เท่านั้น' });
+        res.redirect("/");
+      }
+    } catch (err) {
+      console.error("Error reading db.json:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 
 }
 

@@ -59,7 +59,7 @@ document.querySelectorAll('.remove-backup-form').forEach( form => {
 
     Swal.fire({
       title: 'ยืนยันการลบ',
-      text: "การลบโฟลเดอร์สำรองข้อมูลจะไม่สามารถกู้คืนได้!",
+      text: "การลบไฟล์สำรองข้อมูลจะไม่สามารถกู้คืนได้!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -84,7 +84,7 @@ document.querySelectorAll('.download-backup-form').forEach( form => {
 
     Swal.fire({
       title: 'ยืนยันการดาวน์โหลด',
-      text: "คุณต้องการดาวน์โหลดโฟลเดอร์สำรองข้อมูลนี้หรือไม่?",
+      text: "คุณต้องการดาวน์โหลดไฟล์สำรองข้อมูลนี้หรือไม่?",
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

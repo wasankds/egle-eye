@@ -31,6 +31,7 @@
     "git1": "git add . && git commit -m \"%date% %time%\" && git push origin main"
   },
   "dependencies": {
+    "archiver": "^7.0.1",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "connect-flash": "^0.1.1",

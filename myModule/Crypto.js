@@ -2,12 +2,13 @@
 // import { JSONFile } from 'lowdb/node';
 import CryptoJS from 'crypto-js';
 import fs from 'fs';
-// ควรเก็บคีย์นี้ในที่ปลอดภัย เช่น ตัวแปรสภาพแวดล้อม
-const secretKey = process.env.DB_ENCRYPTED_KEY; 
+const secretKey = process.env.DB_ENCRYPTED_KEY;
+
 export class EncryptedJSONFile {
   constructor(filename) {
     this.filename = filename;
   }
+
   async read() {
     try {
       const encrypted = await fs.promises.readFile(this.filename, 'utf-8');
@@ -17,11 +18,13 @@ export class EncryptedJSONFile {
       return null;
     }
   }
+
   async write(obj) {
     const json = JSON.stringify(obj);
     const encrypted = CryptoJS.AES.encrypt(json, secretKey).toString();
     await fs.promises.writeFile(this.filename, encrypted, 'utf-8');
   }
+  
 }
 
 // // ใช้งานกับ lowdb

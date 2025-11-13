@@ -5,6 +5,7 @@
 // const userManager = new UserManager(global.db);
 // await userManager.add({ userId: 1, username: 'test', ... });
 export class UserManager {
+  
   constructor(db) {
     this.db = db;
     if (!this.db.data) this.db.data = {};

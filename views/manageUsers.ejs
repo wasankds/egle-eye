@@ -104,28 +104,25 @@
 
           <!-- Row1 -->
           <div class="flex-row">
-
-            <div class="col-f flex-row">
-              <!--  -->
-              <div class="col-sm-4 input-group">
-                <label class="pd-r-s al-l lh-label" title="User ID">
-                  <i class="fas fa-id-badge mg-r-m"></i>รหัสผู้ใช้
-                </label>
-                <input class="al-c" type="text" id="userId" name="userId" 
-                       placeholder="User ID" readonly
-                       value="<%= isItem ? item.userId : '' %>">
-              </div>
-  
-              <!--  -->
-              <div class="col-sm-6 input-group">
-                <label class="pd-r-s al-l lh-label" title="_id">
-                  <i class="fas fa-id-card mg-r-m"></i><span>_id</span>
-                </label>
-                <input class="al-c" type="text" id="_id" name="_id" 
-                       placeholder="_id" readonly
-                       value="<%= isItem ? item._id : '' %>">
-              </div>
+            <div class="col-sm-3 input-group">
+              <label class="pd-r-s al-l lh-label" title="User ID">
+                <i class="fas fa-id-badge mg-r-m"></i>รหัสผู้ใช้
+              </label>
+              <input class="al-c" type="text" id="userId" name="userId" 
+                      placeholder="User ID" readonly
+                      value="<%= isItem ? item.userId : '' %>">
             </div>
+
+            <div class="col-sm-7 input-group">
+              <label class="pd-r-s al-l lh-label" title="Email">
+                <i class="fas fa-envelope"></i> อิเมล์ *
+              </label>
+              <input type="email" class="al-l pd-l-m" 
+                      required
+                      id="userEmail" name="userEmail" placeholder="Email"
+                      value="<%= isItem ? item.userEmail : '' %>">
+            </div>
+  
 
           </div> <!-- Row1 -->
 
@@ -138,7 +135,7 @@
               <input class="pd-l-m al-l" type="text" 
                     id="username" name="username" placeholder="Username" 
                     required 
-                    pattern="<%= global.USERNAME_PATTERN %>"
+                    pattern="<%= global.USERNAME_PATTERN_STRING %>"
                     title="<%= global.USERNAME_DESCRIPTION %>"
                     value="<%= isItem ? item.username : '' %>">
             </div>          
@@ -147,10 +144,10 @@
               <label class="pd-r-s al-l" title="Active Status">
                 <i class="fas fa-user-check"></i> สถานะ
               </label>
-              <select class="al-c" name="userIsActive" id="userIsActive">
+              <select class="al-c" name="userStatus" id="userStatus">
                 <% if( isItem ){ %>
                   <option value="">-</option>
-                  <option <%= item.userIsActive == 'active' ? 'selected' : '' %> value="active">active</option>
+                  <option <%= item.userStatus == 'active' ? 'selected' : '' %> value="active">active</option>
                 <% }else{ %>
                   <option value="">-</option>
                   <option value="active">active</option>
@@ -178,7 +175,7 @@
                 <% if(['O'].includes(user.userAuthority)){ %>
                   <!-- ไม่ใช่ตัวเอง(session) -->
                   <!-- ถ้าเป็นตัวเองที่กำลังใช้งานอยู่ ไม่สามารถเปลี่ยนสิทธิตัวเองเป็น A/U ได้ -->
-                  <% if(item && item._id != user.user_id ){ %>
+                  <% if(item && item.userId != user.userId ){ %>
                     <option value="A" <%= (isItem && item.userAuthority == 'A') ? 'selected' : '' %>>A</option>
                     <option value="U" <%= (isItem && item.userAuthority == 'U') ? 'selected' : '' %>>U</option>
                     <option value="O" <%= (isItem && item.userAuthority == 'O') ? 'selected' : '' %>>O</option>
@@ -190,37 +187,7 @@
               </select>
             </div> 
 
-          </div> <!-- Row3 -->
-
-
-          <!-- Row4 -->
-          <div class="row mg-t-s">
-
-            <div class="col-f flex-row">
-
-              <div class="col-sm-6 input-group">
-                <label class="pd-r-s al-l lh-label" title="Email">
-                  <i class="fas fa-envelope"></i> อิเมล์ *
-                </label>
-                <input type="email" class="al-l pd-l-m" 
-                       required
-                       id="userEmail" name="userEmail" placeholder="Email"
-                       value="<%= isItem ? item.userEmail : '' %>">
-              </div>
-  
-              <div class="col-sm-4 input-group">
-                <label class="pd-r-s al-l lh-label" title="Phone">
-                  <i class="fas fa-phone "></i> โทรศัพท์
-                </label>
-                <input type="text" class="al-l pd-l-m"
-                       title="<%=  global.PHONE_DESCRIPTION %>" 
-                       pattern="<%= global.PHONE_PATTERN %>"
-                       id="userPhone" name="userPhone" placeholder="Phone"
-                       value="<%= isItem ? item.userPhone : '' %>">
-              </div>
-            </div>
-
-          </div> <!-- Row4 -->
+          </div> <!-- Row3 -->  
 
 
           <!-- Row5 -->
@@ -292,7 +259,7 @@
             action="<%= PATH_MAIN %>" method="get" 
             onsubmit="createSpinner()">
 
-        <input type="hidden" name="load_id" value="<%= load_id %>">
+        <input type="hidden" name="load_uid" value="<%= load_uid %>">
         
         <div class="flex-row">
           <input class="flex-9 al-c clickable" type="search"
@@ -355,9 +322,6 @@
                 <th class="al-c pd-l-s pd-r-s" onclick="sortTableJs(this, 4)" title="Delete">
                   <i class="fas fa-trash-alt"></i>
                 </th>
-                <th class="al-c pd-l-s pd-r-s" onclick="sortTableJs(this, 5)" title="Changes">
-                  <i class="fas fa-exchange-alt"></i>
-                </th>
               </tr>
             </thead>
 
@@ -365,13 +329,12 @@
               <% data.forEach( (obj,index) => { %>
               <%
                 const lineSwap = index%2 == 0 ? 'bg-line-swap' : ''
-                const classLoad = obj._id == load_id ? 'bg-load-active' : 'bg-load-inactive'
+                const classLoad = obj.userId == load_uid ? 'bg-load-active' : 'bg-load-inactive'
 
                 // กำหนดสีตาม userAuthority
                 let color_userAuthority = '';
-                if(obj.userIsActive == 'active'){
+                if(obj.userStatus == 'active'){
                   color_userAuthority = obj.userAuthority === 'O' ? 'fc-blue'
-                    : obj.userAuthority === 'S' ? 'fc-dodgerblue'
                     : obj.userAuthority === 'A' ? 'fc-green'
                     : obj.userAuthority === 'U' ? 'fc-magenta'
                     : 'fc-black';
@@ -385,10 +348,8 @@
                 <!-- mg-s  มีผลต่อความสูงของแถว -->
                 <td class="al-c">
                   <form action="<%= PATH_LOAD %>" method="post" style="width: 100%">
-                    <!-- hidden-loop -->
-                    <input type="hidden" name="_id" value="<%= obj._id %>">
                     <!-- hidden : เหมือนกันหมด -->
-                    <input type="hidden" name="load_id" value="<%= obj._id %>">
+                    <input type="hidden" name="userId" value="<%= obj.userId %>">
                     <input type="hidden" name="rpp" value="<%= rpp %>">
                     <input type="hidden" name="sip" value="<%= sip %>">
                     <input type="hidden" name="page" value="<%= page %>">
@@ -397,6 +358,7 @@
                     </button>
                   </form>
                 </td>
+                
                 <td class="<%= color_userAuthority %> al-c pd-l-s pd-r-s" title="<%= obj.userId %>"><%= obj.userId??'-' %></td>
                 <td class="<%= color_userAuthority %> pd-l-m" title="<%= obj.userFullname %>"><%= obj.username??'-' %></td>
                 <td class="<%= color_userAuthority %> al-c pd-l-s pd-r-s" title="<%= obj.userAuthority %>">
@@ -406,41 +368,15 @@
                   <% if(obj.isCanDelete && obj.canDelete != false){ %>
                     <form class="" action="<%= PATH_DELETE %>" method="post">
                       <!-- hidden-loop -->
-                      <!-- <input type="hidden" name="_id" value="<= obj._id >"> -->
-                      <input type="hidden" name="_id_toDelete" value="<%= obj._id %>">
-                      <input type="hidden" name="Id_toDelete" value="<%= obj.userId %>">
+                      <input type="hidden" name="userId" value="<%= obj.userId %>">
                       <!-- hidden : เหมือนกันหมด -->
-                      <input type="hidden" name="load_id" value="<%= load_id %>">
+                      <input type="hidden" name="load_uid" value="<%= load_uid %>">
                       <input type="hidden" name="rpp" value="<%= rpp %>">
                       <input type="hidden" name="sip" value="<%= sip %>">
                       <input type="hidden" name="page" value="<%= page %>">
                       <!-- btn-delete ใช้สำหรับ Swal -->
                       <button type="button" class="btn-delete bg-delete pd-l-l pd-r-l pd-t-s pd-b-s">
                         <i class="fas fa-trash-alt"></i>
-                      </button>
-
-                      <!-- กรณีใช้ btngroup ที่เราเขียนเอง ให้ใส่คลาส .btn-group กับ <form> ด้วย -->
-                      <!-- 
-                       <button type="button" class="lh-tb btn-show bg-delete pd-l-l pd-r-l" 
-                              onclick="onBtnClicked(this,'ON')"><i class="fas fa-trash"></i>
-                      </button>
-                      <input type="submit" value="✔" class="lh-tb pd-l-s pd-r-s btn-confirm">
-                      <input type="button" value="✖" class="lh-tb pd-l-s pd-r-s btn-cancel" 
-                             onclick="onBtnClicked(this,'CANCEL')"> 
-                        -->
-                    </form>
-                  <% }else{ %>
-                    <span>-</span>
-                  <% } %>
-                </td>
-
-                <td class="al-c pd-l-s pd-r-s" title="ประวัติการเปลี่ยนแปลง">
-                  <% if(obj.changesHistoryCount > 0) { %>
-                    <form action="<%= PATH_CHANGES %>" method="post">
-                      <input type="hidden" name="userId" value="<%= obj.userId %>">
-                      <!-- btn-print-changes ใช้สำหรับ Swal -->
-                      <button type="button" class="btn-print-changes bg-change pd-l-l pd-r-l pd-t-s pd-b-s">
-                        <i class="fas fa-print"></i>
                       </button>
                     </form>
                   <% }else{ %>
@@ -467,7 +403,7 @@
     var PATH_MAIN = `<%= PATH_MAIN %>` ;     
     var PATH_NEW = `<%= PATH_NEW %>` ;
     var PREFIX = '<%= PREFIX %>' ; 
-    var PATH_PRINT = `<%= PATH_PRINT %>` ;     
+    // var PATH_PRINT = `<= PATH_PRINT >` ;    
     var USER_AUTHORITIES = JSON.parse(`<%- USER_AUTHORITIES_JSON %>`) ;
   </script>
   <% if(!IS_PRODUCTION) { %>

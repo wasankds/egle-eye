@@ -1,11 +1,11 @@
-const LowdbSessionStore = await import(`../${global.myModuleFolder}/LowDB.js`).then(mod => mod.LowdbSessionStore);
+const LowDbSessionStore = await import(`../${global.myModuleFolder}/LowDB.js`).then(mod => mod.LowDbSessionStore);
 
 //================================================
 // จับข้อมูล User จากฐาน session
 export function getSessionData(req) {
   // // กรณี เอาหมดเลย
   // return sessionStore.getSessionById(req.sessionID); 
-  const sessionStore = new LowdbSessionStore(global.db);
+  const sessionStore = new LowDbSessionStore(global.db);
   return sessionStore.getSessionById(req.sessionID).then(sessionData => ({
     isAuth: sessionData?.isAuth || false,
     userId: sessionData?.userId || null,

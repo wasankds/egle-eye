@@ -4,33 +4,62 @@
       "userId": 100,
       "userEmail": "wasankds@gmail.com",
       "username": "wasankds",
-      "userPrefix": "Mr",
+      "userPrefix": "นาย",
       "userFirstname": "Wasan",
       "userLastname": "Khunnadiloksawet",
       "userAuthority": "O",
-      "userIsActive": "active",
-      "userPassword": "$2b$12$7CMTQPwSZS.9m2lpmaat/eaJ9ReMo7M3aD7kpBKiFN.LDwnll6Oji",
-      "dateTimeCanDelete": "2025-12-13 14:37"
+      "userStatus": "active",
+      "userPassword": "$2b$12$GNEpYJq5s3spnAazy/IK7uVJrqSZ6TdWwP1eP9MOfjRXtWS3a2WPm",
+      "dateTimeCanDelete": "2025-12-13 15:37"
+    },
+    {
+      "userId": 101,
+      "userEmail": "user_101@gmail.com",
+      "username": "user_101",
+      "userPrefix": "",
+      "userFirstname": "user_101",
+      "userLastname": "",
+      "userAuthority": "U",
+      "userStatus": "active",
+      "userPassword": "$2b$12$3qXj4NabBVkZE26gIUqPiO1ahmS2rLBbKmk5hZVr0GyBRJ/zDaCxy",
+      "dateTimeCanDelete": "2026-01-12 19:13"
+    },
+    {
+      "userId": 102,
+      "userEmail": "user_102@gmail.com",
+      "username": "user_102",
+      "userPrefix": "",
+      "userFirstname": "user_102",
+      "userLastname": "",
+      "userAuthority": "U",
+      "userStatus": "active",
+      "userPassword": "$2b$12$nrvsHOQfVSDro6yj1/hTdefUACTK4LgBxGZdPnb5IanCNgrjhyXEy",
+      "dateTimeCanDelete": "2026-01-12 19:13"
+    },
+    {
+      "userId": 103,
+      "userEmail": "user_103@gmail.com",
+      "username": "user_103",
+      "userPrefix": "",
+      "userFirstname": "user_103",
+      "userLastname": "",
+      "userAuthority": "U",
+      "userStatus": "active",
+      "userPassword": "$2b$12$Gts.F1Q6LNw/.8ldbxdZgeKVrDwlyRY9px39rCtZLuyIBYihR3mty",
+      "dateTimeCanDelete": "2026-01-12 19:13"
     }
   ],
   "sessions": [
     {
-      "sid": "CH0lANr8Yo4TSd6in8XQMeV5_EbBbe4Q",
+      "sid": "L6uoI0x6F-7CAjn1qO23ghHbbxfLNP19",
       "session": {
         "cookie": {
           "originalMaxAge": 2592000000,
-          "expires": "2025-12-13T07:37:28.845Z",
+          "expires": "2025-12-13T12:12:37.696Z",
           "httpOnly": false,
           "path": "/"
         },
-        "flash": {
-          "user": [
-            {
-              "userNameEmail": "wasankds",
-              "userPassword": "qwerty"
-            }
-          ]
-        },
+        "flash": {},
         "isAuth": true,
         "userId": 100,
         "userAuthority": "O",
@@ -42,5 +71,18 @@
         "userFullname": "Mr Wasan Khunnadiloksawet"
       }
     }
-  ]
+  ],
+  "settings": {
+    "COMPANY_NAME": "ทดสอบ",
+    "AUTO_BACKUP_DATABASE": 0,
+    "LOGIN_NOTIFY_TELEGRAM": 1,
+    "LOGIN_NOTIFY_EMAIL": 1
+  },
+  "settingsSystem": {
+    "EMAIL_WHOSEND": "wasankds@gmail.com",
+    "EMAIL_APP_PASSWORD": "czes ztev jwkf itze",
+    "TELEGRAM_BOT_TOKEN": "8046567910:AAG8IhMqBMfxenMqbZapeULZGS546k83s28",
+    "TELEGRAM_GROUP_CHAT_ID": null,
+    "TELEGRAM_BOT_NOTE": "ห้อง ???"
+  }
 }

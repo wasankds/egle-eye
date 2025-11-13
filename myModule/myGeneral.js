@@ -23,8 +23,17 @@ export const cleanHtml = (htmlString) => {
 }
 
 //================================================
+// จับข้อมูลการตั้งค่าทั่วไป
 //
-export async function generateResetCode() {
+export async function getSettings () {
+  await global.db.read();
+  const settings = global.db.data.settings || {};
+  return settings;
+}
+
+//================================================
+//
+export function generateResetCode() {
   const charsCap = "ABCDEFGHIJKLMNPQRSTUVWXYZ"
   const charsLow = "abcdefghijklmnpqrstuvwxyz"
   const numbers = "123456789"
@@ -46,7 +55,7 @@ export async function generateResetCode() {
 //================================================
 //
 // 
-export async function generatePassword() {
+export function generatePassword() {
   const chars = "abcdefghijklmnopqrstuvwxyz"
   const numbers = "123456789"
   let password = ''

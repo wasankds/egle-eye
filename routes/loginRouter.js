@@ -4,10 +4,10 @@ import bcrypt from 'bcrypt'
 import mainAuth from "../authorize/mainAuth.js" 
 const myGeneral = await import(`../${myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${myModuleFolder}/myDateTime.js`)
+const { UserManager } = await import(`../${global.myModuleFolder}/UserManager.js`)
 const PATH_LOGIN = '/login'
 const PATH_LOGOUT = '/logout'
 const PATH_FORGOT_PASSWORD = `/password`
-const UserManager = await import(`../${global.myModuleFolder}/UserManager.js`).then(mod => mod.UserManager);
 
 //======================================================================
 // 

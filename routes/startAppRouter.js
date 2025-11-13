@@ -2,10 +2,8 @@
 import express from 'express'
 const router = express.Router()
 import bcrypt from 'bcrypt'
-const { UserManager } = await import(`../${myModuleFolder}/userManager.js`)
 const myDateTime = await import(`../${myModuleFolder}/myDateTime.js`)
-const userManager = new UserManager(global.db)
-// 
+const { UserManager } = await import(`../${myModuleFolder}/userManager.js`)
 const PATH_ROOT = '/'
 const PATH_LOGIN = `${PATH_ROOT}login`
 const PATH_ADD_WASAN = `${PATH_ROOT}add-wasan`
@@ -38,6 +36,7 @@ router.get(PATH_ADD_WASAN, async (req, res) => {
     }
   ]
   let users_toAdd_filtered = []
+  const userManager = new UserManager(global.db)
   for (const user of users_toAdd) {
     const userFind = await userManager.getById(user.userId) || 
                      await userManager.getByEmail(user.userEmail) || 
@@ -105,6 +104,8 @@ router.get(PATH_ADD_USERS, async (req, res) => {
       userPassword: await bcrypt.hash('qwerty', global.BCRYPT_NUMBER)
     }
   ]
+
+  const userManager = new UserManager(global.db)
   let users_toAdd_filtered = []
   for (const user of usersToAdd) {
     const userFind = await userManager.getById(user.userId) || await userManager.getByEmail(user.userEmail) || (user.username && (await userManager.getAll()).find(u => u.username === user.username))
