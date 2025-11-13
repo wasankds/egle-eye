@@ -11,6 +11,18 @@
       "userStatus": "active",
       "userPassword": "$2b$12$gG9BW8JUi0uHf7BpzncBkOL8gcpI0/GmEFDS6jx5Kly2WhUZR1/pa",
       "dateTimeCanDelete": "2025-12-13 15:37"
+    },
+    {
+      "userId": 101,
+      "userEmail": "user_101@gmail.com",
+      "username": "user_101",
+      "userPrefix": "",
+      "userFirstname": "user_101",
+      "userLastname": "",
+      "userAuthority": "U",
+      "userStatus": "active",
+      "userPassword": "$2b$12$KP689oqi1TXNfj4Qvh86euFzeOkYyFCBp1bEIV3MmILeBVtCyX/3S",
+      "dateTimeCanDelete": "2026-01-12 20:59"
     }
   ],
   "sessions": [

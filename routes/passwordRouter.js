@@ -1,14 +1,3 @@
-// import ejs from 'ejs'
-// import path from 'path'
-// import fs from 'fs'
-// const PREFIX = PATH_MAIN.replace(/\//g,"_") 
-// import * as myDateTime from "../myGeneral/myDateTime.js"
-// import * as myUsers from "../myGeneral/myUsers.js"
-// import * as myGeneral from "../myGeneral/myGeneral.js"
-// import * as mySendmail from "../myGeneral/mySendmail.js"
-// const myData = await import(`../${myGeneralFolder}/myData.js`)
-// const myUsers = await import(`../${myGeneralFolder}/myUsers.js`)
-// import { MongoClient, ObjectId } from 'mongodb' ;
 import express from 'express';
 const router = express.Router();
 import bcrypt from 'bcrypt';
@@ -166,7 +155,6 @@ router.post(PATH_MAIN, mainAuth.isLogged, async (req,res) => {
 /*********************************************************************/
 /*********************************************************************/
 /*********************************************************************/
-
 
 
 
