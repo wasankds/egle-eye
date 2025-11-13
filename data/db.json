@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "userId": 100,
+      "userEmail": "wasankds@gmail.com",
+      "username": "wasankds",
+      "userPrefix": "Mr",
+      "userFirstname": "Wasan",
+      "userLastname": "Khunnadiloksawet",
+      "userAuthority": "O",
+      "userIsActive": "active",
+      "userPassword": "$2b$12$7CMTQPwSZS.9m2lpmaat/eaJ9ReMo7M3aD7kpBKiFN.LDwnll6Oji",
+      "dateTimeCanDelete": "2025-12-13 14:37"
+    }
+  ],
+  "sessions": [
+    {
+      "sid": "CH0lANr8Yo4TSd6in8XQMeV5_EbBbe4Q",
+      "session": {
+        "cookie": {
+          "originalMaxAge": 2592000000,
+          "expires": "2025-12-13T07:37:28.845Z",
+          "httpOnly": false,
+          "path": "/"
+        },
+        "flash": {
+          "user": [
+            {
+              "userNameEmail": "wasankds",
+              "userPassword": "qwerty"
+            }
+          ]
+        },
+        "isAuth": true,
+        "userId": 100,
+        "userAuthority": "O",
+        "username": "wasankds",
+        "userEmail": "wasankds@gmail.com",
+        "userPrefix": "Mr",
+        "userFirstname": "Wasan",
+        "userLastname": "Khunnadiloksawet",
+        "userFullname": "Mr Wasan Khunnadiloksawet"
+      }
+    }
+  ]
+}

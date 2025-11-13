@@ -1,0 +1,12 @@
+/***  ***/
+/* ใช้กับ Dark */
+/* a:link { color: lightgreen;text-decoration: none;}
+a:visited { color: yellowgreen;text-decoration: none;}
+a:hover { color: lime; text-decoration: dashed;}
+a:active { color: limegreen;text-decoration: none;} */
+
+/* ใช้กับ Light */
+a:link { color:cornflowerblue; text-decoration: none; }
+a:visited { color: dodgerblue; text-decoration: none; }
+a:hover { filter: brightness(1.2); }
+a:active { color: #0056b3; text-decoration: none; }

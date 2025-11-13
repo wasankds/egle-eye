@@ -3,14 +3,16 @@ function pathToFolder( ...args){
   const rootFolder = process.cwd()
   return path.join(rootFolder, ...args)
 }
-global.SYS_NAME = 'Eagle Eye Remote System'
-global.SYS_NAME2 = ''
-global.SYS_VERSION = '1.1.1'
+global.SYS_NAME = 'ตาเหยี่ยว'
+global.SYS_NAME2 = 'บินเดี่ยว'
+global.SYS_VERSION = '1.0'
 // ใช้ในหน้า term and conditions
 global.SYS_OWNER_FULLNAME = 'นายวสันต์ คุณดิลกเศวต'
 global.SYS_OWNER_EMAIL = 'wasankds@gmail.com'
 global.SYS_OWNER_PHONE = '081-459-8343'
-global.PY_FILE_DHT11 =  process.env.PY_FILE_DHT11
+// ค่าคงที่ระบบ
+global.DB_ENCRYPTED = process.env.DB_ENCRYPTED == 1 ? true : false;
+global.BCRYPT_NUMBER = 12
 // Database
 global.dbName = process.env.DB_NAME
 global.dbColl_settings = 'settings'
@@ -19,7 +21,7 @@ global.dbColl_sessions = 'sessions'
 global.dbColl_users = 'users'
 global.dbColl_usersResetPassword = 'usersResetPassword'
 // ระบบ
-global.PAGE_HOME = 'MMS'
+global.PAGE_HOME = 'ตาเหยี่ยว'
 global.PAGE_TERM = 'ข้อกำหนดและเงื่อนไข'
 global.PAGE_LOGIN = 'เข้าสู่ระบบ'
 global.PAGE_MANAGE_USERS = 'จัดการผู้ใช้งาน'
@@ -31,7 +33,6 @@ global.PAGE_USER_INFO = 'ข้อมูลผู้ใช้งาน'
 global.PAGE_PASSWORD_FORGOT = 'ลืมรหัสผ่าน'
 global.PAGE_PASSWORD_RESET = 'รีเซ็ตรหัสผ่าน'
 // ให้จับจาก .env เวลาขึ้น Server หรือ Update จะได้ไม่มีปัญหา
-global.BCRYPT_NUMBER = 12
 global.USER_AUTHORITIES = ["O", "A", "U"]
 global.USER_AUTHORITIES_TABLE = [ 
   { auth: "O", name : 'Owner', nameThai : 'เจ้าของระบบ' }, 
@@ -44,17 +45,28 @@ global.USER_AUTHORITIES_TITLE = global.USER_AUTHORITIES_TABLE.reduce( (acc, obj)
 }, 'สิทธิ์ของผู้ใช้งาน\n\n');
 
 // Message ต่างๆ
-global.USERNAME_PATTERN = "^[a-z0-9_\\.\\-]{6,}$"
+global.USERNAME_PATTERN_STRING = "^[a-z0-9_\\.\\-]{6,}$"
+global.USERNAME_PATTERN_REGEX = new RegExp(global.USERNAME_PATTERN_STRING)
 global.USERNAME_DESCRIPTION = "อักษรที่สามารถใช้เป็นชื่อยูสเซอร์ได้ a-z, 0-9, . , - อย่างน้อย 6 ตัวอักษร"
-global.USER_SIGNATURE_DESCRIPTION = "ไฟล์ภาพ .png ไม่เกิน 1MB เท่านั้น ขนาดที่แนะนำ 330x120px"
-global.PASSWORD_PATTERN = "^[a-zA-Z0-9._!@#%&*+\\-=]{6,}$"
-global.PASSWORD_DESCRIPTION = "อักษรที่สามารถใช้เป็นพาสเวิร์ดได้ a-z, A-Z, 0-9, ., _, !, @, #, %, &, *, -, +, = อย่างน้อย 6 ตัวอักษร"
-global.EMAIL_PATTERN = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-global.PHONE_PATTERN = "^[0-9]{9,10}$"
+// global.PASSWORD_PATTERN_STRING = "^[a-zA-Z0-9._!@#%&*+\\-=]{6,}$"
+global.PASSWORD_PATTERN_STRING = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&_-])[a-zA-Z0-9!@#$%^&_-]{6,}$"
+// (?=.*[a-z]) ต้องมีตัวพิมพ์เล็กอย่างน้อย 1 ตัว
+// (?=.*[A-Z]) ต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว
+// (?=.*[!@#$%^&_-]) ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว
+// [a-zA-Z0-9!@#$%^&_-]{6,} ความยาวอย่างน้อย 6 ตัว
+global.PASSWORD_PATTERN_REGEX = new RegExp(global.PASSWORD_PATTERN_STRING)
+global.PASSWORD_DESCRIPTION = "รหัสผ่านอย่างน้อย 6 ตัวอักษร ต้องมีตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และอักขระพิเศษ อย่างน้อยอย่างละ 1 ตัว เช่น ! @ # $ % ^ & _ -"
+global.EMAIL_PATTERN_STRING = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+global.EMAIL_PATTERN_REGEX = new RegExp(global.EMAIL_PATTERN_STRING)
+
+global.PHONE_PATTERN_STRING = "^[0-9]{9,10}$"
+global.PHONE_PATTERN_REGEX = new RegExp(global.PHONE_PATTERN_STRING)
 global.PHONE_DESCRIPTION = "เบอร์โทรศัพท์ 9-10 หลัก"
-global.TELEGRAM_BOT_TOKEN_PATTERN = "^[0-9]+:[A-Za-z0-9_]+$"
+global.TELEGRAM_BOT_TOKEN_PATTERN_STRING = "^[0-9]+:[A-Za-z0-9_]+$"
+global.TELEGRAM_BOT_TOKEN_PATTERN_REGEX = new RegExp(global.TELEGRAM_BOT_TOKEN_PATTERN_STRING)
 global.TELEGRAM_BOT_TOKEN_DESCRIPTION = "โทเค็นบ็อต Telegram เช่น 123456789:AAH..."
-global.GROUP_CHAT_ID_PATTERN = "^-?[0-9]{9,}$"
+global.GROUP_CHAT_ID_PATTERN_STRING = "^-?[0-9]{9,}$"
+global.GROUP_CHAT_ID_PATTERN_REGEX = new RegExp(global.GROUP_CHAT_ID_PATTERN_STRING)
 global.GROUP_CHAT_ID_DESCRIPTION = "ไอดีกลุ่ม Telegram เช่น -123456789"
 // ไฟล์และโฟลเดอร์
 global.folderPublic = pathToFolder('public')
@@ -62,19 +74,21 @@ global.folderImages = pathToFolder('public','images')
 global.folderViews = pathToFolder('views')
 global.folderPartials = pathToFolder('views','partials')
 global.folderForms = pathToFolder('views','forms')
+global.folderData = pathToFolder('data')
 global.file404 = pathToFolder('public','static', '404.html')
+global.fileDb = pathToFolder('data', 'db.json')
 
 
 
 global.NAV_LEFT = [
-  { // 
-    path: '/', 
-    title: PAGE_HOME,
-    icon: 'fas fa-home' ,
-    menuColor : 'menu-blue', // ไม่มีในหน้า home
-    userAuthorities: ['O','A','U'],
-    separator: false,    
-  },
+  // { // 
+  //   path: '/', 
+  //   title: PAGE_HOME,
+  //   icon: 'fas fa-home' ,
+  //   menuColor : 'menu-blue', // ไม่มีในหน้า home
+  //   userAuthorities: ['O','A','U'],
+  //   separator: false,    
+  // },
 ]
 
 

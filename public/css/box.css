@@ -1,0 +1,86 @@
+.box-blue{ color: white; background-color: blue; border: 1px solid blue; }
+.box-steelblue{ color: white; background-color: steelblue; border: 1px solid steelblue; }
+.box-slateblue{ color: white; background-color: slateblue; border: 1px solid slateblue; }
+.box-darkslateblue{ color: white; background-color: darkslateblue; border: 1px solid darkslateblue; }
+.box-darkblue{ color: white; background-color: darkblue; border: 1px solid darkblue; }
+.box-blueviolet{ color: white; background-color: blueviolet; border: 1px solid blueviolet;}
+.box-cfb{ color: white; background-color: CornflowerBlue; border: 1px solid CornflowerBlue; }
+.box-dodgerblue{ color: white; background-color: dodgerblue; border: 1px solid dodgerblue; }
+.box-darkcyan{ color: white; background-color: darkcyan; border: 1px solid darkcyan; }
+.box-darkmagenta{ color: white; background-color: darkmagenta; border: 1px solid darkmagenta; }
+.box-magenta{ color: white; background-color: magenta; border: 1px solid magenta; }
+.box-green{ color: white; background-color: green; border: 1px solid green; }
+.box-darkgreen{ color: white; background-color: darkgreen; border: 1px solid darkgreen; }
+.box-forestgreen{ color: white; background-color: forestgreen; border: 1px solid forestgreen; }
+.box-orange{ color: white; background-color: orange; border: 1px solid orange; }
+.box-darkorange{ color: white; background-color: darkorange; border: 1px solid darkorange; }
+.box-gold{ color: black; background-color: gold; border: 1px solid gold; }
+.box-goldenrod{ color: black; background-color: goldenrod; border: 1px solid goldenrod;}
+.box-darkgoldenrod{ color: black; background-color: darkgoldenrod; border: 1px solid darkgoldenrod;}
+.box-red{ color: black; background-color: rgb(255, 59, 59); border: 1px solid rgb(255, 59, 59);}
+.box-gray{ color: white; background-color: gray; border: 1px solid gray;}
+.box-black{ color: white; background-color: black; border: 1px solid black;}
+.box-pink{ color: black; background-color: pink; border: 1px solid pink;}
+.box-palevioletred{ color: black; background-color: palevioletred; border: 1px solid palevioletred;}
+.box-plum{ color: black; background-color: plum; border: 1px solid plum;}
+.box-yg{ color: black; background-color: YellowGreen; border: 1px solid YellowGreen;}
+.box-gy { color: black; background-color: greenyellow; border: 1px solid greenyellow;}
+.box-white{ color: black; background-color: white; border: 1px solid white;}
+/* แบบมีแต่เส้นขอบ */
+.box-blue-b{ color: white; border: 1px solid blue; }
+.box-steelblue-b{ color: white; background-color: steelblue; }
+.box-slateblue-b{ color: white; background-color: slateblue; }
+.box-darkslateblue-b{ color: white; background-color: darkslateblue; }
+.box-darkblue-b{ color: white; background-color: darkblue;}
+.box-cfb-b{ color: white; border: 1px solid CornflowerBlue; }
+.box-dodgerblue-b{ color: white; border: 1px solid dodgerblue;}
+.box-blueviolet-b{ color: white; border: 1px solid blueviolet; }
+.box-darkcyan-b{ color: white; border: 1px solid darkcyan; }
+.box-darkmagenta-b{ color: white;  border: 1px solid darkmagenta;}
+.box-magenta-b{ color: white;  border: 1px solid magenta;}
+.box-green-b{ color: white; border: 1px solid green; }
+.box-darkgreen-b{ color: white; background-color: darkgreen; }
+.box-forestgreen-b{ color: white; background-color: forestgreen;  }
+.box-orange-b{ color: white; border: 1px solid orange;}
+.box-darkorange-b{ color: white; border: 1px solid darkorange;}
+.box-gold-b{ color: black; border: 1px solid gold;}
+.box-goldenrod-b{ color: black; border: 1px solid goldenrod;}
+.box-darkgoldenrod-b{ color: black; border: 1px solid darkgoldenrod;}
+.box-red-b{ color: black; border: 1px solid rgb(255, 59, 59); }
+.box-gray-b{ color: white; border: 1px solid gray; }
+.box-black-b{ color: white; border: 1px solid black; }
+.box-pink-b{ color: black; background-color: pink; }
+.box-palevioletred-b{ color: black; background-color: palevioletred; }
+.box-plum{ color: black; background-color: plum; border: 1px solid plum;}
+.box-yg-b{ color: black; border: 1px solid YellowGreen; }
+.box-gy-b { color: black; border: 1px solid greenyellow; }
+.box-white-b{ color: black; border: 1px solid white; }
+
+.box-blue-b,
+.box-steelblue, 
+.box-slateblue, 
+.box-darkslateblue, 
+.box-dodgerblue-b,
+.box-darkblue-b,
+.box-cfb-b,
+.box-darkcyan-b,
+.box-darkmagenta-b,
+.box-magenta-b,
+.box-green-b,
+.box-darkgreen-b,
+.box-forestgreen-b,
+.box-orange-b,
+.box-darkorange-b,
+.box-gold-b,
+.box-goldenrod-b,
+.box-darkgoldenrod-b,
+.box-red-b,
+.box-gray-b,
+.box-black-b,
+.box-pink-b,
+.box-yg-b,
+.box-gy-b,
+.box-white-b{
+  border-radius: 3px;
+  padding: 2px 3px;
+}
