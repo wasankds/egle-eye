@@ -38,7 +38,7 @@ export async function sendRegisterUserEmail(user, password){
         pass: `${settingsSystem.EMAIL_APP_PASSWORD}`     // ต้องครอบด้วย Backtik
       }
     });
-    const sysname = `[${global.SYS_NAME}-${global.SYS_NAME2}]`
+    const sysname = `[${global.SYS_NAME} ${global.SYS_NAME2}]`
     const sender = `"${sysname} อิเมล์อัตโนมัติ" <${settingsSystem.EMAIL_WHOSEND}>` // ชื่อผู้ส่งอีเมล์
 
     //=== สร้างเนื้อหาอีเมล์
@@ -76,12 +76,21 @@ export async function sendRegisterUserEmail(user, password){
 // 
 export async function sendResetPassword(user, resetUrl){
   try{
+    // console.log("user ===> ", user)
+    // console.log("resetUrl ===> ", resetUrl)
+
     //=== ต้องดึงข้อมูลการตั้งค่าจากฐานข้อมูล
     const settingsSystem = await myGeneral.getSettingsSystem()
+    // console.log("settingsSystem ===> ", settingsSystem)
 
     if (!settingsSystem || !settingsSystem.EMAIL_WHOSEND || !settingsSystem.EMAIL_APP_PASSWORD) {
       throw new Error('ไม่ได้ตั้งค่าการส่งอีเมล์อย่างถูกต้อง')
     }
+    console.log("EMAIL_WHOSEND ===>" , settingsSystem.EMAIL_WHOSEND)
+    console.log("EMAIL_APP_PASSWORD ===>" , settingsSystem.EMAIL_APP_PASSWORD)
+    // EMAIL_WHOSEND ===> wasankds@gmail.com
+    // EMAIL_APP_PASSWORD ===> czes ztev jwkf itze
+
     //=== สร้างตัวส่งอีเมล์
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -96,7 +105,8 @@ export async function sendResetPassword(user, resetUrl){
       socketTimeout: 10000
     });
 
-    const sysname = `[${global.SYS_NAME}-${global.SYS_NAME2}]`
+    // const sysname = `[${global.SYS_NAME} ${global.SYS_NAME2}]`
+    const sysname = `[${global.SYS_NAME}]`
     const sender = `"${sysname} อิเมล์อัตโนมัติ" <${settingsSystem.EMAIL_WHOSEND}>` // ชื่อผู้ส่งอีเมล์
 
     //=== สร้างเนื้อหาอีเมล์
@@ -129,8 +139,9 @@ export async function sendResetPassword(user, resetUrl){
             <span style="color:red">ขอให้ท่านไม่ต้องสนใจอิเมล์ฉะบับนี้</span>
           </p>
         </div>`
-    }
-    return await transporter.sendMail(mailOptions);
+      }
+    // console.log(mailOptions)
+    return await transporter.sendMail(mailOptions)
   }catch(err){ 
     console.log(err)
     return err

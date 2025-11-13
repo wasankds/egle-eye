@@ -48,14 +48,9 @@ global.USER_AUTHORITIES_TITLE = global.USER_AUTHORITIES_TABLE.reduce( (acc, obj)
 global.USERNAME_PATTERN_STRING = "^[a-z0-9_\\.\\-]{6,}$"
 global.USERNAME_PATTERN_REGEX = new RegExp(global.USERNAME_PATTERN_STRING)
 global.USERNAME_DESCRIPTION = "อักษรที่สามารถใช้เป็นชื่อยูสเซอร์ได้ a-z, 0-9, . , - อย่างน้อย 6 ตัวอักษร"
-// global.PASSWORD_PATTERN_STRING = "^[a-zA-Z0-9._!@#%&*+\\-=]{6,}$"
 global.PASSWORD_PATTERN_STRING = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&_-])[a-zA-Z0-9!@#$%^&_-]{6,}$"
-// (?=.*[a-z]) ต้องมีตัวพิมพ์เล็กอย่างน้อย 1 ตัว
-// (?=.*[A-Z]) ต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว
-// (?=.*[!@#$%^&_-]) ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว
-// [a-zA-Z0-9!@#$%^&_-]{6,} ความยาวอย่างน้อย 6 ตัว
-global.PASSWORD_PATTERN_REGEX = new RegExp(global.PASSWORD_PATTERN_STRING)
-global.PASSWORD_DESCRIPTION = "รหัสผ่านอย่างน้อย 6 ตัวอักษร ต้องมีตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และอักขระพิเศษ อย่างน้อยอย่างละ 1 ตัว เช่น ! @ # $ % ^ & _ -"
+global.PASSWORD_PATTERN_REGEX = new RegExp(global.PASSWORD_PATTERN_STRING) // (?=.*[a-z]) ต้องมีตัวพิมพ์เล็กอย่างน้อย 1 ตัว // (?=.*[A-Z]) ต้องมีตัวพิมพ์ใหญ่อย่างน้อย 1 ตัว // (?=.*[!@#$%^&_-]) ต้องมีอักขระพิเศษอย่างน้อย 1 ตัว // [a-zA-Z0-9!@#$%^&_-]{6,} ความยาวอย่างน้อย 6 ตัว
+global.PASSWORD_DESCRIPTION = "รหัสผ่านอย่างน้อย 6 ตัวอักษร ต้องมีตัวพิมพ์เล็ก ตัวพิมพ์ใหญ่ และอักขระพิเศษ(! @ # $ % ^ & _ -) อย่างน้อยอย่างละ 1 ตัว "
 global.EMAIL_PATTERN_STRING = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 global.EMAIL_PATTERN_REGEX = new RegExp(global.EMAIL_PATTERN_STRING)
 global.EMAIL_APP_PASSWORD_STRING = "[0-9a-zA-Z]{4}\\s[0-9a-zA-Z]{4}\\s[0-9a-zA-Z]{4}\\s[0-9a-zA-Z]{4}"
@@ -77,11 +72,9 @@ global.folderViews = pathToFolder('views')
 global.folderPartials = pathToFolder('views','partials')
 global.folderForms = pathToFolder('views','forms')
 global.folderData = pathToFolder('data')
-global.file404 = pathToFolder('public','static', '404.html')
-global.fileDb = pathToFolder('data', 'db.json')
 global.folderBackup = pathToFolder('backup')
-
-
+global.fileDb = pathToFolder('data', 'db.json')
+global.file404 = pathToFolder('public','static', '404.html')
 
 global.NAV_LEFT = [
   // { // 

@@ -32,6 +32,15 @@ export async function getSettings () {
 }
 
 //================================================
+// จับข้อมูลการตั้งค่าระบบ
+//
+export async function getSettingsSystem () {
+  await global.db.read();
+  const settings = global.db.data.settingsSystem || {};
+  return settings;
+}
+
+//================================================
 //
 export function generateResetCode() {
   const charsCap = "ABCDEFGHIJKLMNPQRSTUVWXYZ"

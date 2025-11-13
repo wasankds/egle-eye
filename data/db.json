@@ -9,21 +9,30 @@
       "userLastname": "Khunnadiloksawet",
       "userAuthority": "O",
       "userStatus": "active",
-      "userPassword": "$2b$12$GNEpYJq5s3spnAazy/IK7uVJrqSZ6TdWwP1eP9MOfjRXtWS3a2WPm",
+      "userPassword": "$2b$12$gG9BW8JUi0uHf7BpzncBkOL8gcpI0/GmEFDS6jx5Kly2WhUZR1/pa",
       "dateTimeCanDelete": "2025-12-13 15:37"
     }
   ],
   "sessions": [
     {
-      "sid": "M5erOSLevrM7tSzW5_7qhOH0Wd7hVGn8",
+      "sid": "8QjdbodnMExIPxAOcogEjwEGFZrZPqiK",
       "session": {
         "cookie": {
           "originalMaxAge": 2592000000,
-          "expires": "2025-12-13T12:19:33.283Z",
+          "expires": "2025-12-13T13:56:58.173Z",
           "httpOnly": false,
           "path": "/"
         },
-        "flash": {}
+        "flash": {},
+        "isAuth": true,
+        "userId": 100,
+        "userAuthority": "O",
+        "username": "wasankds",
+        "userEmail": "wasankds@gmail.com",
+        "userPrefix": "นาย",
+        "userFirstname": "Wasan",
+        "userLastname": "Khunnadiloksawet",
+        "userFullname": "นาย Wasan Khunnadiloksawet"
       }
     }
   ],
@@ -39,5 +48,14 @@
     "TELEGRAM_BOT_TOKEN": "8046567910:AAG8IhMqBMfxenMqbZapeULZGS546k83s28",
     "TELEGRAM_GROUP_CHAT_ID": null,
     "TELEGRAM_BOT_NOTE": "ห้อง ???"
-  }
+  },
+  "usersResetPassword": [
+    {
+      "userEmail": "wasankds@gmail.com",
+      "userFirstname": "Wasan",
+      "userLastname": "Khunnadiloksawet",
+      "expire": "2025-11-13 20:58",
+      "id": "1763041390958_93855"
+    }
+  ]
 }

@@ -75,6 +75,8 @@ export async function getSessionData(req) {
     userAuthority: sessionData?.userAuthority || null,
     username: sessionData?.username || null,
     userEmail: sessionData?.userEmail || null,
+    userFirstname: sessionData?.userFirstname || null,
+    userLastname: sessionData?.userLastname || null,
     userFullname: sessionData?.userFullname || null,
   }));
 }

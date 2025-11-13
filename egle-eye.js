@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
   });
 }); 
 server.listen(PORT, () => {
-  console.log(`🌐 Web Server: http://${global.DOMAIN_ALLOW}`);
+  console.log(`🌐 Web Server: ${global.DOMAIN_ALLOW}`);
   // setTimeout(startSensor, 2000);
 });
 
