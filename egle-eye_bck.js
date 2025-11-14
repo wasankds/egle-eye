@@ -12,7 +12,6 @@ import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
 import flash from 'connect-flash'
-import { pigpio } from 'pigpio-client';
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
 global.IS_PRODUCTION = process.env.IS_PRODUCTION == 1 ? true : false
@@ -95,7 +94,7 @@ io.on('connection', (socket) => {
   // เมื่อ client หลุดการเชื่อมต่อ
   socket.on('disconnect', () => {
     console.log('❌ Client disconnected:', socket.id);
-  });    
+  });
 }); 
 
 
@@ -104,12 +103,7 @@ server.listen(PORT, () => {
 });
 
 
-// //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
-// console.log('process.platform ===>', process.platform);
-// if (process.platform === 'linux') {
-//   global.gpio = pigpio({ host: 'localhost' });
-//   global.led1 = global.gpio.gpio(global.LED1_PIN);
-// }
+
 
 // === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {
@@ -118,7 +112,7 @@ if (process.platform === 'linux') {
     if (ledCleanupCalled) return;
     ledCleanupCalled = true;
     try {
-      execSync(`pigs w ${global.LED1_PIN} 0`); // ปิด LED
+      execSync(`pigs w ${global.LED1_PIN} 0`);
       console.log('LED ปิดแล้ว (exit/terminate)');
     } catch (err) {
       console.log('Error ปิด LED (exit):', err.message);
