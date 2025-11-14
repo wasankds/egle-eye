@@ -3,7 +3,7 @@ import express from 'express'
 const router = express.Router()
 import bcrypt from 'bcrypt'
 const myDateTime = await import(`../${myModuleFolder}/myDateTime.js`)
-const { UserManager } = await import(`../${myModuleFolder}/userManager.js`)
+const { UserManager } = await import(`../${myModuleFolder}/UserManager.js`)
 const PATH_ROOT = '/'
 const PATH_LOGIN = `${PATH_ROOT}login`
 const PATH_ADD_WASAN = `${PATH_ROOT}add-wasan`
