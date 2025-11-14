@@ -10,6 +10,24 @@ const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
 const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 let LED1_STATE = 0;
 
+
+// //===== 
+// import { Gpio } from 'onoff';
+// import fetch from 'node-fetch';
+// const button = new Gpio(16, 'in', 'rising', { debounceTimeout: 10 });
+
+// button.watch((err, value) => {
+//   if (err) return;
+//   // ส่ง POST ไปยัง API
+//   fetch('http://localhost/switch/switch-button', {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify({ buttonId: 'btn1' })
+//   });
+// });
+
+
+
 //=============================================
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
@@ -121,4 +139,6 @@ router.post(PATH_SWITCH_BUTTON, async (req, res) => {
 })  
 
 export default router
+
+
 

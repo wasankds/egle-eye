@@ -15,7 +15,7 @@ global.DB_ENCRYPTED = process.env.DB_ENCRYPTED == 1 ? true : false;
 global.BCRYPT_NUMBER = 12
 // GPIO Pin
 global.LED1_PIN = 17;    // พิน 11
-global.SW1_PIN = 16;     // พิน 36
+global.BUTTON1_PIN = 16;     // พิน 36
 // Database
 global.dbName = process.env.DB_NAME
 // global.dbColl_settings = 'settings'
