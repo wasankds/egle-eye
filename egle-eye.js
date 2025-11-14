@@ -112,6 +112,7 @@ console.log('BTN1_PIN:', global.BTN1_PIN, typeof global.BTN1_PIN);
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
   global.gpio = pigpio({ host: 'localhost' });
+  global.gpio.once('connected', () => console.log('pigpio-client connected!'));
 
   //=== LED ที่ตัวบอร์ด
   global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
