@@ -156,25 +156,23 @@ if (process.platform === 'linux') {
         //=== เขียนลง LowDb
         global.db.read().then( async () => {
 
-          //== สถานะ LED1 กับ RELAY1
-          if (!global.db.data.let1State) {
-            global.db.data.let1State = {};            
-          }
-          global.db.data.let1State['led1'] = {
-            ledState: global.LED1_STATE,
-            relayState: global.RELAY1_STATE,
-            timeStamp: myDateTime.now()
-          };
+          // //== สถานะ LED1 กับ RELAY1
+          // if (!global.db.data.let1State) {
+          //   global.db.data.let1State = {};            
+          // }
+          // global.db.data.let1State['led1'] = {
+          //   ledState: global.LED1_STATE,
+          //   timeStamp: myDateTime.now()
+          // };
 
-          //== สถานะ LED1 กับ RELAY1
-          if (!global.db.data.relay1State) {
-            global.db.data.relay1State = {};            
-          }
-          global.db.data.relay1State['relay1'] = {
-            ledState: global.LED1_STATE,
-            relayState: global.RELAY1_STATE,
-            timeStamp: myDateTime.now()
-          };
+          // //== สถานะ LED1 กับ RELAY1
+          // if (!global.db.data.relay1State) {
+          //   global.db.data.relay1State = {};            
+          // }
+          // global.db.data.relay1State['relay1'] = {
+          //   relayState: global.RELAY1_STATE,
+          //   timeStamp: myDateTime.now()
+          // };
 
           await global.db.write();
         }); 
@@ -202,20 +200,26 @@ if (process.platform === 'linux') {
 
 //=== ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {
-  let ledCleanupCalled = false;
-  const turnOffLedSync = () => {
-    if (ledCleanupCalled) return;
-    ledCleanupCalled = true;
+  let cleanupCalled = false;
+  const turnOffDevicesSync = () => {
+    if (cleanupCalled) return;
+    cleanupCalled = true;
     try {
       execSync(`pigs w ${global.LED1_PIN} 0`); // ปิด LED
       console.log('LED ปิดแล้ว (exit/terminate)');
     } catch (err) {
       console.log('Error ปิด LED (exit):', err.message);
     }
+    try {
+      execSync(`pigs w ${global.RELAY1_PIN} 1`); // ปิด Relay - Active High to turn off
+      console.log('Relay ปิดแล้ว (exit/terminate)');
+    } catch (err) {
+      console.log('Error ปิด Relay (exit):', err.message);
+    }
   };
-  process.once('SIGINT', () => { turnOffLedSync(); process.exit(); });
-  process.once('SIGTERM', () => { turnOffLedSync(); process.exit(); });
-  process.once('exit', () => { turnOffLedSync(); });
+  process.once('SIGINT', () => { turnOffDevicesSync(); process.exit(); });
+  process.once('SIGTERM', () => { turnOffDevicesSync(); process.exit(); });
+  process.once('exit', () => { turnOffDevicesSync(); });
 }
 
 
