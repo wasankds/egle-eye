@@ -112,7 +112,13 @@ if (process.platform === 'linux') {
 
   // เมื่อเชื่อมต่อสำเร็จ
   global.gpio.once('connected', () => {
-    // console.log('pigpio-client connected!');
+    
+    //=== Boardcast สถานะเริ่มต้น
+    global.io.emit('button_pressed', { 
+      buttonId: 'btn1', 
+      ledState: global.LED1_STATE,
+      relayState: global.RELAY1_STATE
+    })
 
     //=== LED1 ***
     global.led1 = global.gpio.gpio(Number(global.LED1_PIN));

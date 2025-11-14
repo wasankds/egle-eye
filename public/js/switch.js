@@ -2,6 +2,9 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+
+
+  //=== จัดการสวิตช์ S01
   const s01el = document.getElementById('s01');
   const s01status = document.getElementById('s01-status');
   if (s01el && s01status) {
@@ -42,9 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const socket = io();
   socket.on('button_pressed', function(data) {
-    console.log('Button pressed event received:', data);
+    // console.log('Button pressed event received:', data);
     // { "buttonId": "btn1", "ledState": 0 }
 
+    //=== ใช้สถานะ btn1
     const { buttonId, ledState } = data;
     if (buttonId === 'btn1') {
       const s01el = document.getElementById('s01');
