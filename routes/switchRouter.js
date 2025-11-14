@@ -7,6 +7,7 @@ const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
+const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 //== ใช้ได้แต่บน Linux เท่านั้น (Raspberry Pi OS)
 let gpio = null;
 if (process.platform === 'linux') {
@@ -36,7 +37,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 
       PREFIX,
       PATH_MAIN,
-      PATH_SWITCH: PATH_SWITCH_WEB,
+      PATH_SWITCH_WEB,
+      PATH_SWITCH_BUTTON,
     })
     res.send(html)
   } catch (error) {
