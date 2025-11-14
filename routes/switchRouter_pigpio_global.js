@@ -1,4 +1,3 @@
-// import { exec } from 'child_process';
 import express from 'express'
 const router = express.Router()
 import mainAuth from "../authorize/mainAuth.js" 
@@ -9,19 +8,7 @@ const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
 const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
-
-// //== ใช้ได้แต่บน Linux เท่านั้น (Raspberry Pi OS)
-// const { pigpio } = await import('pigpio-client');
-// let gpio = null;
-// if (process.platform === 'linux') {
-//   try {
-//     gpio = pigpio({ host: 'localhost' });
-//   } catch (err) {
-//     console.log('pigpio-client error:', err.message);
-//   }
-// }
 let LED1_STATE = 0;
-
 
 //=============================================
 // 
@@ -48,7 +35,7 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 })
 
 //=============================================
-// เมื่อมีการกดสวิตช์ 
+// เมื่อกดสวิตช์บนเว็บ
 //
 router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
   // console.log(`-----------------${req.originalUrl}----------------------`)
@@ -95,8 +82,43 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
   }
 })
 
+//=============================================
+// เมื่อกดปุ่มสวิตช์ที่ตัวบอร์ด
+//
+router.post(PATH_SWITCH_BUTTON, async (req, res) => {
+  console.log(`-----------------${req.originalUrl}----------------------`)
+  console.log("req.body ===> " , req.body)
+  // req.body ===>  { buttonId: 'btn1' }
+  const { buttonId } = req.body;
 
+  // try {
+  //   //=== ตรวจสอบค่าที่ส่งมา
+  //   if(!buttonId){
+  //     return res.status(400).send({
+  //       status: 'error',
+  //       message: 'Missing buttonId in request body',
+  //     });
+  //   }
 
+  //   //=== สลับสถานะ LED1
+  //   LED1_STATE = LED1_STATE === 0 ? 1 : 0;
+  //   if (global.gpio) {
+  //     await global.led1.modeSet('output');
+  //     await global.led1.write(LED1_STATE);
+  //   } 
+  //   res.send({
+  //     status: 'ok',
+  //     buttonId: buttonId,
+  //     led1State: LED1_STATE,
+  //   });
+  // } catch (error) {
+  //   console.log("Error ===> " , error.message)
+  //   res.status(500).send({
+  //     status: 'error',
+  //     message: error.message,
+  //   });
+  // }
+})  
 
 export default router
 
