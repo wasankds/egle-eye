@@ -118,6 +118,11 @@ if (process.platform === 'linux') {
     global.led1.modeSet('output');
     global.led1.write(global.LED1_STATE); // ทดสอบเปิด LED
 
+    //=== RELAY1 ***
+    global.relay1 = global.gpio.gpio(Number(global.RELAY1_PIN));
+    global.relay1.modeSet('output');
+    global.relay1.write(global.RELAY1_STATE); // ทดสอบเปิด RELAY
+
     //=== BTN1 ***
     global.btn1 = global.gpio.gpio(global.BTN1_PIN);
     global.btn1.modeSet('input');
@@ -142,11 +147,17 @@ if (process.platform === 'linux') {
         global.led1.write(newLedState);
         global.LED1_STATE = newLedState;
         
+        //== เปิด/ปิด RELAY1
+        const newRelayState = global.RELAY1_STATE === 1 ? 0 : 1;
+        global.relay1.write(newRelayState);
+        global.RELAY1_STATE = newRelayState;
+
         //=== boardcast ผ่าน socket.io
         global.io.emit('button_pressed', { 
           buttonId: 'btn1', 
           ledState: global.LED1_STATE 
         });
+
       }
     });
     //=== ตรวจสอบ error
@@ -154,13 +165,6 @@ if (process.platform === 'linux') {
       console.error('btn1 error:', err);
     });
 
-
-    //=== RELAY1 ***
-    global.relay1 = global.gpio.gpio(Number(global.RELAY1_PIN));
-    global.relay1.modeSet('output');
-    global.relay1.write(global.RELAY1_STATE); // ทดสอบเปิด RELAY
-
-    
 
   });
 
