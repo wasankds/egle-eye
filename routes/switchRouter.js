@@ -67,16 +67,16 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
         message: 'Missing id or switchState in request body',
       });
     }
-    const cmd = switchState === 'on' ? 1 : 0;
-    console.log(`Executing: pigs w ${global.LED1_PIN} ${cmd}`);
 
+    //=== 
     if (process.platform === 'linux') {
-      //=== ควบคุม GPIO
-      LED1_STATE = switchState === 'on' ? 1 : 0;
-      execSync(`pigs w ${global.LED1_PIN} ${LED1_STATE}`);
+      // LED1_STATE = switchState === 'on' ? 1 : 0;
+      // execSync(`pigs w ${global.LED1_PIN} ${LED1_STATE}`);
+      exec(`pigs w ${global.LED1_PIN} ${switchState === 'on' ? 1 : 0}`, (err, stdout, stderr) => {
+        if (err) console.log('pigs error:', err.message);
+      });
     } else {
-      //=== ไม่มี GPIO
-      console.log('GPIO control is not available on this platform.');
+      console.log('No Linux platform.');
     }
 
     // //=== ควบคุม GPIO
