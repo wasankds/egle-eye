@@ -32,6 +32,7 @@ global.PAGE_USERS = 'ผู้ใช้งาน'
 global.PAGE_USER_INFO = 'ข้อมูลผู้ใช้งาน'
 global.PAGE_PASSWORD_FORGOT = 'ลืมรหัสผ่าน'
 global.PAGE_PASSWORD_RESET = 'รีเซ็ตรหัสผ่าน'
+global.PAGE_SWITCH = 'สวิตช์'
 global.USER_AUTHORITIES = ["O", "A", "U"]
 global.USER_AUTHORITIES_TABLE = [ 
   { auth: "O", name : 'Owner', nameThai : 'เจ้าของระบบ' }, 
@@ -84,6 +85,14 @@ global.NAV_LEFT = [
   //   userAuthorities: ['O','A','U'],
   //   separator: false,    
   // },
+  { // 
+    path: '/switch', 
+    title: PAGE_SWITCH,
+    icon: 'fas fa-toggle-on', // ไอค่อนรูปสวิตช์
+    menuColor : 'menu-blue',
+    userAuthorities: ['O','A','U'],
+    separator: false,    
+  },
 ]
 
 
