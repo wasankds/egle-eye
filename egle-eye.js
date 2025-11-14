@@ -105,23 +105,6 @@ server.listen(PORT, () => {
 });
 
 
-// const { pigpio } = await import('pigpio-client');
-// const gpio = pigpio({ host: 'localhost' });
-// const button = gpio.gpio(16);
-
-// button.modeSet('input');
-// button.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
-
-// button.notify((level, tick) => {
-//   if (level === 0) { // ปุ่มถูกกด (active low)
-//     // ส่ง HTTP POST ไปยัง API
-//     fetch('http://localhost/switch/switch-button', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ buttonId: 'btn1' })
-//     });
-//   }
-// });
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
@@ -135,6 +118,7 @@ if (process.platform === 'linux') {
   global.button1.modeSet('input');
   global.button1.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
   global.button1.notify((level, tick) => {
+    console.log(`🔘 Button1 level: ${level} at tick: ${tick}`);
     if (level === 0) { // ปุ่มถูกกด (active low)
       // ส่ง HTTP POST ไปยัง API
       fetch('http://localhost/switch/switch-button', {
@@ -221,3 +205,22 @@ function startSensor() {
 
 */
 
+
+
+// const { pigpio } = await import('pigpio-client');
+// const gpio = pigpio({ host: 'localhost' });
+// const button = gpio.gpio(16);
+
+// button.modeSet('input');
+// button.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
+
+// button.notify((level, tick) => {
+//   if (level === 0) { // ปุ่มถูกกด (active low)
+//     // ส่ง HTTP POST ไปยัง API
+//     fetch('http://localhost/switch/switch-button', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ buttonId: 'btn1' })
+//     });
+//   }
+// });
