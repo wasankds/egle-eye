@@ -106,7 +106,6 @@ server.listen(PORT, () => {
 
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
-console.log('process.platform ===>', process.platform);
 if (process.platform === 'linux') {
   global.gpio = pigpio({ host: 'localhost' });
   global.led1 = global.gpio.gpio(global.LED1_PIN);
