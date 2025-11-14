@@ -1,6 +1,8 @@
+// ทดสอบ pigpio-client ด้วย ES6 module
 import { pigpio } from 'pigpio-client';
+
 const gpio = pigpio({ host: 'localhost' });
-const led = gpio.gpio(26);
+const led = gpio.gpio(26); // เปลี่ยนหมายเลข GPIO ได้
 
 async function testLed() {
   try {
