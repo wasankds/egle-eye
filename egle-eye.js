@@ -112,30 +112,48 @@ console.log('BTN1_PIN:', global.BTN1_PIN, typeof global.BTN1_PIN);
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
   global.gpio = pigpio({ host: 'localhost' });
-  global.gpio.once('connected', () => console.log('pigpio-client connected!'));
 
-  //=== LED ที่ตัวบอร์ด
-  global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
-  
-  //=== ปุ่มสวิตช์ ที่ตัวบอร์ด
-  if (typeof global.BTN1_PIN !== 'number') {
-    throw new Error('BTN1_PIN is not a number');
-  }
-  global.btn1 = global.gpio.gpio(global.BTN1_PIN);
-  console.log(`${global.btn1}`);
-  global.btn1.modeSet('input');
-  global.btn1.pullUpDown(2);
-  let lastTick = 0;
-  global.btn1.notify((level, tick) => {
-    console.log(`🔘 btn1 notify: level=${level}, tick=${tick}`);
+  global.gpio.once('connected', () => {
+    console.log('pigpio-client connected!');
 
-    if (tick - lastTick < 10000) return; // debounce 10ms
-    lastTick = tick;
-    if (level === 0) {
-      // fetch ...
+    // LED
+    global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
+    global.led1.modeSet('output');
+    global.led1.write(1); // ทดสอบเปิด LED
+
+    // BUTTON
+    if (typeof global.BTN1_PIN !== 'number') {
+      throw new Error('BTN1_PIN is not a number');
     }
+    global.btn1 = global.gpio.gpio(global.BTN1_PIN);
+    global.btn1.modeSet('input');
+    global.btn1.pullUpDown(2); // PUD_UP
+
+    // ตรวจสอบค่าปุ่มรอบแรก
+    global.btn1.read().then(val => {
+      console.log(`btn1 initial value: ${val}`);
+    }).catch(err => {
+      console.error('btn1 read error:', err);
+    });
+
+    // subscribe notify
+    global.btn1.notify((level, tick) => {
+      console.log(`btn1 notify: level=${level}, tick=${tick}`);
+      if (level === 0) {
+        // fetch ...
+      }
+    });
+
+    // ตรวจสอบ error
+    global.btn1.on('error', err => {
+      console.error('btn1 error:', err);
+    });
   });
-};
+
+  global.gpio.on('error', err => {
+    console.error('pigpio-client error:', err);
+  });
+}
 
 // === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {
