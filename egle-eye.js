@@ -104,24 +104,21 @@ server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
-// เพิ่มโค้ดนี้ก่อนบรรทัด global.led1 = global.gpio.gpio(global.LED1_PIN);
-console.log(`LED1_PIN: ${typeof global.LED1_PIN}`);
-console.log('BTN1_PIN:', global.BTN1_PIN, typeof global.BTN1_PIN);
-// BTN1_PIN: 27 number
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
   global.gpio = pigpio({ host: 'localhost' });
 
+  // เมื่อเชื่อมต่อสำเร็จ
   global.gpio.once('connected', () => {
     console.log('pigpio-client connected!');
 
-    // LED
+    //=== LED ***
     global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
     global.led1.modeSet('output');
     global.led1.write(1); // ทดสอบเปิด LED
 
-    // BUTTON
+    //=== BUTTON ***
     if (typeof global.BTN1_PIN !== 'number') {
       throw new Error('BTN1_PIN is not a number');
     }
@@ -129,22 +126,26 @@ if (process.platform === 'linux') {
     global.btn1.modeSet('input');
     global.btn1.pullUpDown(2); // PUD_UP
 
-    // ตรวจสอบค่าปุ่มรอบแรก
+    //=== ตรวจสอบค่าปุ่มรอบแรก
     global.btn1.read().then(val => {
       console.log(`btn1 initial value: ${val}`);
     }).catch(err => {
       console.error('btn1 read error:', err);
     });
 
-    // subscribe notify
+    //=== subscribe notify
     global.btn1.notify((level, tick) => {
       console.log(`btn1 notify: level=${level}, tick=${tick}`);
       if (level === 0) {
-        // fetch ...
+        //=== เปิด/ปิด LED
+        const newLedState = global.LED1_STATE === 1 ? 0 : 1;
+        global.led1.write(newLedState);
+        global.LED1_STATE = newLedState;
+        console.log(`LED1 state changed to: ${global.LED1_STATE}`);
       }
     });
 
-    // ตรวจสอบ error
+    //=== ตรวจสอบ error
     global.btn1.on('error', err => {
       console.error('btn1 error:', err);
     });

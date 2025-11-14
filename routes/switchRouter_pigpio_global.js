@@ -8,7 +8,7 @@ const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
 const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
-let LED1_STATE = 0;
+
 
 //=============================================
 // 
@@ -58,7 +58,7 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       // const led1 = global.led1;
       await global.led1.modeSet('output');
       await global.led1.write(switchState === 'on' ? 1 : 0);
-      LED1_STATE = switchState === 'on' ? 1 : 0;
+      global.LED1_STATE = switchState === 'on' ? 1 : 0;
 
       res.send({
         status: 'ok',
