@@ -20,7 +20,7 @@ const PREFIX = PATH_MAIN.replace(/\//g,"_")
 //================================================================
 // โหลด settings หน้าแรก
 // 
-router.get(PATH_MAIN, mainAuth.isOA , async (req, res) => {
+router.get(PATH_MAIN, mainAuth.isO , async (req, res) => {
   // console.log(`-----------------${req.originalUrl}------------------`)  
   // console.log(req.query)
 
@@ -65,7 +65,7 @@ router.get(PATH_MAIN, mainAuth.isOA , async (req, res) => {
 //================================================================
 // Save
 // 
-router.post(PATH_SAVE, mainAuth.isOA, async (req,res) => {
+router.post(PATH_SAVE, mainAuth.isO, async (req,res) => {
   // console.log(`-----------------${req.originalUrl}------------------`)
   // console.log(req.body)
   
@@ -87,7 +87,7 @@ router.post(PATH_SAVE, mainAuth.isOA, async (req,res) => {
 
 //=======================================================
 //
-router.post(PATH_BACKUP_DB,  mainAuth.isOA , async (req, res) => {
+router.post(PATH_BACKUP_DB,  mainAuth.isO , async (req, res) => {
   // console.log(`-----------------${req.originalUrl}------------------`) 
   // console.log("req.body ===> " , req.body)
 
@@ -121,7 +121,7 @@ router.post(PATH_BACKUP_DB,  mainAuth.isOA , async (req, res) => {
 //=======================================================
 // ดาวน์โหลดไฟล์ backup
 //
-router.get(`${PATH_DOWNLOAD_BACKUP}/:filename`,  mainAuth.isOA , async (req, res) => {
+router.get(`${PATH_DOWNLOAD_BACKUP}/:filename`,  mainAuth.isO , async (req, res) => {
   // console.log(`-----------------${req.originalUrl}------------------`)
   // console.log("req.body ===> " , req.body)
   // console.log("req.params ===> " , req.params)
@@ -161,7 +161,7 @@ router.get(`${PATH_DOWNLOAD_BACKUP}/:filename`,  mainAuth.isOA , async (req, res
 //=======================================================
 // ลบไฟล์ backup ที่ระบุ
 //
-router.get(`${PATH_REMOVE_BACKUP}/:filename`,  mainAuth.isOA , async (req, res) => {
+router.get(`${PATH_REMOVE_BACKUP}/:filename`,  mainAuth.isO , async (req, res) => {
   // console.log(`-----------------${req.originalUrl}------------------`)
   // console.log("req.body ===> " , req.body)
   // console.log("req.params ===> " , req.params)
@@ -202,7 +202,7 @@ router.get(`${PATH_REMOVE_BACKUP}/:filename`,  mainAuth.isOA , async (req, res) 
 
 //=======================================================
 //
-router.post(PATH_UPDATE_SYSTEM,  mainAuth.isOA , async (req, res) => {
+router.post(PATH_UPDATE_SYSTEM,  mainAuth.isO , async (req, res) => {
 
   try {
     //=== รันคำสั่งจาก package.json ที่กำหนดไว้
@@ -260,7 +260,7 @@ router.post(PATH_UPDATE_SYSTEM,  mainAuth.isOA , async (req, res) => {
 
 //=======================================================
 //
-router.post(PATH_RESTART_PM2,  mainAuth.isOA , async (req, res) => {
+router.post(PATH_RESTART_PM2,  mainAuth.isO , async (req, res) => {
   // console.log(`-----------------${req.originalUrl}------------------`)
   // console.log("req.body ===> " , req.body)
 

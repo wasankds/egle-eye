@@ -1,13 +1,17 @@
 import express from 'express'
 const router = express.Router()
 import bcrypt from 'bcrypt'
+import svgCaptcha from 'svg-captcha';
 import mainAuth from "../authorize/mainAuth.js" 
 const myGeneral = await import(`../${myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${myModuleFolder}/myDateTime.js`)
+const mySendmail = await import(`../${global.myModuleFolder}/mySendmail.js`)
+const mySendMessage = await import(`../${global.myModuleFolder}/mySendMessage.js`)
 const { UserManager } = await import(`../${global.myModuleFolder}/UserManager.js`)
 const PATH_LOGIN = '/login'
 const PATH_LOGOUT = '/logout'
 const PATH_FORGOT_PASSWORD = `/password`
+const PATH_CAPTCHA = `/captcha`
 
 //======================================================================
 // 
@@ -41,6 +45,7 @@ router.get(PATH_LOGIN, mainAuth.isLogged, async (req,res) => {
 
       PATH_LOGIN ,
       PATH_FORGOT_PASSWORD  ,
+      PATH_CAPTCHA ,
     })
     return res.send(html)
   }catch(err){
@@ -57,11 +62,19 @@ router.post(PATH_LOGIN, mainAuth.isLogged, async (req, res) => {
   // console.log(`req.body ===> `, req.body)
 
   try{
-    const { userNameEmail, userPassword } = req.body;
+    const { userNameEmail, userPassword, captcha } = req.body;
   
     // ใช้ UserManager ในการจัดการข้อมูลยูสเซอร์
     const userManager = new UserManager(global.db);
     
+    // 0.) ตรวจสอบ captcha
+    if (!captcha || captcha.toLowerCase() !== (req.session.captcha || '').toLowerCase()) {
+      req.flash('msg', { class: "red", text: "รหัสยืนยัน (Captcha) ไม่ถูกต้อง" });
+      req.flash('user', { userNameEmail, userPassword });
+      return res.redirect(PATH_LOGIN);
+    }
+
+
     // 1) ค้นหาจาก username ก่อน
     if(userNameEmail.match(global.EMAIL_PATTERN_REGEX)) {
       var userFind = await userManager.getByEmail(userNameEmail);
@@ -85,7 +98,31 @@ router.post(PATH_LOGIN, mainAuth.isLogged, async (req, res) => {
     }
     await global.db.write();
   
-    // 3) เซ็ตข้อมูลผู้ใช้ลงใน session
+
+    const settings = await myGeneral.getSettings();
+    const settingsSystem = await myGeneral.getSettingsSystem();
+
+    // 3) ส่ง Telegram แจ้งเตือน - ถ้าเปิดไว้
+    if(settings.LOGIN_NOTIFY_TELEGRAM === 1 && settingsSystem.TELEGRAM_BOT_TOKEN && settingsSystem.TELEGRAM_GROUP_CHAT_ID) {
+      const msg = `🔔 มีผู้ใช้งานเข้าสู่ระบบ`+
+        `\n\n- ผู้ใช้: ${userFind.username}`+
+        `\n- เวลา: ${myDateTime.getDateTime()}`+
+        `\n- ไอพี: ${req.ip}`+
+        `\n- เบราว์เซอร์: ${req.headers['user-agent']}`;
+      await mySendMessage.sendMsgToGroup(msg, settingsSystem.TELEGRAM_BOT_TOKEN, settingsSystem.TELEGRAM_GROUP_CHAT_ID);
+    }
+
+    // 4) ส่ง อิเมล์ แจ้งเตือน - ถ้าเปิดไว้
+    if(settings.LOGIN_NOTIFY_EMAIL === 1) {
+      const obj = {
+        ip: req.ip,
+        userAgent: req.headers['user-agent'],
+        dateTime: myDateTime.getDateTime(),
+      }
+      await mySendmail.sendLoginNotify(userFind, obj);
+    }
+
+    // 5) เซ็ตข้อมูลผู้ใช้ลงใน session
     req.session.isAuth = true;
     req.session.userId = userFind.userId;
     req.session.userAuthority = userFind.userAuthority;
@@ -119,6 +156,17 @@ router.get(PATH_LOGOUT, mainAuth.isAuth, (req,res) => {
 
 
 
+
+//===================================================
+// เขียน captcha ไว้ที่ session
+// และส่งรูป captcha กลับไป
+// 
+router.get('/captcha', (req, res) => {
+  const captcha = svgCaptcha.create();
+  req.session.captcha = captcha.text;
+  res.type('svg');
+  res.status(200).send(captcha.data);
+});
 
 
 export default router

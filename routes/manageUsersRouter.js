@@ -1,25 +1,16 @@
-// import fs from 'fs'  ;
-// import ejs from 'ejs'  ;
-// import e from 'connect-flash';
-// import path from 'path' ;
 import express from 'express';
 import bcrypt from 'bcrypt';
 const router = express.Router();
 import mainAuth from "../authorize/mainAuth.js" 
-const myGeneral = await import(`../${myModuleFolder}/myGeneral.js`)
-const myDateTime = await import(`../${myModuleFolder}/myDateTime.js`)
-const lowDb = await import(`../${myModuleFolder}/LowDb.js`)
-// const mySendmail = await import(`../${myModuleFolder}/mySendmail.js`)
-// const myData = await import(`../${myModuleFolder}/myData.js`)
+const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
+const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
+const mySendmail = await import(`../${global.myModuleFolder}/mySendmail.js`) 
+const lowDb = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/manage/users'
 const PATH_SAVE = `${PATH_MAIN}/save`
 const PATH_NEW = `${PATH_MAIN}/new`
 const PATH_LOAD = `${PATH_MAIN}/load`
 const PATH_DELETE = `${PATH_MAIN}/delete`
-// const PATH_PRINT = `${PATH_MAIN}/print`
-// const PATH_CHANGES = `${PATH_MAIN}/changes`
-// const PATH_DOWNLOAD_EXCEL = `${PATH_MAIN}/download-excel`  ;
-// const PATH_UPLOAD_EXCEL = `${PATH_MAIN}/upload-excel`  ;
 const PREFIX = PATH_MAIN.replace(/\//g,"_")
 const ADAY_MINUTES = 24*60*60 // 1 วัน ในหน่วยนาที
 
@@ -28,7 +19,7 @@ const ADAY_MINUTES = 24*60*60 // 1 วัน ในหน่วยนาที
 // 
 // http://localhost/manage/users?sip=&rpp=20&page=1&load_uid=689eb7d54ea43b1123cb847e
 // 
-router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
+router.get(PATH_MAIN, mainAuth.isO, async (req, res) => {
   // console.log(`-----------------${req.originalUrl}----------------------`)
   // console.log("req.query ===> " , req.query)
 
@@ -137,7 +128,7 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 
 //=============================================
 //
-router.post(PATH_LOAD, mainAuth.isOA, async (req, res) => {  
+router.post(PATH_LOAD, mainAuth.isO, async (req, res) => {  
   // console.log(`-----------------${req.originalUrl}----------------------`)
   // console.log("req.body ===> " , req.body)
   const userId = req.body.userId ? Number(req.body.userId) : null;
@@ -161,10 +152,9 @@ router.post(PATH_LOAD, mainAuth.isOA, async (req, res) => {
 // ใช้กับทั้ง Create และ Update
 // http://localhost:3000/manage/users?sip=&rpp=20&page=1&load_uid=100
 // 
-router.post(PATH_SAVE, mainAuth.isOA, async (req, res) => {
-  console.log(`-----------------${req.originalUrl}------------------`)
-  console.log("req.body ===> " , req.body)
-
+router.post(PATH_SAVE, mainAuth.isO, async (req, res) => {
+  // console.log(`-----------------${req.originalUrl}------------------`)
+  // console.log("req.body ===> " , req.body)
 
   //=== 1.) ค่าจาก req.body
   const sip = req.body.sip
@@ -254,40 +244,38 @@ router.post(PATH_SAVE, mainAuth.isOA, async (req, res) => {
 
       //== 1.7) ส่งเมล์ต่อ - เมื่อสร้าง User สำเร็จ
       const redirectUrl_new = `${PATH_MAIN}?sip=${sip}&rpp=${rpp}&page=${page}&load_uid=${newId}`;
-      res.redirect( redirectUrl_new );
+      const flashObj = { ...req.body };
+      delete flashObj.userPassword;
 
-      /*       
-        const flashObj = { ...req.body };
-        delete flashObj.userPassword;
-
-        if (userEmail && userEmail.includes('@') && userEmail.includes('.') && userEmail.length > 5) {
-          const settingsEmail = await myGeneral.getSettingsSystem_Email();
-          if (!settingsEmail || !settingsEmail.EMAIL_WHOSEND || !settingsEmail.EMAIL_PASS) {
-            req.flash('msg', { 
-              class: "yellow", 
-              text: `สร้างยูสเซอร์ ${newId} แล้ว{{sep}}แต่ไม่ได้ส่งอีเมล์ การตั้งค่าการส่งอิเมล์ไม่ถูกต้อง` 
-            });
-            return res.redirect(redirectUrl_new);
-          }
-          //= ส่งอีเมล์แจ้งรหัสผ่านไปยัง user
-          mySendmail.sendRegisterUserEmail(flashObj, userPassword_pure)
-            .then(info => {
-              req.flash('msg', {
-                class: "green",
-                text: `เพิ่มยูสเซอร์และส่งอิเมล์เรียบร้อยแล้ว (${userEmail}){{sep}}(CODE : ${info.response})`
-              });
-              return res.redirect(redirectUrl_new);
-            }).catch(error => {
-              req.flash('userFlash', req.body);
-              req.flash('msg', { class: "red", text: `${error.message}` });
-              return res.redirect(redirectUrl_new);
-            });
-        } else {
-          req.flash('userFlash', req.body);
-          req.flash('msg', { class: "green", text: `เพิ่มยูสเซอร์ ${userEmail}` });
+      if (userEmail && userEmail.includes('@') && userEmail.includes('.') && userEmail.length > 5) {
+        const settingsSystem = await myGeneral.getSettingsSystem();
+        if (!settingsSystem || !settingsSystem.EMAIL_WHOSEND || !settingsSystem.EMAIL_APP_PASSWORD) {
+          req.flash('msg', { 
+            class: "yellow", 
+            text: `สร้างยูสเซอร์ ${newId} แล้ว{{sep}}แต่ไม่ได้ส่งอีเมล์ การตั้งค่าการส่งอิเมล์ไม่ถูกต้อง` 
+          });
           return res.redirect(redirectUrl_new);
-        } 
-      */
+        }
+
+        //=== ส่งเมล์ แจ้งยูสเซอร์ใหม่
+        const info = await mySendmail.sendRegisterUserEmail(flashObj, userPassword_pure)
+        if(info.response && info.response.includes('250')) {
+          req.flash('msg', { 
+            class : "green", 
+            text: `เพิ่มยูสเซอร์และส่งอิเมล์เรียบร้อยแล้ว (${userEmail}){{sep}}(CODE : ${info.response})`
+          })
+          return res.redirect(redirectUrl_new)
+        }else{
+          req.flash('userFlash', req.body);
+          req.flash('msg', { class: "red", text: `${info.message || 'ส่งอีเมล์ไม่สำเร็จ'}` });
+          return res.redirect(redirectUrl_new);
+        }
+
+      } else {
+        req.flash('userFlash', req.body);
+        req.flash('msg', { class: "green", text: `เพิ่มยูสเซอร์ ${userEmail}` });
+        return res.redirect(redirectUrl_new);
+      } 
     }
 
     //=== 2.) กรณี Update
@@ -362,7 +350,7 @@ router.post(PATH_SAVE, mainAuth.isOA, async (req, res) => {
 //=======================================================
 // สร้าง user ใหม่ทันที - ไม่ต้องส่งอิเมล์
 // 
-router.post(PATH_NEW, mainAuth.isOA, async (req, res) => {
+router.post(PATH_NEW, mainAuth.isO, async (req, res) => {
   // console.log(`-----------------${req.originalUrl}------------------`)
   // console.log("req.body ===> " , req.body)
 
@@ -421,7 +409,7 @@ router.post(PATH_NEW, mainAuth.isOA, async (req, res) => {
 
 //=============================================
 // 
-router.post(PATH_DELETE, mainAuth.isOA, async (req, res) => {  
+router.post(PATH_DELETE, mainAuth.isO, async (req, res) => {  
   // console.log(`-----------------${req.originalUrl}----------------------`)
   // console.log("req.body ===> " , req.body)
   // req.body ===>  { userId: '105', load_uid: '104', rpp: '20', sip: '', page: '1' }
@@ -485,7 +473,7 @@ router.post(PATH_DELETE, mainAuth.isOA, async (req, res) => {
 
 // //=============================================
 // // 
-// router.post(PATH_PRINT, mainAuth.isOA, async (req, res) => {  
+// router.post(PATH_PRINT, mainAuth.isO, async (req, res) => {  
 //   // console.log(`-----------------${req.originalUrl}----------------------`)
 //   // console.log("req.body ===> " , req.body)
 
@@ -568,7 +556,7 @@ export default router
 
 // //=============================================
 // // 
-// router.post(PATH_CHANGES, mainAuth.isOA, async (req, res) => {
+// router.post(PATH_CHANGES, mainAuth.isO, async (req, res) => {
 //   // console.log(`-----------------${req.originalUrl}------------------`)
 //   // console.log("req.body ===> ", req.body)
 

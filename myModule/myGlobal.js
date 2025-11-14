@@ -94,7 +94,7 @@ global.NAV_USERS = [ // ผู้ใช้งาน
     title: PAGE_MANAGE_USERS,
     menuColor : 'menu-silver',    
     icon: 'fas fa-users-cog',    // // icon: 'fas fa-users',
-    userAuthorities: ['O','A'],
+    userAuthorities: ['O'],
     separator: false
   },
   {
@@ -102,7 +102,7 @@ global.NAV_USERS = [ // ผู้ใช้งาน
     title: PAGE_MANAGE_SESSIONS,
     icon: 'fas fa-user-clock',
     menuColor : 'menu-silver',
-    userAuthorities: ['O','A'],
+    userAuthorities: ['O'],
     separator: false
   }
 ]
@@ -116,7 +116,7 @@ global.NAV_RIGHT = [
     title: PAGE_MANAGE_SETTINGS,
     icon: 'fas fa-sliders-h',
     menuColor : 'menu-silver',
-    userAuthorities: ['O','A'],
+    userAuthorities: ['O'],
     separator: false, 
   },
   {

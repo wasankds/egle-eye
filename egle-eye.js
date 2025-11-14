@@ -21,13 +21,10 @@ global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
 global.myModuleFolder = global.IS_PRODUCTION ? 'myModule-min' : 'myModule'
 const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
-// import { LowDbSessionStore } from './myModule/LowDB.js';
-// import { EncryptedJSONFile } from './myModule/Crypto.js';
-// const LowDbSessionStore = await import(`./${myModuleFolder}/LowDb.js`).then(mod => mod.LowDbSessionStore);
-// const EncryptedJSONFile = await import(`./${myModuleFolder}/Crypto.js`).then(mod => mod.EncryptedJSONFile);
 const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js`);
 const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
-await import(`./${myModuleFolder}/myGlobal.js`)
+await import(`./${global.myModuleFolder}/myGlobal.js`)
+// await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
 //===
 const app = express();
 const server = createServer(app)

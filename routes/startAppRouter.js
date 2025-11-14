@@ -15,14 +15,15 @@ const START_PASSWORD = process.env.START_PASSWORD || 'qwerty'
 //=======================================================
 // สำหรับเพิ่มยูสเซอร์ WASAN สำหรับการใช้งานครั้งแรก
 // http://localhost/add-wasan?key=wasan123
+// 
 router.get(PATH_ADD_WASAN, async (req, res) => {
-  const { key } = req.query
-  if (key != process.env.ADD_USER_KEY) {
-    req.flash('msg', { class: 'red', text: 'Key ไม่ถูกต้อง' })
-    return res.redirect(PATH_LOGIN)
-  }
-  var users_toAdd = [
-    {
+  try {
+    const { key } = req.query
+    if (key != process.env.ADD_USER_KEY) {
+      req.flash('msg', { class: 'red', text: 'Key ไม่ถูกต้อง' })
+      return res.redirect(PATH_LOGIN)
+    }
+    var users_toAdd = {
       userId: 100,
       userEmail: 'wasankds@gmail.com',
       username: 'wasankds',
@@ -30,38 +31,43 @@ router.get(PATH_ADD_WASAN, async (req, res) => {
       userFirstname: 'Wasan',
       userLastname: 'Khunnadiloksawet',
       userAuthority: 'O',
-      userIsActive: 'active',
+      userStatus: 'active',
       userPassword: await bcrypt.hash(START_PASSWORD, global.BCRYPT_NUMBER),
       dateTimeCanDelete: myDateTime.getDateTime(ADAY_MINUTES*30) // 30 วัน
     }
-  ]
-  let users_toAdd_filtered = []
-  const userManager = new UserManager(global.db)
-  for (const user of users_toAdd) {
-    const userFind = await userManager.getById(user.userId) || 
-                     await userManager.getByEmail(user.userEmail) || 
-                     (user.username && (await userManager.getAll()).find(u => u.username === user.username))
-    if (!userFind) users_toAdd_filtered.push(user)
-  }
-  if (users_toAdd_filtered.length === 0) {
+
+    //=== ค้นหายูสเซอร์ wasankds
+    const userManager = new UserManager(global.db)
+    const dataUsers = await userManager.getAll()
+    const userFind_from_all = dataUsers.find(u => u.username === users_toAdd.username)
+    const userFind_from_email = dataUsers.find(u => u.userEmail === users_toAdd.userEmail)
+    const userFind_from_id = dataUsers.find(u => u.userId === users_toAdd.userId)
+
+    if( userFind_from_all || userFind_from_email || userFind_from_id ) {
+      req.flash('msg', { 
+        class: 'red', 
+        text: `ยูสเซอร์ ${users_toAdd.username} มีอยู่แล้ว` 
+      })
+      return res.redirect(PATH_LOGIN)
+    }   
+
+    //=== เพิ่มผู้ใช้ wasankds
+    await userManager.add(users_toAdd)
     req.flash('msg', { 
-      class: 'red', 
-      text: `ยูสเซอร์ทั้งหมด ${users_toAdd.map(u => u.userId).join(', ')} มีอยู่แล้ว` 
+      class: 'green', 
+      text: `เพิ่มยูสเซอร์ ${users_toAdd.username} สำเร็จ` 
     })
-    return res.redirect(PATH_LOGIN)
+    res.redirect(PATH_LOGIN)
+  }catch (err) {
+    console.log(err.message)
+    req.flash('msg', { class: 'red', text: err.message })
+    res.redirect(PATH_LOGIN)
   }
-  for (const user of users_toAdd_filtered) {
-    await userManager.add(user)
-  }
-  req.flash('msg', { 
-    class: 'green', 
-    text: `เพิ่มยูสเซอร์ ${users_toAdd_filtered.map(u => u.userId).join(', ')} สำเร็จ` 
-  })
-  res.redirect(PATH_LOGIN)
 })
 
 //=======================================================
 // สำหรับเพิ่มยูสเซอร์ทดสอบ
+// http://localhost/add-users?key=wasan123
 // 
 router.get(PATH_ADD_USERS, async (req, res) => {
   let { key } = req.query
@@ -72,35 +78,26 @@ router.get(PATH_ADD_USERS, async (req, res) => {
   var usersToAdd = [
     {
       userId: 90,
-      userEmail: 'test-s@gmail.com',
-      username: 'test-s',
-      userPrefix: 'Mr',
-      userFirstname: 'Test-S',
-      userLastname: 'SSS',
-      userAuthority: 'S',
-      userIsActive: 'active',
-      userPassword: await bcrypt.hash('qwerty', global.BCRYPT_NUMBER)
-    },
-    {
-      userId: 91,
       userEmail: 'test-a@gmail.com',
       username: 'test-a',
       userPrefix: 'Mr',
       userFirstname: 'Test-A',
       userLastname: 'AAA',
       userAuthority: 'A',
-      userIsActive: 'active',
+      userStatus: 'active',
+      dateTimeCanDelete: myDateTime.getDateTime(ADAY_MINUTES),
       userPassword: await bcrypt.hash('qwerty', global.BCRYPT_NUMBER)
     },
     {
-      userId: 92,
+      userId: 91,
       userEmail: 'test-u@gmail.com',
       username: 'test-u',
       userPrefix: 'Mr',
       userFirstname: 'Test-U',
       userLastname: 'UUU',
       userAuthority: 'U',
-      userIsActive: 'active',
+      userStatus: 'active',
+      dateTimeCanDelete: myDateTime.getDateTime(ADAY_MINUTES),
       userPassword: await bcrypt.hash('qwerty', global.BCRYPT_NUMBER)
     }
   ]
@@ -225,7 +222,7 @@ export default router
 //         userFirstname: `user-${i}`,
 //         userLastname: ``,
 //         userAuthority: 'U',
-//         userIsActive: 'active',
+//         userStatus: 'active',
 //         userPassword: await bcrypt.hash(START_PASSWORD, global.BCRYPT_NUMBER),
 //         branchId: 100,
 //         dateTimeCanDelete: myDateTime.getDateTime(ADAY_MINUTES),

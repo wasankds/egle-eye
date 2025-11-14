@@ -34,30 +34,29 @@ export async function sendRegisterUserEmail(user, password){
       port: 465,
       secure: true,
       auth: {
-        user: `${settingsSystem.EMAIL_WHOSEND}`, // ต้องครอบด้วย Backtik
-        pass: `${settingsSystem.EMAIL_APP_PASSWORD}`     // ต้องครอบด้วย Backtik
+        user: settingsSystem.EMAIL_WHOSEND , 
+        pass: settingsSystem.EMAIL_APP_PASSWORD   
       }
     });
-    const sysname = `[${global.SYS_NAME}-${global.SYS_NAME2}]`
+    const sysname = `[${global.SYS_NAME}]`
     const sender = `"${sysname} อิเมล์อัตโนมัติ" <${settingsSystem.EMAIL_WHOSEND}>` // ชื่อผู้ส่งอีเมล์
 
     //=== สร้างเนื้อหาอีเมล์
     const mailOptions = {
       from: sender,
       to: user.userEmail,
-      subject: `${sysname} แจ้งลงทะเบียนยูสเซอร์ [${ myDateTime.getDateTime() }]`.trim() ,  
+      subject: `${sysname} แจ้งลงทะเบียนยูสเซอร์ [${ myDateTime.getDateTime()}]`.trim() ,  
       html: `
         <div style="padding:10px;border-radius:5px;background-color:white;border:1px dashed black;line-height:1rem">
           <p style="font-weight:bold">ข้อมูลยูสเซอร์</p>
           <p>อีเมล์ : <span style="color:blue;">${user.userEmail}</span></p>
           <p>รหัสผ่าน : <span style="color:blue;text-decoration:underline">${password}</span></p>
           <p>ชื่อ : <span style="color:blue;">${user.userPrefix} ${user.userFirstname} ${user.userLastname}</span></p>
-          <p>เบอร์โทรศัพท์ : <span style="color:blue;">${user.userPhone}</span></p>
           <p>สิทธิ์การใช้งาน : <span style="color:blue;">${user.userAuthority}</span></p>
           <p>สถานะ : <span style="color:blue;">${user.userStatus}</span></p>
         </div>
         <p style="margin-top:12px;font-size:14px">
-          <span>เข้าใช้งานระบบ ${global.SYS_NAME} ${global.SYS_NAME2} ได้ที่</span>
+          <span>เข้าใช้งานระบบ ${global.SYS_NAME}-${global.SYS_NAME2} ได้ที่</span>
           <span><a href="${DOMAIN_ALLOW}" target="_blank">${DOMAIN_ALLOW}</span>
         </p>`
     }
@@ -96,7 +95,7 @@ export async function sendResetPassword(user, resetUrl){
       socketTimeout: 10000
     });
 
-    const sysname = `[${global.SYS_NAME}-${global.SYS_NAME2}]`
+    const sysname = `[${global.SYS_NAME}]`
     const sender = `"${sysname} อิเมล์อัตโนมัติ" <${settingsSystem.EMAIL_WHOSEND}>` // ชื่อผู้ส่งอีเมล์
 
     //=== สร้างเนื้อหาอีเมล์
@@ -129,6 +128,57 @@ export async function sendResetPassword(user, resetUrl){
             <span style="color:red">ขอให้ท่านไม่ต้องสนใจอิเมล์ฉะบับนี้</span>
           </p>
         </div>`
+    }
+    return await transporter.sendMail(mailOptions);
+  }catch(err){ 
+    console.log(err)
+    return err
+  }
+}
+
+
+
+//================================================
+// ส่งลิงค์รีเซ็ตพาสเวิร์ด
+// 
+export async function sendLoginNotify(user,obj){
+  try{
+    //=== ต้องดึงข้อมูลการตั้งค่าจากฐานข้อมูล
+    const settingsSystem = await myGeneral.getSettingsSystem()
+
+    if (!settingsSystem || !settingsSystem.EMAIL_WHOSEND || !settingsSystem.EMAIL_APP_PASSWORD) {
+      throw new Error('ไม่ได้ตั้งค่าการส่งอีเมล์อย่างถูกต้อง')
+    }
+    //=== สร้างตัวส่งอีเมล์
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: settingsSystem.EMAIL_WHOSEND, // ต้องครอบด้วย Backtik
+        pass: settingsSystem.EMAIL_APP_PASSWORD     // ต้องครอบด้วย Backtik
+      } ,
+      connectionTimeout: 10000, 
+      greetingTimeout: 10000,
+      socketTimeout: 10000
+    });
+
+    const sysname = `[${global.SYS_NAME}]`
+    const sender = `"${sysname} มีผู้ใช้งานเข้าสู่ระบบ" <${settingsSystem.EMAIL_WHOSEND}>` // ชื่อผู้ส่งอีเมล์
+
+    //=== สร้างเนื้อหาอีเมล์
+    const mailOptions = {
+      from: sender,
+      to: user.userEmail,
+      subject: `${sysname} 🔔 มีผู้ใช้งานเข้าสู่ระบบ [${ obj.dateTime }]`.trim() ,
+      html: `
+        <p>🔔 มีผู้ใช้งานเข้าสู่ระบบ</p>
+        <ul>
+          <li>ผู้ใช้: ${user.username}</li>
+          <li>เวลา: ${obj.dateTime}</li>
+          <li>ไอพี: ${obj.ip}</li>
+          <li>เบราว์เซอร์: ${obj.userAgent}</li>
+        </ul>`
     }
     return await transporter.sendMail(mailOptions);
   }catch(err){ 

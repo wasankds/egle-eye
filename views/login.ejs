@@ -71,46 +71,79 @@
               action="<%= PATH_LOGIN %>" 
               method="POST" autocomplete="off">
   
-            <!--  -->
-            <div class="flex-row">
-              <div class="col-sm-f input-group">
-                <label class="pd-r-s">
-                  <span>ชื่อผู้ใช้หรืออีเมล์</span>
-                  <span class="fc-lime">*</span>
-                </label>
-                <input class="pd-l-m" type="text" name="userNameEmail" 
-                       placeholder="ชื่อผู้ใช้หรืออีเมล์" required>
-              </div>
+          <!--  -->
+          <div class="flex-row">
+            <div class="col-sm-f input-group">
+              <label class="pd-r-s">
+                <span>ชื่อผู้ใช้หรืออีเมล์</span>
+                <span class="fc-lime">*</span>
+              </label>
+              <input class="pd-l-m" type="text" name="userNameEmail" 
+                      placeholder="ชื่อผู้ใช้หรืออีเมล์" required>
             </div>
+          </div>
   
-            <!--  -->
-            <div class="flex-row mg-t-l">
+          <!--  -->
+          <div class="flex-row mg-t-l">
 
-              <div class="col-sm-8-5 input-group">
-                <label class="pd-r-s">
-                  <span>รหัสผ่าน</span>
-                  <span class="fc-lime">*</span>
-                </label>
-                <input class="pd-l-m" type="password" id="userPassword"  name="userPassword" 
-                      placeholder="กรอกรหัสผ่าน" required>
-              </div>
-  
-              <div class="col-sm-1-5 input-group">
-                <label class="pd-r-s">&nbsp;</label>
-                <button class="al-c btn btn-sm bg-dashed" id="btnViewPassword" type="button" 
-                        title="ดูรหัสผ่าน"><i class="fa fa-eye"></i>         
-                </button>
-              </div>
-  
+            <div class="col-sm-8-5 input-group">
+              <label class="pd-r-s">
+                <span>รหัสผ่าน</span>
+                <span class="fc-lime">*</span>
+              </label>
+              <input class="pd-l-m" type="password" id="userPassword"  name="userPassword" 
+                    placeholder="กรอกรหัสผ่าน" required>
             </div>
 
-  
-            <!--  -->
-            <div class="flex-row mg-t-xl">
-              <button class="col-sm-5 bg-login lh-label" type="submit" title="Login">
-                <i class="fa fa-sign-in-alt pd-r-m"></i>เข้าสู่ระบบ
+            <div class="col-sm-1-5 input-group">
+              <label class="pd-r-s">&nbsp;</label>
+              <button class="al-c btn btn-sm bg-dashed" id="btnViewPassword" type="button" 
+                      title="ดูรหัสผ่าน"><i class="fa fa-eye"></i>         
               </button>
             </div>
+
+          </div>
+
+          <!--  -->
+          <!-- <div class="flex-row mg-t-l">
+            <div class="col-sm-f input-group">
+              <label class="pd-r-s">
+                <span>รหัสยืนยัน (Captcha)</span>
+                <span class="fc-lime">*</span>
+              </label>
+              <input class="pd-l-m" type="text" 
+                     name="captcha" placeholder="กรอกรหัสยืนยัน" required>
+              <img src="<%= PATH_CAPTCHA %>" alt="captcha" 
+                   style="vertical-align: middle; margin-left: 10px; height: 40px;">
+              <button class="btn btn-sm bg-pink" type="button" 
+                      onclick="this.previousElementSibling.src='<%= PATH_CAPTCHA %>?'+Date.now()">เปลี่ยนภาพ</button>
+            </div>
+          </div> -->
+
+          <div class="flex-row mg-t-l">
+            <div class="col-sm-f input-group">
+              <label class="pd-r-s">
+                <span>รหัสยืนยัน (Captcha)</span>
+                <span class="fc-lime">*</span>
+              </label>
+              <input class="pd-l-m" type="text"  name="captcha" placeholder="กรอกรหัสยืนยัน" required>
+            </div>
+          </div>
+          <div class="flex-row">
+            <div class="col-sm-f bb bl br bdr3">
+              <img src="<%= PATH_CAPTCHA %>" alt="captcha" 
+                   style="vertical-align: middle; margin-left: 5px; height: 50px; margin: 5px;">
+              <button class="btn btn-sm bg-pink" type="button"  title="เปลี่ยนภาพ"
+                      onclick="this.previousElementSibling.src='<%= PATH_CAPTCHA %>?'+Date.now()"><i class="fa fa-sync-alt"></i></button>
+            </div>
+          </div>
+
+          <!--  -->
+          <div class="flex-row mg-t-xl">
+            <button class="col-sm-5 bg-login lh-label" type="submit" title="Login">
+              <i class="fa fa-sign-in-alt pd-r-m"></i>เข้าสู่ระบบ
+            </button>
+          </div>
   
         </form>
   

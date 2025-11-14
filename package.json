@@ -7,6 +7,8 @@
   "scripts": {
     "dev": "nodemon egle-eye.js",
     "app": "node egle-eye.js",
+    "app-sudo": "sudo node egle-eye.js",
+    "app-pi-sudo": "sudo pigpiod && sudo node egle-eye.js",
     "start": "pm2 start egle-eye.js -i 0",
     "start1": "pm2 start egle-eye.js -i 1",
     "stop": "pm2 stop egle-eye.js",
@@ -45,11 +47,13 @@
     "lowdb": "^7.0.1",
     "luxon": "^3.5.0",
     "multer": "^2.0.0",
+    "node-telegram-bot-api": "^0.66.0",
     "nodemailer": "^6.10.1",
     "readline": "^1.3.0",
     "request": "^2.88.2",
     "sharp": "^0.34.4",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "svg-captcha": "^1.4.0"
   },
   "keywords": [
     "raspberry-pi",

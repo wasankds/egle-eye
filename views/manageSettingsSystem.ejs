@@ -104,12 +104,12 @@
             <i class="fab fa-telegram-plane"></i>
             โทเคนบ็อตส่งข้อความของเทเลแกรม
           </label> 
-          <input class="pd-l-m" type="text"                
-                name="TELEGRAM_BOT_TOKEN" id="TELEGRAM_BOT_TOKEN" 
-                pattern="<%= global.TELEGRAM_BOT_TOKEN_PATTERN_STRING %>"
-                title="<%= global.TELEGRAM_BOT_TOKEN_DESCRIPTION %>"
-                value="<%= settingsSystem?.TELEGRAM_BOT_TOKEN ?? '' %>"
-                placeholder="รูปแบบ: 1234567890:AAH...">
+          <input class="pd-l-m" type="text"
+                 name="TELEGRAM_BOT_TOKEN" id="TELEGRAM_BOT_TOKEN" 
+                 pattern="<%= global.TELEGRAM_BOT_TOKEN_PATTERN_STRING %>"
+                 title="<%= global.TELEGRAM_BOT_TOKEN_DESCRIPTION %>"
+                 value="<%= settingsSystem?.TELEGRAM_BOT_TOKEN ?? '' %>"
+                 placeholder="รูปแบบ: 1234567890:AAH...">
         </div>  
 
         <!-- TELEGRAM_GROUP_CHAT_ID -->
@@ -138,6 +138,9 @@
         </div>  
 
 
+        <p>
+          <%= user.userAuthority %> 
+        </p>
         <!-- Buttons/Save -->
         <section class="flex-row justify-content-center mg-t-xxl">
           <button class="btn-xlh btn-sm bg-save" type="submit">

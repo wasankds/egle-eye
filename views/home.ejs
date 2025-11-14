@@ -52,46 +52,54 @@
     </section>  
 
     <!--  -->
-    <% if(['O','A'].includes(user.userAuthority) && user.isAuth) { %>
-    <section class="mg-t-l mg-b-l">
-      <h3 class="al-c">
-        <i class="fa-solid fa-users mg-r-l"></i> 
-        <span>ผู้ใช้งานระบบ</span>
-      </h3>
-    </section>
+    <% if(['O'].includes(user.userAuthority) && user.isAuth) { %>
+      <section class="mg-t-l mg-b-l">
+        <h3 class="al-c">
+          <i class="fa-solid fa-users mg-r-l"></i> 
+          <span>ผู้ใช้งานระบบ</span>
+        </h3>
+      </section>
 
-    <!--  -->
-    <section class="flex-row">
-      <% global.NAV_USERS.forEach(item => { %>
-      <div class="col-1 w-100 <%= item.menuColor %>">
-        <a href="<%= item.path %>">
-          <i class="<%= item.icon %> mg-r-xl"></i><%= item.title %>
-        </a>
-      </div>
-      <% }) %>
-    </section>
-
+      <!--  -->
+      <section class="flex-row">
+        <% global.NAV_USERS.forEach(item => { %>
+          <% if(item.userAuthorities.includes(user.userAuthority) && user.isAuth) { %>
+            <div class="col-1 w-100 <%= item.menuColor %>">
+              <a href="<%= item.path %>">
+                <i class="<%= item.icon %> mg-r-xl"></i><%= item.title %>
+              </a>
+            </div>
+          <% } %>
+        <% }) %>
+      </section>
     <% } %>
 
     <!--  -->
     <% if(['O','A'].includes(user.userAuthority) && user.isAuth) { %>
+    <%
+      const iconSetting = user.userAuthority === 'O' ? 'fa-solid fa-cog' : 'fa-solid fa-file-contract'
+      const textSetting = user.userAuthority === 'O' ? 'ตั้งค่า' : 'ข้อกำหนดการใช้งาน'
+    %> 
     <section class="mg-t-l mg-b-l">
       <h3 class="al-c">
-        <i class="fa-solid fa-cog mg-r-l"></i> 
-        <span>ตั้งค่า</span>
+        <i class="<%= iconSetting %> mg-r-l"></i> 
+        <span><%= textSetting %></span>
       </h3>
     </section>
 
     <!--  -->
     <section class="flex-row">
       <% global.NAV_RIGHT.forEach(item => { %>
-      <div class="col-1 w-100 <%= item.menuColor %>">
-        <a href="<%= item.path %>">
-          <i class="<%= item.icon %> mg-r-xl"></i><%= item.title %>
-        </a>
-      </div>
+        <% if(item.userAuthorities.includes(user.userAuthority) && user.isAuth) { %>
+          <div class="col-1 w-100 <%= item.menuColor %>">
+            <a href="<%= item.path %>">
+              <i class="<%= item.icon %> mg-r-xl"></i><%= item.title %>
+            </a>
+          </div>
+        <% } %>
       <% }) %>
     </section>
+
     <% } %>
 
 

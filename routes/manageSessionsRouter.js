@@ -14,7 +14,7 @@ const PATH_CLEAR = `${PATH_MAIN}/clear`
 //=======================================================
 //
 // 
-router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
+router.get(PATH_MAIN, mainAuth.isO, async (req, res) => {
   // console.log(`-----------------${req.originalUrl}----------------------`)
   // console.log("req.query ===> " , req.query)
   // const user = await lowDb.getSessionData(req);
@@ -106,7 +106,7 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 
 //=============================================
 // 
-router.post(PATH_DELETE, mainAuth.isOA, async (req, res) => {
+router.post(PATH_DELETE, mainAuth.isO, async (req, res) => {
   // console.log(`-----------------${req.originalUrl}----------------------`)
   // console.log("req.body ===> " , req.body)
   // req.body ===>  { sid: 'DLqLfWdZVzajzQzXdMZB3B_yHUJmpMnF', rpp: '20', page: '1' }
@@ -141,7 +141,7 @@ router.post(PATH_DELETE, mainAuth.isOA, async (req, res) => {
 //=============================================
 // ล้างเซสชั่นที่ว่างเปล่า
 //
-router.get( PATH_CLEAR, mainAuth.isOA, async (req, res) => {
+router.get( PATH_CLEAR, mainAuth.isO, async (req, res) => {
   // console.log(`-----------------${req.originalUrl}----------------------`)
   // console.log("req.query ===> " , req.query)
   const rpp = Number(req.query.rpp) || 20;
