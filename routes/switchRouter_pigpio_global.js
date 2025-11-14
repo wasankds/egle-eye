@@ -79,7 +79,7 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       //=== 3.) Boardcast ผ่าน WebSocket ด้วย
       if(global.io){
         global.io.emit('button_pressed', {
-          buttonId: id,
+          buttonId: 'btn1', 
           ledState: global.LED1_STATE,
           relayState: global.RELAY1_STATE
         });
