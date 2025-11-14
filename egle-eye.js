@@ -116,19 +116,16 @@ if (process.platform === 'linux') {
     //=== LED ***
     global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
     global.led1.modeSet('output');
-    global.led1.write(1); // ทดสอบเปิด LED
+    global.led1.write(global.LED1_STATE); // ทดสอบเปิด LED
 
     //=== BUTTON ***
-    if (typeof global.BTN1_PIN !== 'number') {
-      throw new Error('BTN1_PIN is not a number');
-    }
     global.btn1 = global.gpio.gpio(global.BTN1_PIN);
     global.btn1.modeSet('input');
     global.btn1.pullUpDown(2); // PUD_UP
 
     //=== ตรวจสอบค่าปุ่มรอบแรก
-    global.btn1.read().then(val => {
-      console.log(`btn1 initial value: ${val}`);
+    global.btn1.read().then( val => {
+      console.log(`btn1 initial value: ${val}`); // 1 คือ ปุ่มไม่ถูกกด (active low)
     }).catch(err => {
       console.error('btn1 read error:', err);
     });
@@ -137,11 +134,17 @@ if (process.platform === 'linux') {
     global.btn1.notify((level, tick) => {
       console.log(`btn1 notify: level=${level}, tick=${tick}`);
       if (level === 0) {
+
         //=== เปิด/ปิด LED
         const newLedState = global.LED1_STATE === 1 ? 0 : 1;
         global.led1.write(newLedState);
         global.LED1_STATE = newLedState;
-        console.log(`LED1 state changed to: ${global.LED1_STATE}`);
+        
+        //=== boardcast ผ่าน socket.io
+        global.io.emit('button_pressed', { 
+          buttonId: 'btn1', 
+          ledState: global.LED1_STATE 
+        });
       }
     });
 

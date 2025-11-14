@@ -3,8 +3,14 @@
 <head>
   <%- include('partials/meta',{ time:time}) %>
   <title><%= title %></title>
+
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/cdn/fontawesome/css/all.min.css">
+
+  <!-- socket.io -->
+  <script src="/cdn/socket.io/socket.io.js"></script>
+
   <% if(!IS_PRODUCTION) { %>
   <link rel="stylesheet" href="/css/utils.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/fonts.css?v=<%= time %>">
