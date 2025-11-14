@@ -23,8 +23,10 @@ global.myModuleFolder = global.IS_PRODUCTION ? 'myModule-min' : 'myModule'
 const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
 // import { LowDbSessionStore } from './myModule/LowDB.js';
 // import { EncryptedJSONFile } from './myModule/Crypto.js';
-const LowDbSessionStore = await import(`./${myModuleFolder}/LowDB.js`).then(mod => mod.LowDbSessionStore);
-const EncryptedJSONFile = await import(`./${myModuleFolder}/Crypto.js`).then(mod => mod.EncryptedJSONFile);
+// const LowDbSessionStore = await import(`./${myModuleFolder}/LowDb.js`).then(mod => mod.LowDbSessionStore);
+// const EncryptedJSONFile = await import(`./${myModuleFolder}/Crypto.js`).then(mod => mod.EncryptedJSONFile);
+const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js`);
+const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
 await import(`./${myModuleFolder}/myGlobal.js`)
 //===
 const app = express();

@@ -1,4 +1,3 @@
-// const mainAuth = await import(`../${myModuleFolder}/mainAuth.js`)
 import express from 'express'
 const router = express.Router()
 import mainAuth from "../authorize/mainAuth.js" 
