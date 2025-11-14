@@ -8,3 +8,9 @@ git reset --hard HEAD      # รีเซ็ตไฟล์ทั้งหมด
 git clean -fd              # ลบไฟล์และโฟลเดอร์ที่ไม่ได้อยู่ใน git
 git pull                   # ดึงโค้ดล่าสุดจากรีโมต
 ```
+
+รันคำสั่งเดียวเลย
+
+```bash
+git reset --hard HEAD && git clean -fd && git pull  
+```

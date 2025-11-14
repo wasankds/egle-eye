@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       //=== ยิง fetch ไปที่เซิร์ฟเวอร์ เพื่อบันทึกสถานะสวิตช์
       const switchState = this.checked ? 'on' : 'off';
-      fetch(PATH_SWITCH, {
+      fetch(PATH_SWITCH_WEB, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

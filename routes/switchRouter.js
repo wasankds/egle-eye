@@ -6,17 +6,11 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
-const PATH_SWITCH = `${PATH_MAIN}/switch-request`
+const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-web`
+const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 
-/* 
-scp "D:\aWK_LeaseSystem\egle-eye\routes\switchRouter.js" wasankds@pi3:~/egle-eye/routes/
-scp "D:\aWK_LeaseSystem\egle-eye\views\switch.ejs" wasankds@pi3:~/egle-eye/views/
-scp "D:\aWK_LeaseSystem\egle-eye\public\css\switch.css" wasankds@pi3:~/egle-eye/public/css/
-scp "D:\aWK_LeaseSystem\egle-eye\public\js\switch.js" wasankds@pi3:~/egle-eye/public/js/
-*/
 
 //=============================================
-// 
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
   try {
@@ -30,7 +24,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 
       PREFIX,
       PATH_MAIN,
-      PATH_SWITCH,
+      PATH_SWITCH_WEB,
+      PATH_SWITCH_BUTTON,
     })
     res.send(html)
   } catch (error) {
@@ -42,27 +37,42 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 //=============================================
 // เมื่อมีการกดสวิตช์ 
 //
-router.post(PATH_SWITCH, mainAuth.isOA, async (req, res) => {
+router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
   console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log("req.params ===> " , req.params)
   console.log("req.body ===> " , req.body)
-  // req.params ===>  { id: 's01' }
-  // req.body ===>  { switchState: 'on' }
-
+  // req.body ===>  { switchState: 'on', id: 's01' }
+  
   const { id, switchState } = req.body;
-  if(!id || !switchState){
-    return res.status(400).send({
-      status: 'error',
-      message: 'Missing id or switchState in request body',
-    });
-  }
 
   try {
-    res.send({
-      status: 'ok',
-      switchId: id,
-      switchState: switchState,
-    });
+
+    //=== ตรวจสอบค่าที่ส่งมา
+    if(!id || !switchState){
+      return res.status(400).send({
+        status: 'error',
+        message: 'Missing id or switchState in request body',
+      });
+    }
+
+    //=== ควบคุม GPIO ด้วย global.led1 ที่ setup ไว้แล้ว
+    if (global.led1) {
+      console.log('Controlling GPIO via global.led1');
+      await global.led1.modeSet('output');
+      await global.led1.write(switchState === 'on' ? 1 : 0);
+      global.LED1_STATE = switchState === 'on' ? 1 : 0;
+      res.send({
+        status: 'ok',
+        switchId: id,
+        switchState: switchState,
+      });
+    } else {
+      //=== ไม่มี GPIO
+      res.send({
+        status: 'no gpio',
+        switchId: id,
+        switchState: switchState,
+      });
+    }
   } catch (error) {
     console.log("Error ===> " , error.message)
     res.status(500).send({
@@ -71,6 +81,9 @@ router.post(PATH_SWITCH, mainAuth.isOA, async (req, res) => {
     });
   }
 })
+
+
+
 
 export default router
 
