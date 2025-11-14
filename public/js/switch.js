@@ -31,19 +31,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-
-
 });
 
 
 //=============================================
 // รับข้อความจาก server ผ่านทาง socket.io
+// - เมื่อมีการกดสวิตช์ที่บอร์ด ปรับสถานะบนเว็บให้ตรงกัน
 //
 document.addEventListener('DOMContentLoaded', function() {
 
-  // const socket = io();
+  const socket = io();
   socket.on('button_pressed', function(data) {
     console.log('Button pressed event received:', data);
+    // { "buttonId": "btn1", "ledState": 0 }
 
     const { buttonId, ledState } = data;
     if (buttonId === 'btn1') {

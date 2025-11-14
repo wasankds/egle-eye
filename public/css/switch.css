@@ -53,8 +53,10 @@ main{
 .switch input:checked + .slider:before {
   transform: translateX(26px);
 }
-/* .switch-status {
+/* 
+.switch-status {
   font-weight: bold;
   color: #2196F3;
   font-size: 1.2rem;
-} */
+} 
+*/

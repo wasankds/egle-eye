@@ -111,14 +111,14 @@ if (process.platform === 'linux') {
 
   // เมื่อเชื่อมต่อสำเร็จ
   global.gpio.once('connected', () => {
-    console.log('pigpio-client connected!');
+    // console.log('pigpio-client connected!');
 
-    //=== LED ***
+    //=== LED1 ***
     global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
     global.led1.modeSet('output');
     global.led1.write(global.LED1_STATE); // ทดสอบเปิด LED
 
-    //=== BUTTON ***
+    //=== BTN1 ***
     global.btn1 = global.gpio.gpio(global.BTN1_PIN);
     global.btn1.modeSet('input');
     global.btn1.pullUpDown(2); // PUD_UP
@@ -129,12 +129,14 @@ if (process.platform === 'linux') {
     }).catch(err => {
       console.error('btn1 read error:', err);
     });
-
     //=== subscribe notify
     global.btn1.notify((level, tick) => {
-      console.log(`btn1 notify: level=${level}, tick=${tick}`);
+      // console.log(`btn1 notify: level=${level}, tick=${tick}`);
+      // btn1 notify: level=1, tick=1777072481
+      // push switch - กดติด ปล่อยดับ
+      // level === 0 คือ ปุ่มถูกกด (active low) 
+      // level === 1 คือ ปุ่มปล่อย
       if (level === 0) {
-
         //=== เปิด/ปิด LED
         const newLedState = global.LED1_STATE === 1 ? 0 : 1;
         global.led1.write(newLedState);
@@ -147,11 +149,19 @@ if (process.platform === 'linux') {
         });
       }
     });
-
     //=== ตรวจสอบ error
     global.btn1.on('error', err => {
       console.error('btn1 error:', err);
     });
+
+
+    //=== RELAY1 ***
+    global.relay1 = global.gpio.gpio(Number(global.RELAY1_PIN));
+    global.relay1.modeSet('output');
+    global.relay1.write(global.RELAY1_STATE); // ทดสอบเปิด RELAY
+
+    
+
   });
 
   global.gpio.on('error', err => {
@@ -159,7 +169,7 @@ if (process.platform === 'linux') {
   });
 }
 
-// === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
+//=== ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {
   let ledCleanupCalled = false;
   const turnOffLedSync = () => {
