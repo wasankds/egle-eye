@@ -71,7 +71,7 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
     if (process.platform === 'linux') {
       //=== ควบคุม GPIO
       LED1_STATE = switchState === 'on' ? 1 : 0;
-      execSync('pigs w ' + LED1_PIN + ' ' + LED1_STATE);
+      execSync(`pigs w ${LED1_PIN} ${LED1_STATE}`);
     } else {
       //=== ไม่มี GPIO
       console.log('GPIO control is not available on this platform.');
