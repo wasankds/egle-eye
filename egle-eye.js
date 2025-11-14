@@ -76,6 +76,7 @@ app.use((await import(`./${routesFolder}/manageSettingsSystemRouter.js`)).defaul
 app.use((await import(`./${routesFolder}/manageSessionsRouter.js`)).default) 
 app.use((await import(`./${routesFolder}/manageUsersRouter.js`)).default) 
 app.use((await import(`./${routesFolder}/passwordRouter.js`)).default) 
+app.use((await import(`./${routesFolder}/userInfoRouter.js`)).default) 
 //=== socket.io เชื่อมต่อกับ client
 io.on('connection', (socket) => {
   console.log('🔗 New client connected:', socket.id);

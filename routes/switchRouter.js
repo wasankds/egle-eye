@@ -1,30 +1,21 @@
 import express from 'express'
 const router = express.Router()
-// import mainAuth from "../middleware/mainAuth.js" 
-const myGeneral = await import(`../${myModuleFolder}/myGeneral.js`)
-const myDateTime = await import(`../${myModuleFolder}/myDateTime.js`)
-// const myUsers = await import(`../${myModuleFolder}/myUsers.js`)
-const PATH_MAIN = '/'
+import mainAuth from "../authorize/mainAuth.js" 
+const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
+const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
+const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
-const PATH_API_DATA = '/api/data'
-const PATH_TERM = '/term-and-conditions'
 
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'index.html'));
-// });
-// app.get('/api/data', (req, res) => { // API ข้อมูล sensor
-//   res.json(latestData);
-// });
 
 //=============================================
 // 
 // 
-router.get(PATH_MAIN, async (req, res) => {
+router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
   console.log(`---- ${req.originalUrl} ----`)
-  // res.sendFile(folderPublic + '/index.html');
+  console.log("req.query ===> " , req.query)
 
   try {
-    const html = await myGeneral.renderView('index', res, {
+    const html = await myGeneral.renderView('switch', res, {
       title:PAGE_HOME ,
       time : myDateTime.getDate(),
       // msg: req.flash('msg'),
@@ -41,23 +32,6 @@ router.get(PATH_MAIN, async (req, res) => {
   }
 })
 
-//========================
-// API ข้อมูล sensor
-router.get(PATH_API_DATA, (req, res) => {
-  res.json(global.latestData);
-});
-
-
-
-// ดูว่าระบบตั้งค่าอะไรไว้
-router.get('/api/config', (req, res) => {
-  const response = {
-    success: true,
-    // data: sensorConfig,
-    // timestamp: Date.now()
-  };
-  res.json(response);
-});
 
 
 export default router

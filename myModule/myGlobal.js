@@ -15,11 +15,11 @@ global.DB_ENCRYPTED = process.env.DB_ENCRYPTED == 1 ? true : false;
 global.BCRYPT_NUMBER = 12
 // Database
 global.dbName = process.env.DB_NAME
-global.dbColl_settings = 'settings'
-global.dbColl_settingsSystem = 'settingsSystem'
-global.dbColl_sessions = 'sessions'
-global.dbColl_users = 'users'
-global.dbColl_usersResetPassword = 'usersResetPassword'
+// global.dbColl_settings = 'settings'
+// global.dbColl_settingsSystem = 'settingsSystem'
+// global.dbColl_sessions = 'sessions'
+// global.dbColl_users = 'users'
+// global.dbColl_usersResetPassword = 'usersResetPassword'
 // ระบบ
 global.PAGE_HOME = 'ตาเหยี่ยว'
 global.PAGE_TERM = 'ข้อกำหนดและเงื่อนไข'
@@ -32,7 +32,6 @@ global.PAGE_USERS = 'ผู้ใช้งาน'
 global.PAGE_USER_INFO = 'ข้อมูลผู้ใช้งาน'
 global.PAGE_PASSWORD_FORGOT = 'ลืมรหัสผ่าน'
 global.PAGE_PASSWORD_RESET = 'รีเซ็ตรหัสผ่าน'
-// ให้จับจาก .env เวลาขึ้น Server หรือ Update จะได้ไม่มีปัญหา
 global.USER_AUTHORITIES = ["O", "A", "U"]
 global.USER_AUTHORITIES_TABLE = [ 
   { auth: "O", name : 'Owner', nameThai : 'เจ้าของระบบ' }, 

@@ -17,7 +17,6 @@
   <link rel="stylesheet" href="/css/same.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/userInfo.css?v=<%= time %>">
   <% } else { %>
-  <!-- < include('partials/local_fjb.ejs') > -->
   <link rel="stylesheet" href="/css-min/userInfo.min.css?v=<%= time %>">
   <% }  %>
 </head>
@@ -64,28 +63,26 @@
         <div class="form-body">
 
           <!-- Row1 -->
-          <div class="row">
+          <div class="flex-row">
 
-            <div class="col-f flex-row">
-              <!--  -->
-              <div class="col-sm-4 input-group">
-                <label class="pd-r-s al-l lh-label" title="User ID">
-                  <i class="fas fa-id-badge mg-r-m"></i>รหัสผู้ใช้
-                </label>
-                <input class="al-c no-arrow" type="number" id="userId" name="userId" 
-                       placeholder="User ID" readonly
-                       value="<%= isItem ? item.userId : '' %>">
-              </div>
-  
-              <!--  -->
-              <div class="col-sm-6 input-group">
-                <label class="pd-r-s al-l lh-label" title="_id">
-                  <i class="fas fa-id-card mg-r-m"></i><span>_id</span>
-                </label>
-                <input class="al-c" type="text" id="_id" name="_id" 
-                       placeholder="_id" readonly
-                       value="<%= isItem ? item._id : '' %>">
-              </div>
+            <!--  -->
+            <div class="col-sm-3 input-group">
+              <label class="pd-r-s al-l lh-label" title="User ID">
+                <i class="fas fa-id-badge mg-r-m"></i>รหัสผู้ใช้
+              </label>
+              <input class="al-c no-arrow" type="number" id="userId" name="userId" 
+                     placeholder="User ID" readonly
+                     value="<%= isItem ? item.userId : '' %>">
+            </div>
+
+            <div class="col-sm-7 input-group">
+              <label class="pd-r-s al-l lh-label" title="Email">
+                <i class="fas fa-envelope"></i> อิเมล์ *
+              </label>
+              <input type="email" class="al-l pd-l-m" 
+                      required
+                      id="userEmail" name="userEmail" placeholder="Email"
+                      value="<%= isItem ? item.userEmail : '' %>">
             </div>
 
           </div> <!-- Row1 -->
@@ -100,8 +97,8 @@
               <input class="pd-l-m al-l" type="text" 
                     id="username" name="username" placeholder="Username" 
                     required 
-                    pattern="<%= USERNAME_PATTERN %>"
-                    title="<%= USERNAME_DESCRIPTION %>"
+                    pattern="<%= global.USERNAME_PATTERN_STRING %>"
+                    title="<%= global.USERNAME_DESCRIPTION %>"
                     value="<%= isItem ? item.username : '' %>">
             </div>
 
@@ -110,9 +107,9 @@
               <label class="pd-r-s al-l" title="Active Status">
                 <i class="fas fa-user-check"></i> สถานะ *
               </label>
-              <select class="col-25 al-c" name="userIsActive" id="userIsActive" disabled>
-                <option value="<%= isItem && item.userIsActive %>">
-                  <%= isItem && item.userIsActive %>
+              <select class="col-25 al-c" name="userStatus" id="userStatus" disabled>
+                <option value="<%= isItem && item.userStatus %>">
+                  <%= isItem && item.userStatus %>
                 </option>
               </select>
             </div>
@@ -131,38 +128,7 @@
 
           </div> <!-- Row3 -->
 
-
           <!-- Row4 -->
-          <div class="row mg-t-s">
-
-            <div class="col-f flex-row">
-
-              <div class="col-sm-6 input-group">
-                <label class="pd-r-s al-l lh-label" title="Email">
-                  <i class="fas fa-envelope"></i> อิเมล์ *
-                </label>
-                <input type="email" class="al-l pd-l-m" 
-                       required
-                       id="userEmail" name="userEmail" placeholder="Email"
-                       value="<%= isItem ? item.userEmail : '' %>">
-              </div>
-  
-              <div class="col-sm-4 input-group">
-                <label class="pd-r-s al-l lh-label" title="Phone">
-                  <i class="fas fa-phone "></i> โทรศัพท์
-                </label>
-                <input type="text" class="al-l pd-l-m"
-                       title="<%= PHONE_DESCRIPTION %>" 
-                       pattern="<%= PHONE_PATTERN %>"
-                       id="userPhone" name="userPhone" placeholder="Phone"
-                       value="<%= isItem ? item.userPhone : '' %>">
-              </div>
-            </div>
-
-          </div> <!-- Row4 -->
-
-
-          <!-- Row5 -->
           <div class="row mg-t-s">
 
             <div class="col-f flex-row">
@@ -191,7 +157,7 @@
                         id="userLastname" name="userLastname" placeholder="Last Name">
               </div>
             </div>
-          </div> <!-- Row5 -->
+          </div> <!-- Row4 -->
 
 
         </div>
@@ -207,7 +173,6 @@
             onsubmit="createSpinner()"
             action="<%= PATH_CHANGE_PASSWORD %>" method="post">
         
-        <input type="hidden" name="_id" value="<%= isItem ? item._id : '' %>">
         <input type="hidden" name="userId" value="<%= isItem ? item.userId : '' %>">
 
 
@@ -236,8 +201,8 @@
               <input class="al-c" type="password" id="newPassword" name="newPassword" 
                       placeholder="พาสเวิร์ดใหม่"
                       required
-                      pattern="<%= PASSWORD_PATTERN %>"
-                      title="<%= PASSWORD_DESCRIPTION %>"
+                      pattern="<%= global.PASSWORD_PATTERN_STRING %>"
+                      title="<%= global.PASSWORD_DESCRIPTION %>"
                       value="<%= itemPassword ? itemPassword.newPassword : '' %>">
             </div>
 
@@ -249,8 +214,8 @@
               <input class="al-c" type="password" id="confirmPassword" name="confirmPassword" 
                       placeholder="ยืนยันพาสเวิร์ดใหม่"
                       required
-                      pattern="<%= PASSWORD_PATTERN %>"
-                      title="<%= PASSWORD_DESCRIPTION %>"
+                      pattern="<%= global.PASSWORD_PATTERN_STRING %>"
+                      title="<%= global.PASSWORD_DESCRIPTION %>"
                       value="<%= itemPassword ? itemPassword.confirmPassword : '' %>">
             </div>
           </div>
