@@ -12,6 +12,7 @@ import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
 import flash from 'connect-flash'
+import { pigpio } from 'pigpio-client';
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
 global.IS_PRODUCTION = process.env.IS_PRODUCTION == 1 ? true : false
@@ -94,7 +95,7 @@ io.on('connection', (socket) => {
   // เมื่อ client หลุดการเชื่อมต่อ
   socket.on('disconnect', () => {
     console.log('❌ Client disconnected:', socket.id);
-  });
+  });    
 }); 
 
 
@@ -104,7 +105,7 @@ server.listen(PORT, () => {
 
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
-import { pigpio } from 'pigpio-client';
+console.log('process.platform ===>', process.platform);
 if (process.platform === 'linux') {
   global.gpio = pigpio({ host: 'localhost' });
   global.led1 = global.gpio.gpio(global.LED1_PIN);
