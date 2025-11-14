@@ -107,6 +107,7 @@ server.listen(PORT, () => {
 // เพิ่มโค้ดนี้ก่อนบรรทัด global.led1 = global.gpio.gpio(global.LED1_PIN);
 console.log(`LED1_PIN: ${typeof global.LED1_PIN}`);
 console.log('BTN1_PIN:', global.BTN1_PIN, typeof global.BTN1_PIN);
+// BTN1_PIN: 27 number
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
@@ -116,22 +117,24 @@ if (process.platform === 'linux') {
   global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
   
   //=== ปุ่มสวิตช์ ที่ตัวบอร์ด
-  global.btn1 = global.gpio.gpio(Number(global.BTN1_PIN));
+  if (typeof global.BTN1_PIN !== 'number') {
+    throw new Error('BTN1_PIN is not a number');
+  }
+  global.btn1 = global.gpio.gpio(global.BTN1_PIN);
+  console.log(`${global.btn1}`);
   global.btn1.modeSet('input');
-  global.btn1.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
+  global.btn1.pullUpDown(2);
+  let lastTick = 0;
   global.btn1.notify((level, tick) => {
-    console.log(`🔘 btn1 level: ${level} at tick: ${tick}`);
+    console.log(`🔘 btn1 notify: level=${level}, tick=${tick}`);
 
-    if (level === 0) { // ปุ่มถูกกด (active low)
-      // ส่ง HTTP POST ไปยัง API
-      fetch('http://localhost/switch/switch-button', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ buttonId: 'btn1' })
-      });
+    if (tick - lastTick < 10000) return; // debounce 10ms
+    lastTick = tick;
+    if (level === 0) {
+      // fetch ...
     }
   });
-}
+};
 
 // === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {
