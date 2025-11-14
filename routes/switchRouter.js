@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 import express from 'express'
 const router = express.Router()
 import mainAuth from "../authorize/mainAuth.js" 
@@ -59,7 +59,6 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
   const { id, switchState } = req.body;
 
   try {
-
     //=== ตรวจสอบค่าที่ส่งมา
     if(!id || !switchState){
       return res.status(400).send({
@@ -68,40 +67,32 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       });
     }
 
-    //=== 
     if (process.platform === 'linux') {
-      // LED1_STATE = switchState === 'on' ? 1 : 0;
-      // execSync(`pigs w ${global.LED1_PIN} ${LED1_STATE}`);
-      execSync(`pigs w ${global.LED1_PIN} ${switchState === 'on' ? 1 : 0}`, (err, stdout, stderr) => {
-        if (err) console.log('pigs error:', err.message);
+      exec(`pigs w ${global.LED1_PIN} ${switchState === 'on' ? 1 : 0}`, (err, stdout, stderr) => {
+        if (err) {
+          console.log('pigs error:', err.message);
+          return res.status(500).send({
+            status: 'error',
+            message: err.message,
+          });
+        }
+        LED1_STATE = switchState === 'on' ? 1 : 0;
+        res.send({
+          status: 'ok',
+          switchId: id,
+          switchState: switchState,
+        });
       });
     } else {
       console.log('No Linux platform.');
+      res.send({
+        status: 'no gpio',
+        switchId: id,
+        switchState: switchState,
+      });
     }
-
-    // //=== ควบคุม GPIO
-    // if (global.gpio) {
-    //   const led1 = global.led1;
-    //   await led1.modeSet('output');
-    //   await led1.write(switchState === 'on' ? 1 : 0);
-    //   LED1_STATE = switchState === 'on' ? 1 : 0;
-
-    //   res.send({
-    //     status: 'ok',
-    //     switchId: id,
-    //     switchState: switchState,
-    //   });
-    // }else{
-    //   //=== ไม่มี GPIO
-    //   res.send({
-    //     status: 'no gpio',
-    //     switchId: id,
-    //     switchState: switchState,
-    //   });
-    // }
   } catch (error) {
     console.log("Error ===> " , error.message)
-    // Error ===>  Argument 'gpio' is not a user GPIO.
     res.status(500).send({
       status: 'error',
       message: error.message,
