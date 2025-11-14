@@ -7,7 +7,8 @@ package-lock.json
 # items
 # warehouse-in
 # warehouse-out
-# backup
+backup
+data
 
 
 # Logs
