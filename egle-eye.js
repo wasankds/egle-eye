@@ -112,6 +112,11 @@ if (process.platform === 'linux') {
 
   // เมื่อเชื่อมต่อสำเร็จ
   global.gpio.once('connected', () => {
+
+    console.log('✅ pigpio-client connected!');
+    console.log('global.LED1_STATE ===> ' , global.LED1_STATE);
+    console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE);
+
     
     //=== Boardcast สถานะเริ่มต้น
     global.io.emit('button_pressed', { 
