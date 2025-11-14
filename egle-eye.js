@@ -114,11 +114,11 @@ if (process.platform === 'linux') {
   global.led1 = global.gpio.gpio(global.LED1_PIN);
   
   //=== ปุ่มสวิตช์ ที่ตัวบอร์ด
-  global.button1 = global.gpio.gpio(global.BUTTON1_PIN);
-  global.button1.modeSet('input');
-  global.button1.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
-  global.button1.notify((level, tick) => {
-    console.log(`🔘 Button1 level: ${level} at tick: ${tick}`);
+  global.btn1 = global.gpio.gpio(global.BTN1_PIN);
+  global.btn1.modeSet('input');
+  global.btn1.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
+  global.btn1.notify((level, tick) => {
+    console.log(`🔘 btn1 level: ${level} at tick: ${tick}`);
     if (level === 0) { // ปุ่มถูกกด (active low)
       // ส่ง HTTP POST ไปยัง API
       fetch('http://localhost/switch/switch-button', {
