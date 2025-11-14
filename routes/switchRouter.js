@@ -67,6 +67,7 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       });
     }
 
+    //==== 
     if (process.platform === 'linux') {
       exec(`pigs w ${global.LED1_PIN} ${switchState === 'on' ? 1 : 0}`, (err, stdout, stderr) => {
         if (err) {
@@ -88,7 +89,7 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       res.send({
         status: 'no gpio',
         switchId: id,
-        switchState: switchState,
+        switchState: LED1_STATE,
       });
     }
   } catch (error) {
