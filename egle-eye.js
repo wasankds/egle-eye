@@ -180,7 +180,8 @@ if (process.platform === 'linux') {
         //=== boardcast ผ่าน socket.io
         global.io.emit('button_pressed', { 
           buttonId: 'btn1', 
-          ledState: global.LED1_STATE 
+          ledState: global.LED1_STATE,
+          relayState: global.RELAY1_STATE
         });
 
       }

@@ -14,7 +14,7 @@ const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 
-  console.log(`---- ${req.originalUrl} ----`)
+  // console.log(`---- ${req.originalUrl} ----`)
 
   //=== อ่านค่าจาก LED1_STATE และ RELAY1_STATE แล้วส่งไปที่หน้า switch
   const led1State = typeof global.LED1_STATE === 'number' ? global.LED1_STATE : 0;
@@ -76,6 +76,16 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       await global.relay1.write(switchState === 'on' ? 0 : 1); // Active Low
       global.RELAY1_STATE = switchState === 'on' ? 0 : 1;      // Active Low
 
+      //=== 3.) Boardcast ผ่าน WebSocket ด้วย
+      if(global.io){
+        global.io.emit('button_pressed', {
+          buttonId: id,
+          ledState: global.LED1_STATE,
+          relayState: global.RELAY1_STATE
+        });
+      }
+
+      //=== 4.) ส่งผลลัพธ์กลับไป
       res.send({
         status: 'ok',
         switchId: id,
