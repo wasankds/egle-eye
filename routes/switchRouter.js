@@ -74,11 +74,7 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       await led.write(switchState === 'on' ? 1 : 0);
       LED_STATE = switchState === 'on' ? 1 : 0;
 
-      // //=== ตรวจสอบสถานะสวิตช์ (ถ้ามี)
-      // const sw = gpio.gpio(SW_PIN);
-      // await sw.modeSet('input');
-      // const swValue = await sw.read();
-      // console.log(`Switch value on pin ${SW_PIN}: `, swValue);
+
       res.send({
         status: 'ok',
         switchId: id,

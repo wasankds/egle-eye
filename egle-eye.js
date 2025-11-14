@@ -96,58 +96,31 @@ io.on('connection', (socket) => {
   });
 }); 
 
-  server.listen(PORT, () => {
-    console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
-  });
 
-// // === GPIO/Pigpio-client setup (Raspberry Pi Only) ===
-// global.LED1_PIN = 26; // พิน 37
-// global.LED1_STATE = 0;
-// global.SW1_PIN = 16;  // พิน 36 - ยังไม่ได้ใช้
-// global.gpio = null;
-// global.led1 = null;
-// async function setupGpio() {
-//   console.log('Setting up GPIO...');
-//   if (process.platform === 'linux') {
-//     console.log('Running on Linux platform, initializing pigpio-client...');
-//     try {
-//       const { pigpio } = await import('pigpio-client');
-//       global.gpio = pigpio({ host: 'localhost' });
-//       global.led1 = global.gpio.gpio(global.LED1_PIN);
-//       // ปิด LED ตอนปิดระบบ
-//       const turnOffLed = async () => {
-//         try {
-//           await global.led1.modeSet('output');
-//           await global.led1.write(0);
-//           global.LED1_STATE = 0;
-//           console.log('LED ปิดแล้ว (exit)');
-//         } catch (err) {
-//           console.log('Error ปิด LED:', err.message);
-//         }
-//       };
-//       process.once('SIGINT', async () => { await turnOffLed(); process.exit(); });
-//       process.once('SIGTERM', async () => { await turnOffLed(); process.exit(); });
-//       process.once('exit', async () => { await turnOffLed(); });
-//       console.log('GPIO setup เสร็จสมบูรณ์');
-//     } catch (err) {
-//       console.log('pigpio-client error:', err.message);
-//     }
-//   }
-// }
+server.listen(PORT, () => {
+  console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
+});
+
+// === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
+if (process.platform === 'linux') {
+  const turnOffLed = async () => {
+    try {
+      const { pigpio } = await import('pigpio-client');
+      const gpio = pigpio({ host: 'localhost' });
+      const led = gpio.gpio(26); // ใช้หมายเลข GPIO ที่ถูกต้อง
+      await led.modeSet('output');
+      await led.write(0);
+      console.log('LED ปิดแล้ว (exit/terminate)');
+    } catch (err) {
+      console.log('Error ปิด LED (exit):', err.message);
+    }
+  };
+  process.once('SIGINT', async () => { await turnOffLed(); process.exit(); });
+  process.once('SIGTERM', async () => { await turnOffLed(); process.exit(); });
+  process.once('exit', async () => { await turnOffLed(); });
+}
 
 
-// // เรียก setupGpio ก่อน start server เพื่อให้แน่ใจว่า async function ทำงาน
-// setupGpio().then(() => {
-//   console.log('setupGpio() เรียบร้อย เตรียม start server...');
-//   server.listen(PORT, () => {
-//     console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
-//   });
-// }).catch((err) => {
-//   console.log('setupGpio() error:', err);
-//   server.listen(PORT, () => {
-//     console.log(`🌐 Web Server 2 : ${global.DOMAIN_ALLOW}`);
-//   });
-// });
 
 
 
