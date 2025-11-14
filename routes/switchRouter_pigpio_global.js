@@ -10,24 +10,6 @@ const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
 const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 let LED1_STATE = 0;
 
-
-// //===== 
-// import { Gpio } from 'onoff';
-// import fetch from 'node-fetch';
-// const button = new Gpio(16, 'in', 'rising', { debounceTimeout: 10 });
-
-// button.watch((err, value) => {
-//   if (err) return;
-//   // ส่ง POST ไปยัง API
-//   fetch('http://localhost/switch/switch-button', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ buttonId: 'btn1' })
-//   });
-// });
-
-
-
 //=============================================
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
@@ -100,44 +82,6 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
   }
 })
 
-// //=============================================
-// // เมื่อกดปุ่มสวิตช์ที่ตัวบอร์ด
-// //
-// router.post(PATH_SWITCH_BUTTON, async (req, res) => {
-//   console.log(`-----------------${req.originalUrl}----------------------`)
-//   console.log("req.body ===> " , req.body)
-
-//   // req.body ===>  { buttonId: 'btn1' }
-//   const { buttonId } = req.body;
-
-//   // try {
-//   //   //=== ตรวจสอบค่าที่ส่งมา
-//   //   if(!buttonId){
-//   //     return res.status(400).send({
-//   //       status: 'error',
-//   //       message: 'Missing buttonId in request body',
-//   //     });
-//   //   }
-
-//   //   //=== สลับสถานะ LED1
-//   //   LED1_STATE = LED1_STATE === 0 ? 1 : 0;
-//   //   if (global.gpio) {
-//   //     await global.led1.modeSet('output');
-//   //     await global.led1.write(LED1_STATE);
-//   //   } 
-//   //   res.send({
-//   //     status: 'ok',
-//   //     buttonId: buttonId,
-//   //     led1State: LED1_STATE,
-//   //   });
-//   // } catch (error) {
-//   //   console.log("Error ===> " , error.message)
-//   //   res.status(500).send({
-//   //     status: 'error',
-//   //     message: error.message,
-//   //   });
-//   // }
-// })  
 
 export default router
 

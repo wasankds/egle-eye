@@ -106,7 +106,7 @@ server.listen(PORT, () => {
 
 // เพิ่มโค้ดนี้ก่อนบรรทัด global.led1 = global.gpio.gpio(global.LED1_PIN);
 console.log(`LED1_PIN: ${typeof global.LED1_PIN}`);
-console.log(`BTN1_PIN: ${typeof global.BTN1_PIN}`);
+console.log('BTN1_PIN:', global.BTN1_PIN, typeof global.BTN1_PIN);
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
@@ -121,6 +121,7 @@ if (process.platform === 'linux') {
   global.btn1.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
   global.btn1.notify((level, tick) => {
     console.log(`🔘 btn1 level: ${level} at tick: ${tick}`);
+
     if (level === 0) { // ปุ่มถูกกด (active low)
       // ส่ง HTTP POST ไปยัง API
       fetch('http://localhost/switch/switch-button', {
