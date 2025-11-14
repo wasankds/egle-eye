@@ -14,7 +14,7 @@ global.SYS_OWNER_PHONE = '081-459-8343'
 global.DB_ENCRYPTED = process.env.DB_ENCRYPTED == 1 ? true : false;
 global.BCRYPT_NUMBER = 12
 // GPIO Pin
-global.LED1_PIN = 2;    // พิน 3
+global.LED1_PIN = 21;    // พิน 40
 global.SW1_PIN = 16;     // พิน 36
 // Database
 global.dbName = process.env.DB_NAME
