@@ -63,8 +63,8 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
 
       //=== เปิด/ปิด RELAY1
       await global.relay1.modeSet('output');
-      await global.relay1.write(switchState === 'on' ? 1 : 0);
-      global.RELAY1_STATE = switchState === 'on' ? 1 : 0;
+      await global.relay1.write(switchState === 'on' ? 0 : 1); // Active Low
+      global.RELAY1_STATE = switchState === 'on' ? 0 : 1; // Active Low
 
       res.send({
         status: 'ok',
