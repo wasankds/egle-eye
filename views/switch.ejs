@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/cdn/fontawesome/css/all.min.css">
 
   <!-- socket.io -->
-  <script src="/cdn/socket.io/socket.io.js"></script>
+  <script src="/cdn/socket.io.min.js"></script>
 
   <% if(!IS_PRODUCTION) { %>
   <link rel="stylesheet" href="/css/utils.css?v=<%= time %>">
@@ -61,6 +61,7 @@
     const PATH_MAIN = `<%= PATH_MAIN %>`;
     const PATH_SWITCH_WEB = `<%= PATH_SWITCH_WEB %>`;
     const PATH_SWITCH_BUTTON = `<%= PATH_SWITCH_BUTTON %>`;
+    const socket = io();
   </script>
 
   <!--  -->

@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
 //
 document.addEventListener('DOMContentLoaded', function() {
 
-  const socket = io();
+  // const socket = io();
   socket.on('button_pressed', function(data) {
     console.log('Button pressed event received:', data);
 
