@@ -12,7 +12,6 @@ import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
 import flash from 'connect-flash'
-import { time, timeStamp } from 'node:console';
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
@@ -27,6 +26,7 @@ const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
 const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js`);
 const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
 await import(`./${global.myModuleFolder}/myGlobal.js`)
+const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 // await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
 //===
 const app = express();
