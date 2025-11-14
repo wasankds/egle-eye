@@ -105,8 +105,8 @@ server.listen(PORT, () => {
 });
 
 // เพิ่มโค้ดนี้ก่อนบรรทัด global.led1 = global.gpio.gpio(global.LED1_PIN);
-console.log(`LED1_PIN: ${global.LED1_PIN}`);
-console.log(`BTN1_PIN: ${global.BTN1_PIN}`);
+console.log(`LED1_PIN: ${typeof global.LED1_PIN}`);
+console.log(`BTN1_PIN: ${typeof global.BTN1_PIN}`);
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
