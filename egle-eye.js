@@ -3,6 +3,7 @@
 // import path from 'path';
 // import { spawn } from 'child_process';
 import 'dotenv/config'
+import { execSync } from 'child_process';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import fs from 'fs';
@@ -103,21 +104,20 @@ server.listen(PORT, () => {
 
 // === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {
-  const turnOffLed = async () => {
+  let ledCleanupCalled = false;
+  const turnOffLedSync = () => {
+    if (ledCleanupCalled) return;
+    ledCleanupCalled = true;
     try {
-      const { pigpio } = await import('pigpio-client');
-      const gpio = pigpio({ host: 'localhost' });
-      const led = gpio.gpio(26); // ใช้หมายเลข GPIO ที่ถูกต้อง
-      await led.modeSet('output');
-      await led.write(0);
+      execSync(`pigs w ${global.LED1_PIN} 0`);
       console.log('LED ปิดแล้ว (exit/terminate)');
     } catch (err) {
       console.log('Error ปิด LED (exit):', err.message);
     }
   };
-  process.once('SIGINT', async () => { await turnOffLed(); process.exit(); });
-  process.once('SIGTERM', async () => { await turnOffLed(); process.exit(); });
-  process.once('exit', async () => { await turnOffLed(); });
+  process.once('SIGINT', () => { turnOffLedSync(); process.exit(); });
+  process.once('SIGTERM', () => { turnOffLedSync(); process.exit(); });
+  process.once('exit', () => { turnOffLedSync(); });
 }
 
 

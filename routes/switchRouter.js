@@ -18,9 +18,9 @@ if (process.platform === 'linux') {
     console.log('pigpio-client error:', err.message);
   }
 }
-let LED_STATE = 0;
-const LED_PIN = 26;    // พิน 37
-const SW_PIN = 16;     // พิน 36
+let LED1_STATE = 0;
+const LED1_PIN = global.LED1_PIN;    // พิน 37
+const SW1_PIN = global.SW1_PIN;     // พิน 36
 
 
 //=============================================
@@ -69,11 +69,10 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
 
     //=== ควบคุม GPIO
     if (gpio) {
-      const led = gpio.gpio(LED_PIN);
-      await led.modeSet('output');
-      await led.write(switchState === 'on' ? 1 : 0);
-      LED_STATE = switchState === 'on' ? 1 : 0;
-
+      const led1 = gpio.gpio(LED1_PIN);
+      await led1.modeSet('output');
+      await led1.write(switchState === 'on' ? 1 : 0);
+      LED1_STATE = switchState === 'on' ? 1 : 0;
 
       res.send({
         status: 'ok',
