@@ -1,4 +1,4 @@
-const { LowDbSessionStore } = await import(`../${global.myModuleFolder}/LowDB.js`) ; 
+const { LowDbSessionStore } = await import(`../${global.myModuleFolder}/LowDb.js`) ; 
 
 const auth = {
 
