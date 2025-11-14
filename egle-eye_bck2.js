@@ -12,7 +12,7 @@ import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
 import flash from 'connect-flash'
-const { pigpio } = await import('pigpio-client');
+import { pigpio } from 'pigpio-client';
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
 global.IS_PRODUCTION = process.env.IS_PRODUCTION == 1 ? true : false
@@ -80,8 +80,7 @@ app.use((await import(`./${routesFolder}/manageUsersRouter.js`)).default)
 app.use((await import(`./${routesFolder}/passwordRouter.js`)).default) 
 app.use((await import(`./${routesFolder}/userInfoRouter.js`)).default)
 // app.use((await import(`./${routesFolder}/switchRouter.js`)).default) 
-// app.use((await import(`./${routesFolder}/switchRouter_pigpio.js`)).default) 
-app.use((await import(`./${routesFolder}/switchRouter_pigpio_global.js`)).default) 
+app.use((await import(`./${routesFolder}/switchRouter_pigpio.js`)).default) 
 //=== socket.io เชื่อมต่อกับ client
 io.on('connection', (socket) => {
   console.log('🔗 New client connected:', socket.id);
@@ -100,17 +99,18 @@ io.on('connection', (socket) => {
   });    
 }); 
 
+
 server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
 
-//=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
-console.log('process.platform ===>', process.platform);
-if (process.platform === 'linux') {
-  global.gpio = pigpio({ host: 'localhost' });
-  global.led1 = global.gpio.gpio(global.LED1_PIN);
-}
+// //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
+// console.log('process.platform ===>', process.platform);
+// if (process.platform === 'linux') {
+//   global.gpio = pigpio({ host: 'localhost' });
+//   global.led1 = global.gpio.gpio(global.LED1_PIN);
+// }
 
 // === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {

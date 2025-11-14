@@ -10,16 +10,16 @@ const PREFIX = PATH_MAIN.replace(/\//g,"_")
 const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
 const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 
-//== ใช้ได้แต่บน Linux เท่านั้น (Raspberry Pi OS)
-const { pigpio } = await import('pigpio-client');
-let gpio = null;
-if (process.platform === 'linux') {
-  try {
-    gpio = pigpio({ host: 'localhost' });
-  } catch (err) {
-    console.log('pigpio-client error:', err.message);
-  }
-}
+// //== ใช้ได้แต่บน Linux เท่านั้น (Raspberry Pi OS)
+// const { pigpio } = await import('pigpio-client');
+// let gpio = null;
+// if (process.platform === 'linux') {
+//   try {
+//     gpio = pigpio({ host: 'localhost' });
+//   } catch (err) {
+//     console.log('pigpio-client error:', err.message);
+//   }
+// }
 let LED1_STATE = 0;
 
 
@@ -67,10 +67,10 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
     }
 
     //=== ควบคุม GPIO
-    if (gpio) {
-      const led1 = gpio.gpio(LED1_PIN);
-      await led1.modeSet('output');
-      await led1.write(switchState === 'on' ? 1 : 0);
+    if (global.gpio) {
+      // const led1 = global.led1;
+      await global.led1.modeSet('output');
+      await global.led1.write(switchState === 'on' ? 1 : 0);
       LED1_STATE = switchState === 'on' ? 1 : 0;
 
       res.send({
