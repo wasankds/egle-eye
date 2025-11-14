@@ -26,7 +26,7 @@ const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
 const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js`);
 const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
 await import(`./${global.myModuleFolder}/myGlobal.js`)
-const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
+const myDateTime = await import(`./${global.myModuleFolder}/myDateTime.js`)
 // await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
 //===
 const app = express();
