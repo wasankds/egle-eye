@@ -97,6 +97,14 @@ io.on('connection', (socket) => {
 
   // เมื่อ client หลุดการเชื่อมต่อ
   socket.on('disconnect', () => {
+        
+    //=== Boardcast สถานะเริ่มต้น
+    global.io.emit('button_pressed', { 
+      buttonId: 'btn1', 
+      ledState: 0,
+      relayState: 1
+    })
+
     console.log('❌ Client disconnected:', socket.id);
   });    
 }); 
@@ -121,8 +129,8 @@ if (process.platform === 'linux') {
     //=== Boardcast สถานะเริ่มต้น
     global.io.emit('button_pressed', { 
       buttonId: 'btn1', 
-      ledState: global.LED1_STATE,
-      relayState: global.RELAY1_STATE
+      ledState: 0,
+      relayState: 1
     })
 
     //=== LED1 ***
@@ -146,7 +154,7 @@ if (process.platform === 'linux') {
     }).catch(err => {
       console.error('btn1 read error:', err);
     });
-    //=== subscribe notify
+    //=== subscribe notify - เมื่อมีการกดปุ่ม
     global.btn1.notify((level, tick) => {
       // console.log(`btn1 notify: level=${level}, tick=${tick}`);
       // btn1 notify: level=1, tick=1777072481
