@@ -103,21 +103,7 @@ server.listen(PORT, () => {
 });
 
 
-let gpio = null;
-let led1 = null;
-//=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
-if (process.platform === 'linux') {
-  const { pigpio } = await import('pigpio-client');
-  gpio = pigpio({ host: 'localhost' });
-  global.gpio = gpio;
-  console.log('✅ GPIO พร้อมใช้งาน');
 
-  // สร้าง global.led1 เพื่อใช้ใน router ต่างๆ
-  led1 = gpio.gpio(global.LED1_PIN);
-  await led1.modeSet('output');
-  global.led1 = led1;
-  console.log('✅ LED1 GPIO พร้อมใช้งาน');
-}
 
 // === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {

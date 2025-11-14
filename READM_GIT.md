@@ -14,3 +14,10 @@ git pull                   # ดึงโค้ดล่าสุดจากร
 ```bash
 git reset --hard HEAD && git clean -fd && git pull  
 ```
+
+ปิด pigpiod
+
+```bash
+sudo killall pigpiod
+sudo pigpiod
+```bash
