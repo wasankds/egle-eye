@@ -86,13 +86,13 @@ app.use((await import(`./${routesFolder}/switchRouter_pigpio_global.js`)).defaul
 io.on('connection', (socket) => {
   console.log('🔗 New client connected:', socket.id);
 
-  // ส่งข้อมูลล่าสุดให้ client ทันทีที่เชื่อมต่อ
-  socket.emit('sensor_data', global.latestData);
+  // // ส่งข้อมูลล่าสุดให้ client ทันทีที่เชื่อมต่อ
+  // socket.emit('sensor_data', global.latestData);
 
-  // เมื่อ client ขอข้อมูล
-  socket.on('request_data', () => {
-    socket.emit('sensor_data', global.latestData);
-  });
+  // // เมื่อ client ขอข้อมูล
+  // socket.on('request_data', () => {
+  //   socket.emit('sensor_data', global.latestData);
+  // });
 
   // เมื่อ client หลุดการเชื่อมต่อ
   socket.on('disconnect', () => {
