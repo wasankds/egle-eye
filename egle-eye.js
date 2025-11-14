@@ -216,14 +216,12 @@ if (process.platform === 'linux') {
     if (cleanupCalled) return;
     cleanupCalled = true;
     try {
-
       //=== Boardcast สถานะเริ่มต้น
       global.io.emit('button_pressed', { 
         buttonId: 'btn1', 
         ledState: 0,
         relayState: 1
       })
-
       // ปิด LED
       execSync(`pigs w ${global.LED1_PIN} 0`); 
       console.log('LED ปิดแล้ว (exit/terminate)');
@@ -232,14 +230,12 @@ if (process.platform === 'linux') {
     }
 
     try {
-
       //=== Boardcast สถานะเริ่มต้น
       global.io.emit('button_pressed', { 
         buttonId: 'btn1', 
         ledState: 0,
         relayState: 1
       })
-
       // ปิด Relay - Active High to turn off
       execSync(`pigs w ${global.RELAY1_PIN} 1`); 
       console.log('Relay ปิดแล้ว (exit/terminate)');

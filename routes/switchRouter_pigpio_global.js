@@ -7,13 +7,10 @@ const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
-const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
-
 
 //=============================================
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
-
   // console.log(`---- ${req.originalUrl} ----`)
 
   //=== อ่านค่าจาก LED1_STATE และ RELAY1_STATE แล้วส่งไปที่หน้า switch
@@ -28,12 +25,10 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
       msg: req.flash('msg'),
 
       user: await lowDB.getSessionData(req),
-      // settings : await myGeneral.getSettings(),
 
       PREFIX,
       PATH_MAIN,
       PATH_SWITCH_WEB,
-      PATH_SWITCH_BUTTON,
       led1State,
       relay1State,
     })
@@ -48,8 +43,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 // เมื่อกดสวิตช์บนเว็บ
 //
 router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
-  console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log("req.body ===> " , req.body)
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log("req.body ===> " , req.body)
   // req.body ===>  { switchState: 'off', id: 's01' }
   
   const { id, switchState } = req.body;

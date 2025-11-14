@@ -18,14 +18,14 @@ global.BTN1_PIN = 27;   // พิน 13
 global.LED1_PIN = 17;   // พิน 11
 global.LED1_STATE = 0;   // เริ่มต้น LED ปิด (0=ปิด, 1=เปิด)
 global.RELAY1_PIN = 20;  // พิน 38
-global.RELAY1_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) Active Low
+global.RELAY1_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) - Active Low
 // Database
 global.dbName = process.env.DB_NAME
-// global.dbColl_settings = 'settings'
-// global.dbColl_settingsSystem = 'settingsSystem'
-// global.dbColl_sessions = 'sessions'
-// global.dbColl_users = 'users'
-// global.dbColl_usersResetPassword = 'usersResetPassword'
+// global.dbColl_settings = 'settings'              // ไม่ได้ใช้แล้ว
+// global.dbColl_settingsSystem = 'settingsSystem'  // ไม่ได้ใช้แล้ว
+// global.dbColl_sessions = 'sessions' // ไม่ได้ใช้แล้ว
+// global.dbColl_users = 'users'       // ไม่ได้ใช้แล้ว
+// global.dbColl_usersResetPassword = 'usersResetPassword'  // ไม่ได้ใช้แล้ว
 // ระบบ
 global.PAGE_HOME = 'ตาเหยี่ยว'
 global.PAGE_TERM = 'ข้อกำหนดและเงื่อนไข'
@@ -42,8 +42,8 @@ global.PAGE_SWITCH = 'สวิตช์'
 global.USER_AUTHORITIES = ["O", "A", "U"]
 global.USER_AUTHORITIES_TABLE = [ 
   { auth: "O", name : 'Owner', nameThai : 'เจ้าของระบบ' }, 
-  { auth: "A", name : 'Admin', nameThai : 'ผู้ดูแลระบบ' }, 
-  { auth: "U", name : 'User', nameThai : 'พนักงาน' }
+  { auth: "A", name : 'Admin', nameThai : 'สมาชิก' }, 
+  { auth: "U", name : 'User', nameThai : 'อื่นๆ' }
 ]
 global.USER_AUTHORITIES_TITLE = global.USER_AUTHORITIES_TABLE.reduce( (acc, obj) => {  
   acc += `${obj.auth} : ${obj.name} (${obj.nameThai})` + '\n'
@@ -83,15 +83,7 @@ global.fileDb = pathToFolder('data', 'db.json')
 global.file404 = pathToFolder('public','static', '404.html')
 
 global.NAV_LEFT = [
-  // { // 
-  //   path: '/', 
-  //   title: PAGE_HOME,
-  //   icon: 'fas fa-home' ,
-  //   menuColor : 'menu-blue', // ไม่มีในหน้า home
-  //   userAuthorities: ['O','A','U'],
-  //   separator: false,    
-  // },
-  { // 
+  {
     path: '/switch', 
     title: PAGE_SWITCH,
     icon: 'fas fa-toggle-on', // ไอค่อนรูปสวิตช์
@@ -107,7 +99,7 @@ global.NAV_USERS = [ // ผู้ใช้งาน
     path: '/manage/users',
     title: PAGE_MANAGE_USERS,
     menuColor : 'menu-silver',    
-    icon: 'fas fa-users-cog',    // // icon: 'fas fa-users',
+    icon: 'fas fa-users-cog',    // icon: 'fas fa-users',
     userAuthorities: ['O'],
     separator: false
   },
