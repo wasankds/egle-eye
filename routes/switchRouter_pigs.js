@@ -52,8 +52,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 // เมื่อมีการกดสวิตช์ 
 //
 router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
-  console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log("req.body ===> " , req.body)
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log("req.body ===> " , req.body)
   // req.body ===>  { switchState: 'off', id: 's01' }
   
   const { id, switchState } = req.body;
