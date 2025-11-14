@@ -20,8 +20,8 @@ const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 //   }
 // }
 let LED1_STATE = 0;
-const LED1_PIN = global.LED1_PIN;    // พิน 37
-const SW1_PIN = global.SW1_PIN;     // พิน 36
+// const LED1_PIN = global.LED1_PIN;    // พิน 37
+// const SW1_PIN = global.SW1_PIN;     // พิน 36
 
 
 //=============================================
@@ -54,7 +54,7 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
   console.log(`-----------------${req.originalUrl}----------------------`)
   console.log("req.body ===> " , req.body)
-  // req.body ===>  { switchState: 'on', id: 's01' }
+  // req.body ===>  { switchState: 'off', id: 's01' }
   
   const { id, switchState } = req.body;
 
@@ -67,11 +67,13 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
         message: 'Missing id or switchState in request body',
       });
     }
+    const cmd = switchState === 'on' ? 1 : 0;
+    console.log(`Executing: pigs w ${global.LED1_PIN} ${cmd}`);
 
     if (process.platform === 'linux') {
       //=== ควบคุม GPIO
       LED1_STATE = switchState === 'on' ? 1 : 0;
-      execSync(`pigs w ${LED1_PIN} ${LED1_STATE}`);
+      execSync(`pigs w ${global.LED1_PIN} ${LED1_STATE}`);
     } else {
       //=== ไม่มี GPIO
       console.log('GPIO control is not available on this platform.');
