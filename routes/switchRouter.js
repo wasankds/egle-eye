@@ -72,7 +72,7 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
     if (process.platform === 'linux') {
       // LED1_STATE = switchState === 'on' ? 1 : 0;
       // execSync(`pigs w ${global.LED1_PIN} ${LED1_STATE}`);
-      exec(`pigs w ${global.LED1_PIN} ${switchState === 'on' ? 1 : 0}`, (err, stdout, stderr) => {
+      execSync(`pigs w ${global.LED1_PIN} ${switchState === 'on' ? 1 : 0}`, (err, stdout, stderr) => {
         if (err) console.log('pigs error:', err.message);
       });
     } else {
