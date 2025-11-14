@@ -12,6 +12,7 @@ import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
 import flash from 'connect-flash'
+import { time, timeStamp } from 'node:console';
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
@@ -151,6 +152,32 @@ if (process.platform === 'linux') {
         const newRelayState = global.RELAY1_STATE === 1 ? 0 : 1;
         global.relay1.write(newRelayState);
         global.RELAY1_STATE = newRelayState;
+
+        //=== เขียนลง LowDb
+        global.db.read().then( async () => {
+
+          //== สถานะ LED1 กับ RELAY1
+          if (!global.db.data.let1State) {
+            global.db.data.let1State = {};            
+          }
+          global.db.data.let1State['led1'] = {
+            ledState: global.LED1_STATE,
+            relayState: global.RELAY1_STATE,
+            timeStamp: myDateTime.now()
+          };
+
+          //== สถานะ LED1 กับ RELAY1
+          if (!global.db.data.relay1State) {
+            global.db.data.relay1State = {};            
+          }
+          global.db.data.relay1State['relay1'] = {
+            ledState: global.LED1_STATE,
+            relayState: global.RELAY1_STATE,
+            timeStamp: myDateTime.now()
+          };
+
+          await global.db.write();
+        }); 
 
         //=== boardcast ผ่าน socket.io
         global.io.emit('button_pressed', { 
