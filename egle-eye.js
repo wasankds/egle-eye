@@ -104,17 +104,19 @@ server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
-
+// เพิ่มโค้ดนี้ก่อนบรรทัด global.led1 = global.gpio.gpio(global.LED1_PIN);
+console.log(`LED1_PIN: ${global.LED1_PIN}`);
+console.log(`BTN1_PIN: ${global.BTN1_PIN}`);
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
   global.gpio = pigpio({ host: 'localhost' });
 
   //=== LED ที่ตัวบอร์ด
-  global.led1 = global.gpio.gpio(global.LED1_PIN);
+  global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
   
   //=== ปุ่มสวิตช์ ที่ตัวบอร์ด
-  global.btn1 = global.gpio.gpio(global.BTN1_PIN);
+  global.btn1 = global.gpio.gpio(Number(global.BTN1_PIN));
   global.btn1.modeSet('input');
   global.btn1.pullUpDown(2); // 2 = PUD_UP (ถ้าต้องการ pull-up)
   global.btn1.notify((level, tick) => {
@@ -128,8 +130,6 @@ if (process.platform === 'linux') {
       });
     }
   });
-  
-
 }
 
 // === ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
