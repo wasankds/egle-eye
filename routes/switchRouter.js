@@ -6,8 +6,20 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
-const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-web`
-const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
+const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
+//== ใช้ได้แต่บน Linux เท่านั้น (Raspberry Pi OS)
+let gpio = null;
+if (process.platform === 'linux') {
+  try {
+    const { pigpio } = await import('pigpio-client');
+    gpio = pigpio({ host: 'localhost' });
+  } catch (err) {
+    console.log('pigpio-client error:', err.message);
+  }
+}
+let LED_STATE = 0;
+const LED_PIN = 26;    // พิน 37
+const SW_PIN = 16;     // พิน 36
 
 
 //=============================================
@@ -24,8 +36,7 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 
       PREFIX,
       PATH_MAIN,
-      PATH_SWITCH_WEB,
-      PATH_SWITCH_BUTTON,
+      PATH_SWITCH: PATH_SWITCH_WEB,
     })
     res.send(html)
   } catch (error) {
@@ -54,18 +65,24 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       });
     }
 
-    //=== ควบคุม GPIO ด้วย global.led1 ที่ setup ไว้แล้ว
-    if (global.led1) {
-      console.log('Controlling GPIO via global.led1');
-      await global.led1.modeSet('output');
-      await global.led1.write(switchState === 'on' ? 1 : 0);
-      global.LED1_STATE = switchState === 'on' ? 1 : 0;
+    //=== ควบคุม GPIO
+    if (gpio) {
+      const led = gpio.gpio(LED_PIN);
+      await led.modeSet('output');
+      await led.write(switchState === 'on' ? 1 : 0);
+      LED_STATE = switchState === 'on' ? 1 : 0;
+
+      // //=== ตรวจสอบสถานะสวิตช์ (ถ้ามี)
+      // const sw = gpio.gpio(SW_PIN);
+      // await sw.modeSet('input');
+      // const swValue = await sw.read();
+      // console.log(`Switch value on pin ${SW_PIN}: `, swValue);
       res.send({
         status: 'ok',
         switchId: id,
         switchState: switchState,
       });
-    } else {
+    }else{
       //=== ไม่มี GPIO
       res.send({
         status: 'no gpio',
