@@ -13,6 +13,14 @@ const PATH_SWITCH_BUTTON = `${PATH_MAIN}/switch-button`
 //=============================================
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
+
+  console.log(`---- ${req.originalUrl} ----`)
+
+  //=== อ่านค่าจาก LED1_STATE และ RELAY1_STATE แล้วส่งไปที่หน้า switch
+  const led1State = typeof global.LED1_STATE === 'number' ? global.LED1_STATE : 0;
+  const relay1State = typeof global.RELAY1_STATE === 'number' ? global.RELAY1_STATE : 1;
+  console.log(`LED1_STATE = ${led1State} , RELAY1_STATE = ${relay1State}`)
+
   try {
     const html = await myGeneral.renderView('switch', res, {
       title: global.PAGE_SWITCH ,
@@ -26,6 +34,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
       PATH_MAIN,
       PATH_SWITCH_WEB,
       PATH_SWITCH_BUTTON,
+      led1State,
+      relay1State,
     })
     res.send(html)
   } catch (error) {

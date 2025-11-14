@@ -14,9 +14,9 @@ global.SYS_OWNER_PHONE = '081-459-8343'
 global.DB_ENCRYPTED = process.env.DB_ENCRYPTED == 1 ? true : false;
 global.BCRYPT_NUMBER = 12
 // GPIO Pin
+global.BTN1_PIN = 27;   // พิน 13
 global.LED1_PIN = 17; // พิน 11
 global.LED1_STATE = 0;
-global.BTN1_PIN = 27;   // พิน 13
 global.RELAY1_PIN = 20; // พิน 38
 global.RELAY1_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) Active Low
 // Database

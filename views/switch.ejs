@@ -37,15 +37,20 @@
 
   <main>
 
+    <%
+      // const led1State = typeof led1State === 'number' ? led1State : 0;
+      const relay1State = typeof relay1State === 'number' ? relay1State : 1;
+    %>
+
     <!--  -->
     <section class="flex-row">
       <div class="col-sm-f">
         <div class="switch-container">
           <label class="switch">
-            <input type="checkbox" id="s01">
+            <input type="checkbox" id="s01" <%= relay1State === 1 ? 'checked' : '' %>>
             <span class="slider"></span>
           </label>
-          <span class="switch-status" id="s01-status">OFF</span>
+          <span class="switch-status" id="s01-status"><%= relay1State === 1 ? 'ON' : 'OFF' %></span>
         </div>
       </div>
     </section>  

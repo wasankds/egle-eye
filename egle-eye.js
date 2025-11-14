@@ -205,13 +205,16 @@ if (process.platform === 'linux') {
     if (cleanupCalled) return;
     cleanupCalled = true;
     try {
-      execSync(`pigs w ${global.LED1_PIN} 0`); // ปิด LED
+      // ปิด LED
+      execSync(`pigs w ${global.LED1_PIN} 0`); 
       console.log('LED ปิดแล้ว (exit/terminate)');
     } catch (err) {
       console.log('Error ปิด LED (exit):', err.message);
     }
+
     try {
-      execSync(`pigs w ${global.RELAY1_PIN} 1`); // ปิด Relay - Active High to turn off
+      // ปิด Relay - Active High to turn off
+      execSync(`pigs w ${global.RELAY1_PIN} 1`); 
       console.log('Relay ปิดแล้ว (exit/terminate)');
     } catch (err) {
       console.log('Error ปิด Relay (exit):', err.message);
