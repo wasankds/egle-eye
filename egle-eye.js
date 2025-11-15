@@ -3,7 +3,7 @@
 // import path from 'path';
 // import { spawn } from 'child_process';
 import 'dotenv/config'
-import { execSync } from 'child_process';
+import { execSync, exec } from 'child_process';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import fs from 'fs';
@@ -103,6 +103,18 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
+
+  setTimeout(() => {
+    const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;
+    exec(`libcamera-vid -t 10000 -o ${filename} --camera 1`, (err, stdout, stderr) => {
+      if (err) {
+        console.error('Error recording video:', err);
+      } else {
+        console.log('Video saved:', filename);
+      }
+    });
+  }, 5000);
+
 });
 
 
