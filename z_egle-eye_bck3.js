@@ -1,45 +1,46 @@
-// import { exec } from 'child_process';
-// import path from 'node:path';
-// import * as myDateTime from './myModule/myDateTime.js';
-// let videoProcess = null;
-// let recording = true;
+import { exec } from 'child_process';
+import path from 'node:path';
+import * as myDateTime from './myModule/myDateTime.js';
 
-// function startNextClip() {
-//   if (!recording) return;
-//   const filename = `${myDateTime.now_name()}.h264`;
-//   const filepath = path.join('/home/wasankds/videos', filename);
+let videoProcess = null;
+let recording = true;
 
-//   videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 300000`, (err) => {
-//     if (err) {
-//       console.error('Error recording video:', err);
-//     } else {
-//       console.log('Video saved:', filename);
-//     }
-//     // เรียกตัวเองต่อเมื่อคลิปนี้จบ
-//     if (recording) startNextClip();
-//   });
-// }
+function startNextClip() {
+  if (!recording) return;
+  const filename = `${myDateTime.now_name()}.h264`;
+  const filepath = path.join('/home/wasankds/videos', filename);
 
-// // เริ่มบันทึกคลิปแรกหลัง delay 5 วินาที
-// setTimeout(startNextClip, 5000);
+  videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 300000`, (err) => {
+    if (err) {
+      console.error('Error recording video:', err);
+    } else {
+      console.log('Video saved:', filename);
+    }
+    // เรียกตัวเองต่อเมื่อคลิปนี้จบ
+    if (recording) startNextClip();
+  });
+}
 
-// // cleanup ตอนปิดระบบ
-// function cleanup() {
-//   recording = false;
-//   if (videoProcess && !videoProcess.killed) {
-//     try {
-//       videoProcess.kill('SIGTERM');
-//       console.log('rpicam-vid process killed (exit/terminate)');
-//     } catch (err) {
-//       console.log('Error killing rpicam-vid:', err.message);
-//     }
-//   }
-//   // ...ปิด LED/Relay ตามเดิม...
-//   process.exit();
-// }
-// process.once('SIGINT', cleanup);
-// process.once('SIGTERM', cleanup);
-// process.once('exit', cleanup);
+// เริ่มบันทึกคลิปแรกหลัง delay 5 วินาที
+setTimeout(startNextClip, 5000);
+
+// cleanup ตอนปิดระบบ
+function cleanup() {
+  recording = false;
+  if (videoProcess && !videoProcess.killed) {
+    try {
+      videoProcess.kill('SIGTERM');
+      console.log('rpicam-vid process killed (exit/terminate)');
+    } catch (err) {
+      console.log('Error killing rpicam-vid:', err.message);
+    }
+  }
+  // ...ปิด LED/Relay ตามเดิม...
+  process.exit();
+}
+process.once('SIGINT', cleanup);
+process.once('SIGTERM', cleanup);
+process.once('exit', cleanup);
 // import session from 'express-session'
 // import flash from 'connect-flash'
 // import path from 'path';
@@ -69,8 +70,7 @@ const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
 const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js`);
 const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
 await import(`./${global.myModuleFolder}/myGlobal.js`)
-// const myDateTime = await import(`./${global.myModuleFolder}/myDateTime.js`)
-await import(`./${global.myModuleFolder}/myVideoProcess.js`)
+const myDateTime = await import(`./${global.myModuleFolder}/myDateTime.js`)
 // await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
 //===
 const app = express();
@@ -149,20 +149,20 @@ io.on('connection', (socket) => {
 server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 
-  // //===== 
-  // setTimeout( () => {
+  //===== 
+  setTimeout( () => {
 
-  //   // const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;    
-  //   const filename = `${myDateTime.now_name()}.h264`;
-  //   const filepath = path.join('/home/wasankds/videos', filename);
-  //   videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 10000`, (err, stdout, stderr) => {
-  //     if (err) {
-  //       console.error('Error recording video:', err);
-  //     } else {
-  //       console.log('Video saved:', filename);
-  //     }
-  //   });
-  // }, 5000);
+    // const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;    
+    const filename = `${myDateTime.now_name()}.h264`;
+    const filepath = path.join('/home/wasankds/videos', filename);
+    videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 10000`, (err, stdout, stderr) => {
+      if (err) {
+        console.error('Error recording video:', err);
+      } else {
+        console.log('Video saved:', filename);
+      }
+    });
+  }, 5000);
 
 });
 
@@ -295,27 +295,22 @@ if (process.platform === 'linux') {
   };
 
   process.once('SIGINT', () => { turnOffDevicesSync(); process.exit(); });
+    // // ปิด rpicam-vid ถ้ายังรันอยู่
+    // if (videoProcess && !videoProcess.killed) {
+    //   try {
+    //     videoProcess.kill('SIGTERM');
+    //     console.log('rpicam-vid process killed (exit/terminate)');
+    //   } catch (err) {
+    //     console.log('Error killing rpicam-vid:', err.message);
+    //   }
+    // }
   process.once('SIGTERM', () => { turnOffDevicesSync(); process.exit(); });
   process.once('exit', () => { turnOffDevicesSync(); });
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  // ตัวอย่างการ start rpicam-vid แล้วเก็บ reference
+  // videoProcess = exec('rpicam-vid -o ...', ...);
 
 
 

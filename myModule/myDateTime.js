@@ -11,6 +11,12 @@ export function now() {
     .setZone('Asia/Bangkok')
     .toFormat('yyyy-MM-dd HH:mm:ss'); // คืนค่าเป็น string เช่น 2025-09-10 11:30
 }
+//=======
+export function now_name() {
+  return DateTime.now()
+    .setZone('Asia/Bangkok')
+    .toFormat('yyyy-MM-dd_HH-mm-ss'); // คืนค่าเป็น string เช่น 2025-09-10_11-30-00
+}
 
 //=======
 export function getDateTime(minutes=0) {
