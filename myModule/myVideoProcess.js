@@ -1,9 +1,16 @@
+
+
+
 import { exec } from 'child_process';
 import path from 'node:path';
 import fs from 'fs';
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 let videoProcess = null;
 let recording = true;
+// 5 นาที - ประมาณ 240MB/File
+const recordingDurationMs = 5 * 60 * 1000; 
+const videoWidth = 1280;
+const videoHeight = 720;
 
 //===============================================================
 // ฟังก์ชันสำหรับเริ่มบันทึกคลิปถัดไป
@@ -13,8 +20,12 @@ function startNextClip() {
   const filename = `${myDateTime.now_name()}.h264`;
   const filepath = path.join(global.folderVideos, filename);
 
-  // 300000 = 5 นาที
-  videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 300000`, (err) => {
+  // -o คือ output file path
+  // --width ความกว้างวิดีโอ
+  // --height ความสูงวิดีโอ
+  // --timeout ระยะเวลาบันทึกเป็นมิลลิวินาที
+  const cmd = `rpicam-vid -o ${filepath} --width ${videoWidth} --height ${videoHeight} --timeout ${recordingDurationMs}`; 
+  videoProcess = exec(cmd, (err) => {
     if (err) {
       console.error('Error recording video:', err);
     } else {

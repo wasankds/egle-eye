@@ -1,51 +1,5 @@
-// import { exec } from 'child_process';
-// import path from 'node:path';
-// import * as myDateTime from './myModule/myDateTime.js';
-// let videoProcess = null;
-// let recording = true;
-
-// function startNextClip() {
-//   if (!recording) return;
-//   const filename = `${myDateTime.now_name()}.h264`;
-//   const filepath = path.join('/home/wasankds/videos', filename);
-
-//   videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 300000`, (err) => {
-//     if (err) {
-//       console.error('Error recording video:', err);
-//     } else {
-//       console.log('Video saved:', filename);
-//     }
-//     // เรียกตัวเองต่อเมื่อคลิปนี้จบ
-//     if (recording) startNextClip();
-//   });
-// }
-
-// // เริ่มบันทึกคลิปแรกหลัง delay 5 วินาที
-// setTimeout(startNextClip, 5000);
-
-// // cleanup ตอนปิดระบบ
-// function cleanup() {
-//   recording = false;
-//   if (videoProcess && !videoProcess.killed) {
-//     try {
-//       videoProcess.kill('SIGTERM');
-//       console.log('rpicam-vid process killed (exit/terminate)');
-//     } catch (err) {
-//       console.log('Error killing rpicam-vid:', err.message);
-//     }
-//   }
-//   // ...ปิด LED/Relay ตามเดิม...
-//   process.exit();
-// }
-// process.once('SIGINT', cleanup);
-// process.once('SIGTERM', cleanup);
-// process.once('exit', cleanup);
-// import session from 'express-session'
-// import flash from 'connect-flash'
-// import path from 'path';
-// import { spawn } from 'child_process';
 import 'dotenv/config'
-import { execSync, exec } from 'child_process';
+import { exec } from 'child_process';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import fs from 'fs';
@@ -131,8 +85,12 @@ app.use((await import(`./${routesFolder}/switchRouter_pigpio_global.js`)).defaul
 io.on('connection', (socket) => {
   console.log('🔗 New client connected:', socket.id);
 
-  // // ส่งข้อมูลล่าสุดให้ client ทันทีที่เชื่อมต่อ
-  // socket.emit('sensor_data', global.latestData);
+  //=== Boardcast สถานะเริ่มต้น - เมื่อมี client เชื่อมต่อ
+  socket.emit('button_pressed', { 
+    buttonId: 'btn1' , 
+    ledState: global.LED1_STATE,
+    relayState: global.RELAY1_STATE
+  })
 
   // // เมื่อ client ขอข้อมูล
   // socket.on('request_data', () => {
@@ -148,22 +106,6 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
-
-  // //===== 
-  // setTimeout( () => {
-
-  //   // const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;    
-  //   const filename = `${myDateTime.now_name()}.h264`;
-  //   const filepath = path.join('/home/wasankds/videos', filename);
-  //   videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 10000`, (err, stdout, stderr) => {
-  //     if (err) {
-  //       console.error('Error recording video:', err);
-  //     } else {
-  //       console.log('Video saved:', filename);
-  //     }
-  //   });
-  // }, 5000);
-
 });
 
 
@@ -173,17 +115,9 @@ if (process.platform === 'linux') {
 
   // เมื่อเชื่อมต่อสำเร็จ
   global.gpio.once('connected', () => {
-
-    console.log('✅ pigpio-client connected!');
+    console.log('<--- ✅ pigpio-client connected --->');
     console.log('global.LED1_STATE ===> ' , global.LED1_STATE);
     console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE);
-    
-    //=== Boardcast สถานะเริ่มต้น
-    global.io.emit('button_pressed', { 
-      buttonId: 'btn1', 
-      ledState: 0,
-      relayState: 1
-    })
 
     //=== LED1 ***
     global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
@@ -284,11 +218,15 @@ if (process.platform === 'linux') {
         ledState: 0,
         relayState: 1
       })
-      // ปิด LED
-      execSync(`pigs w ${global.LED1_PIN} 0`);    // ปิด LED
-      console.log('LED ปิดแล้ว (exit/terminate)');
-      execSync(`pigs w ${global.RELAY1_PIN} 1`);  // ปิด Relay - Active High to turn off
-      console.log('Relay ปิดแล้ว (exit/terminate)');
+      // exec เป็น asynchronous (ไม่รอคำสั่งจบก่อนจะไปคำสั่งถัดไป)
+      exec(`pigs w ${global.LED1_PIN} 0`);    // ปิด LED
+      exec(`pigs w ${global.RELAY1_PIN} 1`);  // ปิด Relay - Active High to turn off
+      // ถ้าต้องการให้รอคำสั่งปิด LED เสร็จก่อนค่อยปิด RELAY
+      // exec(`pigs w ${global.LED1_PIN} 0`, (err) => {
+      //   if (!err) {
+      //     exec(`pigs w ${global.RELAY1_PIN} 1`);
+      //   }
+      // });
     } catch (err) {
       console.log(err.message);
     }
