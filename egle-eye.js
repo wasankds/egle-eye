@@ -104,9 +104,10 @@ io.on('connection', (socket) => {
 server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 
+  //===== 
   setTimeout(() => {
-    const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;
-    exec(`libcamera-vid -t 10000 -o ${filename} --camera 1`, (err, stdout, stderr) => {
+      const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;
+      exec(`rpicam-vid -o ${filename} --width 1280 --height 720 --timeout 10000`, (err, stdout, stderr) => {
       if (err) {
         console.error('Error recording video:', err);
       } else {
@@ -224,6 +225,7 @@ if (process.platform === 'linux') {
 //=== ปิด LED อัตโนมัติเมื่อปิดระบบหรือ process ถูก kill ===
 if (process.platform === 'linux') {
   let cleanupCalled = false;
+  
   const turnOffDevicesSync = () => {
     if (cleanupCalled) return;
     cleanupCalled = true;
@@ -235,32 +237,32 @@ if (process.platform === 'linux') {
         relayState: 1
       })
       // ปิด LED
-      execSync(`pigs w ${global.LED1_PIN} 0`); 
+      execSync(`pigs w ${global.LED1_PIN} 0`);    // ปิด LED
       console.log('LED ปิดแล้ว (exit/terminate)');
-    } catch (err) {
-      console.log('Error ปิด LED (exit):', err.message);
-    }
-
-    try {
-      //=== Boardcast สถานะเริ่มต้น
-      global.io.emit('button_pressed', { 
-        buttonId: 'btn1', 
-        ledState: 0,
-        relayState: 1
-      })
-      // ปิด Relay - Active High to turn off
-      execSync(`pigs w ${global.RELAY1_PIN} 1`); 
+      execSync(`pigs w ${global.RELAY1_PIN} 1`);  // ปิด Relay - Active High to turn off
       console.log('Relay ปิดแล้ว (exit/terminate)');
     } catch (err) {
-      console.log('Error ปิด Relay (exit):', err.message);
+      console.log(err.message);
     }
   };
+
   process.once('SIGINT', () => { turnOffDevicesSync(); process.exit(); });
+    // ปิด rpicam-vid ถ้ายังรันอยู่
+    if (videoProcess && !videoProcess.killed) {
+      try {
+        videoProcess.kill('SIGTERM');
+        console.log('rpicam-vid process killed (exit/terminate)');
+      } catch (err) {
+        console.log('Error killing rpicam-vid:', err.message);
+      }
+    }
   process.once('SIGTERM', () => { turnOffDevicesSync(); process.exit(); });
   process.once('exit', () => { turnOffDevicesSync(); });
 }
 
 
+  // ตัวอย่างการ start rpicam-vid แล้วเก็บ reference
+  // videoProcess = exec('rpicam-vid -o ...', ...);
 
 
 
