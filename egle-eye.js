@@ -101,13 +101,14 @@ io.on('connection', (socket) => {
   });    
 }); 
 
+let videoProcess = null;
 server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 
   //===== 
-  setTimeout(() => {
-      const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;
-      exec(`rpicam-vid -o ${filename} --width 1280 --height 720 --timeout 10000`, (err, stdout, stderr) => {
+  setTimeout( () => {
+    const filename = `/home/wasankds/videos/video_${new Date().toISOString().replace(/[:.]/g, '-')}.h264`;
+    videoProcess = exec(`rpicam-vid -o ${filename} --width 1280 --height 720 --timeout 10000`, (err, stdout, stderr) => {
       if (err) {
         console.error('Error recording video:', err);
       } else {
