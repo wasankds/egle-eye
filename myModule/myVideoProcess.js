@@ -1,13 +1,12 @@
-// import * as myDateTime from './myModule/myDateTime.js';
-// console.log("-------------------")
-// console.log("myDateTime.now_name() ===>" , myDateTime.now_name())
-
 import { exec } from 'child_process';
 import path from 'node:path';
+import fs from 'fs';
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 let videoProcess = null;
 let recording = true;
 
+//===============================================================
+// ฟังก์ชันสำหรับเริ่มบันทึกคลิปถัดไป
 function startNextClip() {
   if (!recording) return;
 
@@ -15,13 +14,34 @@ function startNextClip() {
   const filepath = path.join(global.folderVideos, filename);
 
   // 300000 = 5 นาที
-  // 30000 = 30 วินาที 
-  videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 30000`, (err) => {
+  videoProcess = exec(`rpicam-vid -o ${filepath} --width 1280 --height 720 --timeout 300000`, (err) => {
     if (err) {
       console.error('Error recording video:', err);
     } else {
       console.log('Video saved:', filename);
     }
+
+    //=== นับไฟล์ในโฟลเดอร์ videos
+    fs.readdir(global.folderVideos, (err, files) => {
+      if (err) {
+        console.error('Error reading videos folder:', err);
+        return 
+      }
+
+      const videoFiles = files.filter(file => file.endsWith('.h264'));
+      if (videoFiles.length > 100) {
+        // เรียงชื่อไฟล์ (timestamp) จากน้อยไปมาก (เก่าที่สุดอยู่ต้น array)
+        videoFiles.sort();
+        const oldestFile = videoFiles[0];
+        if (oldestFile) {
+          fs.unlink(path.join(global.folderVideos, oldestFile), err => {
+            if (err) console.error(`Error deleting file ${oldestFile}:`, err);
+            else console.log(`Deleted oldest video file: ${oldestFile}`);
+          });
+        }
+      }
+    });
+
     // เรียกตัวเองต่อเมื่อคลิปนี้จบ
     if (recording) startNextClip();
   });
@@ -44,7 +64,6 @@ function cleanup() {
       console.log('Error killing rpicam-vid:', err.message);
     }
   }
-  // ...ปิด LED/Relay ตามเดิม...
   process.exit();
 }
 process.once('SIGINT', cleanup);
