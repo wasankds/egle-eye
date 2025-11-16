@@ -148,6 +148,8 @@ if (process.platform === 'linux') {
     // สร้าง object servo1, servo2
     global.servo1 = global.gpio.gpio(18);
     global.servo2 = global.gpio.gpio(13);
+    console.log('DEBUG global.servo1:', global.servo1);
+    console.log('DEBUG global.servo2:', global.servo2);
     // เรียกแบบนี้
     setAngle(global.servo1, 100, 600, 2400);
     setTimeout(() => setAngle(global.servo1, 80, 600, 2400), 1000);
