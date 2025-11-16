@@ -23,7 +23,7 @@ const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
 const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js`);
 const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
 await import(`./${global.myModuleFolder}/myGlobal.js`)
-// await import(`./${global.myModuleFolder}/myVideoProcess.js`) // ใช้จริงให้เปิด 
+await import(`./${global.myModuleFolder}/myVideoProcess.js`) // ใช้จริงให้เปิด 
 // // const myDateTime = await import(`./${global.myModuleFolder}/myDateTime.js`)
 // // await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
 //===
