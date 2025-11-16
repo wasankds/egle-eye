@@ -67,8 +67,6 @@ router.get(PATH_MAIN, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_REQUEST,
-      led1State,
-      relay1State,
     })
     res.send(html)
   } catch (error) {
