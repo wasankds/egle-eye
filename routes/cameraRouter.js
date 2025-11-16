@@ -13,6 +13,8 @@ const PATH_STREAM = `${PATH_MAIN}/stream`
 
 
 router.get(PATH_STREAM, (req, res) => {
+  console.log(`---- ${req.originalUrl} ----`)
+
   // ตั้ง header สำหรับ MJPEG
   res.writeHead(200, {
     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
@@ -52,7 +54,6 @@ router.get(PATH_STREAM, (req, res) => {
 // router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 router.get(PATH_MAIN, async (req, res) => {
   console.log(`---- ${req.originalUrl} ----`)
-
 
   try {
     const html = await myGeneral.renderView('camera', res, {
