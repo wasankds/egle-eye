@@ -16,36 +16,6 @@ const PATH_STREAM = `${PATH_MAIN}/stream`
 ps aux | grep rpicam-vid
 sudo killall rpicam-vid
 */
-// router.get(PATH_STREAM, (req, res) => {
-//   console.log(`---- ${req.originalUrl} ----`);
-
-//   res.writeHead(200, {
-//     'Content-Type': 'video/x-motion-jpeg',
-//     'Cache-Control': 'no-cache',
-//     'Connection': 'close',
-//     'Pragma': 'no-cache'
-//   });
-
-//   const cam = spawn('rpicam-vid', [
-//     '-t', '0',
-//     '--width', '640',
-//     '--height', '480',
-//     '--codec', 'mjpeg',
-//     '-o', '-'
-//   ]);
-
-//   cam.stdout.pipe(res);
-
-//   cam.stderr.on('data', (data) => {
-//     console.log('rpicam-vid stderr:', data.toString());
-//   });
-
-
-//   req.on('close', () => {
-//     cam.kill('SIGINT');
-//   });
-// });
-
 router.get(PATH_STREAM, (req, res) => {
   console.log(`---- ${req.originalUrl} ----`);
 
@@ -61,6 +31,7 @@ router.get(PATH_STREAM, (req, res) => {
     '--width', '640',
     '--height', '480',
     '--codec', 'mjpeg',
+     '--framerate', '10',   // เพิ่มบรรทัดนี้ - ถ้าเอาออก จะทำให้โหลด CPU สูงมาก
     '-o', '-'
   ]);
 
@@ -196,3 +167,34 @@ export default router
 
 
 
+
+
+// router.get(PATH_STREAM, (req, res) => {
+//   console.log(`---- ${req.originalUrl} ----`);
+
+//   res.writeHead(200, {
+//     'Content-Type': 'video/x-motion-jpeg',
+//     'Cache-Control': 'no-cache',
+//     'Connection': 'close',
+//     'Pragma': 'no-cache'
+//   });
+
+//   const cam = spawn('rpicam-vid', [
+//     '-t', '0',
+//     '--width', '640',
+//     '--height', '480',
+//     '--codec', 'mjpeg',
+//     '-o', '-'
+//   ]);
+
+//   cam.stdout.pipe(res);
+
+//   cam.stderr.on('data', (data) => {
+//     console.log('rpicam-vid stderr:', data.toString());
+//   });
+
+
+//   req.on('close', () => {
+//     cam.kill('SIGINT');
+//   });
+// });
