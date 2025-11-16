@@ -16,26 +16,21 @@ router.get(PATH_STREAM, (req, res) => {
   console.log(`---- ${req.originalUrl} ----`);
 
   res.writeHead(200, {
-    'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
+    'Content-Type': 'video/x-motion-jpeg',
     'Cache-Control': 'no-cache',
     'Connection': 'close',
     'Pragma': 'no-cache'
   });
 
-  // ใช้ rpicam-vid สำหรับ MJPEG stream
   const cam = spawn('rpicam-vid', [
-    '-t', '0',                // ไม่จำกัดเวลา
+    '-t', '0',
     '--width', '640',
     '--height', '480',
     '--codec', 'mjpeg',
-    '-o', '-'                 // output ไป stdout
+    '-o', '-'
   ]);
 
-  cam.stdout.on('data', (data) => {
-    res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${data.length}\r\n\r\n`);
-    res.write(data);
-    res.write('\r\n');
-  });
+  cam.stdout.pipe(res);
 
   cam.stderr.on('data', (data) => {
     console.log('rpicam-vid stderr:', data.toString());
