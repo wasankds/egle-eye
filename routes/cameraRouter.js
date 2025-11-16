@@ -54,8 +54,6 @@ router.get(PATH_MAIN, async (req, res) => {
   console.log(`---- ${req.originalUrl} ----`)
 
 
-
-
   try {
     const html = await myGeneral.renderView('camera', res, {
       title: global.PAGE_CAMERA ,
@@ -67,6 +65,7 @@ router.get(PATH_MAIN, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_REQUEST,
+      PATH_STREAM ,
     })
     res.send(html)
   } catch (error) {
