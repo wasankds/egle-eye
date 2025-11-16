@@ -11,12 +11,47 @@ const PREFIX = PATH_MAIN.replace(/\//g,"_")
 const PATH_REQUEST = `${PATH_MAIN}/request`
 const PATH_STREAM = `${PATH_MAIN}/stream`
 
+/* 
+ถ้าติด process อื่นๆอยู่ ให้สั่งหยุดก่อนด้วยคำสั่งนี้
+ps aux | grep rpicam-vid
+sudo killall rpicam-vid
+*/
+// router.get(PATH_STREAM, (req, res) => {
+//   console.log(`---- ${req.originalUrl} ----`);
+
+//   res.writeHead(200, {
+//     'Content-Type': 'video/x-motion-jpeg',
+//     'Cache-Control': 'no-cache',
+//     'Connection': 'close',
+//     'Pragma': 'no-cache'
+//   });
+
+//   const cam = spawn('rpicam-vid', [
+//     '-t', '0',
+//     '--width', '640',
+//     '--height', '480',
+//     '--codec', 'mjpeg',
+//     '-o', '-'
+//   ]);
+
+//   cam.stdout.pipe(res);
+
+//   cam.stderr.on('data', (data) => {
+//     console.log('rpicam-vid stderr:', data.toString());
+//   });
+
+
+//   req.on('close', () => {
+//     cam.kill('SIGINT');
+//   });
+// });
+import { spawn } from 'child_process';
 
 router.get(PATH_STREAM, (req, res) => {
   console.log(`---- ${req.originalUrl} ----`);
 
   res.writeHead(200, {
-    'Content-Type': 'video/x-motion-jpeg',
+    'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
     'Cache-Control': 'no-cache',
     'Connection': 'close',
     'Pragma': 'no-cache'
@@ -30,7 +65,21 @@ router.get(PATH_STREAM, (req, res) => {
     '-o', '-'
   ]);
 
-  cam.stdout.pipe(res);
+  let buffer = Buffer.alloc(0);
+
+  cam.stdout.on('data', (data) => {
+    buffer = Buffer.concat([buffer, data]);
+    // หา JPEG frame (0xFFD8 ... 0xFFD9)
+    let start, end;
+    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
+           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
+      const frame = buffer.slice(start, end + 2);
+      res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+      res.write(frame);
+      res.write('\r\n');
+      buffer = buffer.slice(end + 2);
+    }
+  });
 
   cam.stderr.on('data', (data) => {
     console.log('rpicam-vid stderr:', data.toString());
@@ -40,7 +89,6 @@ router.get(PATH_STREAM, (req, res) => {
     cam.kill('SIGINT');
   });
 });
-
 
 //=============================================
 // 
