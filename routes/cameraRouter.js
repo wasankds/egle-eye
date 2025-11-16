@@ -134,16 +134,16 @@ router.post(PATH_REQUEST,  async (req, res) => {
     //=== ใช้ - servo1
     else if(direction == 'up'){ // ใช้ - servo1
       let sub = 10
-      UP_START += sub
-      if(UP_START > 120) UP_START = 120
+      UP_START -= sub
+      if(UP_START < 60) UP_START = 60
       myServo.setAngle(global.servo1, UP_START, 600, 2400)
-      return  res.send({ status: 'ok up', direction: direction });  
+      return  res.send({ status: 'ok down', direction: direction });
     }else if(direction == 'down'){ // ใช้ - servo1
       let sub = 10
-      DOWN_START -= sub
-      if(DOWN_START < 60) DOWN_START = 60
+      DOWN_START += sub
+      if(DOWN_START > 120) DOWN_START = 120
       myServo.setAngle(global.servo1, DOWN_START, 600, 2400)
-      return  res.send({ status: 'ok down', direction: direction });
+      return  res.send({ status: 'ok up', direction: direction });  
     }
     //=== กลาง
     else if(direction == 'center'){
