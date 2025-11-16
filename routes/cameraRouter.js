@@ -94,78 +94,47 @@ router.get(PATH_MAIN, async (req, res) => {
 
 
 
-// //=============================================
-// // เมื่อกดสวิตช์บนเว็บ
-// //
+//=============================================
+// เมื่อกดสวิตช์บนเว็บ
+//
 // router.post(PATH_REQUEST, mainAuth.isOA, async (req, res) => {
-//   // console.log(`-----------------${req.originalUrl}----------------------`)
-//   // console.log("req.body ===> " , req.body)
-//   // req.body ===>  { switchState: 'off', id: 's01' }
+router.post(PATH_REQUEST,  async (req, res) => {
+  console.log(`-----------------${req.originalUrl}----------------------`)
+  console.log("req.body ===> " , req.body)
+  // req.body ===>  { action: 'move', direction: 'right' }
+
+  const { direction } = req.body;
   
-//   const { id, switchState } = req.body;
 
-//   try {
-//     //=== ตรวจสอบค่าที่ส่งมา
-//     if(!id || !switchState){
-//       return res.status(400).send({
-//         status: 'error',
-//         message: 'Missing id or switchState in request body',
-//       });
-//     }
+  try {
 
-//     //=== ควบคุม GPIO
-//     if (global.gpio) {
-      
-//       //== 1.) เปิด/ปิด LED1
-//       await global.led1.modeSet('output');
-//       await global.led1.write(switchState === 'on' ? 1 : 0);
-//       global.LED1_STATE = switchState === 'on' ? 1 : 0;
-
-//       //== 2.) เปิด/ปิด RELAY1
-//       await global.relay1.modeSet('output');
-//       await global.relay1.write(switchState === 'on' ? 0 : 1); // Active Low
-//       global.RELAY1_STATE = switchState === 'on' ? 0 : 1;      // Active Low
-
-//       //== 3.) ทดสอบหมุนมอเตอร์เซอร์โว
-//       await myServo.setAngle(global.servo1, 100, 600, 2400);
-//       setTimeout(() => myServo.setAngle(global.servo1, 80, 600, 2400), 1000);
-//       setTimeout(() => myServo.setAngle(global.servo1, 90, 600, 2400), 2000);
-
-//       await myServo.setAngle(global.servo2, 100, 600, 2400);
-//       setTimeout(() => myServo.setAngle(global.servo2, 80, 600, 2400), 4000);
-//       setTimeout(() => myServo.setAngle(global.servo2, 90, 600, 2400), 5000);
-
-//       //=== 3.) Boardcast ผ่าน WebSocket ด้วย
-//       if(global.io){
-//         global.io.emit('button_pressed', {
-//           buttonId: 'btn1', 
-//           ledState: global.LED1_STATE,
-//           relayState: global.RELAY1_STATE
-//         });
-//       }
-
-//       //=== 4.) ส่งผลลัพธ์กลับไป
-//       res.send({
-//         status: 'ok',
-//         switchId: id,
-//         switchState: switchState,
-//       });
-//     }else{
-//       //=== ไม่มี GPIO
-//       res.send({
-//         status: 'no gpio',
-//         switchId: id,
-//         switchState: switchState,
-//       });
-//     }
-//   } catch (error) {
-//     console.log("Error ===> " , error.message)
-//     res.status(500).send({
-//       status: 'error',
-//       message: error.message,
-//     });
-//   }
-// })
+    //=== ควบคุม Servo
+    if (global.gpio) {
+      if(direction){
+        await myServo.setAngle(global.servo1, 100, 600, 2400);
+        setTimeout(() => myServo.setAngle(global.servo1, 80, 600, 2400), 1000);
+        setTimeout(() => myServo.setAngle(global.servo1, 90, 600, 2400), 2000);
+        res.send({
+          status: 'ok',
+          action: action,
+          direction: direction,
+        });
+      }
+    }else{
+      res.send({
+        status: 'no gpio',
+        switchId: id,
+        switchState: switchState,
+      });
+    }
+  } catch (error) {
+    console.log("Error ===> " , error.message)
+    res.status(500).send({
+      status: 'error',
+      message: error.message,
+    });
+  }
+})
 
 
 export default router
