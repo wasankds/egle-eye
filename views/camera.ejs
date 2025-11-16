@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/meta',{ time:time}) %>
+  <title><%= title %></title>
+
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/cdn/fontawesome/css/all.min.css">
+
+  <!-- socket.io -->
+  <script src="/cdn/socket.io.min.js"></script>
+
+  <% if(!IS_PRODUCTION) { %>
+  <link rel="stylesheet" href="/css/utils.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/fonts.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/toast.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/footer.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/nav.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/same.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/camera.css?v=<%= time %>">
+  <% } else { %>
+  <link rel="stylesheet" href="/css-min/camera.min.css?v=<%= time %>">
+  <% }  %>
+</head>
+ 
+<body>
+
+  <%- include('partials/nav.ejs') %>
+  <%- include('partials/notify.ejs', {msg:msg}) %> 
+
+  <header class="header-title bg-forestgreen">
+    <p class="al-c fc-white">
+      <span><%= title %></span>
+    </p>
+  </header>
+
+  <main>
+
+
+    <section class="flex-row">
+        <img src="<%= PATH_STREAM %>" style="width:100%;">
+    </section>  
+
+
+  </main>  
+
+
+  <!--  -->
+  <%- include('partials/footer') %>
+  <script type="text/javascript">
+    const PREFIX = '<%= PREFIX %>';
+    const PATH_MAIN = `<%= PATH_MAIN %>`;
+    const PATH_REQUEST = `<%= PATH_REQUEST %>`;
+  </script>
+
+  <!--  -->
+  <% if(!IS_PRODUCTION) { %>
+  <script type="text/javascript" src="/js/script_all.js?v=<%= time %>"></script>
+  <script type="text/javascript" src="/js/nav.js"></script>
+  <script type="text/javascript" src="/js/notify.js?v=<%= time %>"></script>
+  <script type="text/javascript" src="/js/camera.js?v=<%= time %>"></script>
+  <% } else { %>
+  <script type="text/javascript" src="/js-min/camera.obf.js?v=<%= time %>"></script>
+  <% }  %>
+
+</body>
+</html>
+
+
+
+

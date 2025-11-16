@@ -3,7 +3,8 @@
 export async function setAngle(gpioObj, angle, minPulse, maxPulse) {
   const pulse = Math.round(minPulse + (angle / 180) * (maxPulse - minPulse));
   console.log(`angle=${angle}, pulse=${pulse}`);
-  gpioObj.setServoPulsewidth(pulse);
+  
+  await gpioObj.setServoPulsewidth(pulse);
   setTimeout(() => {
     gpioObj.setServoPulsewidth(0);
   }, 500);
