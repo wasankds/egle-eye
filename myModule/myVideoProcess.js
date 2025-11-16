@@ -8,7 +8,7 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 let videoProcess = null;
 let recording = true;
 // 5 นาที - ประมาณ 240MB/File
-const recordingDurationMs = 5 * 60 * 1000; 
+const recordingDurationMs = 0.25 * 60 * 1000; 
 const videoWidth = 1280;
 const videoHeight = 720;
 

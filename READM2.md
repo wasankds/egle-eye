@@ -27,3 +27,10 @@ sudo pigpiod
 ```bash
  PS D:\aWK_LeaseSystem\egle-eye> scp node-servo-moter.js wasankds@192.168.1.135:~/egle-eye
 ```
+
+
+คำสั่ง scp - ก๊อปี้ไฟล์ video
+
+```bash
+ PS D:\aWK_LeaseSystem\egle-eye> scp wasankds@192.168.1.135:~/egle-eye/videos/2025-11-16_10-18-04.h264 .
+```
