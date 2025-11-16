@@ -4,6 +4,7 @@ import mainAuth from "../authorize/mainAuth.js"
 const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
+const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
 const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
@@ -73,11 +74,14 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       await global.relay1.write(switchState === 'on' ? 0 : 1); // Active Low
       global.RELAY1_STATE = switchState === 'on' ? 0 : 1;      // Active Low
 
+      //== 3.) ทดสอบหมุนมอเตอร์เซอร์โว
+      await myServo.setAngle(global.servo1, 100, 600, 2400);
+      setTimeout(() => myServo.setAngle(global.servo1, 80, 600, 2400), 1000);
+      setTimeout(() => myServo.setAngle(global.servo1, 90, 600, 2400), 2000);
 
-      // //=== 3.) ทดสอบหมุนมอเตอร์เซอร์โว
-      // await global.servo1.modeSet('output');
-      // await global.servo2.modeSet('output');
-
+      await myServo.setAngle(global.servo2, 100, 600, 2400);
+      setTimeout(() => myServo.setAngle(global.servo2, 80, 600, 2400), 4000);
+      setTimeout(() => myServo.setAngle(global.servo2, 90, 600, 2400), 5000);
 
       //=== 3.) Boardcast ผ่าน WebSocket ด้วย
       if(global.io){

@@ -108,14 +108,14 @@ server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
-function setAngle(gpioObj, angle, minPulse, maxPulse) {
-  const pulse = Math.round(minPulse + (angle / 180) * (maxPulse - minPulse));
-  console.log(`angle=${angle}, pulse=${pulse}`);
-  gpioObj.setServoPulsewidth(pulse);
-  setTimeout(() => {
-    gpioObj.setServoPulsewidth(0);
-  }, 500);
-}
+// function setAngle(gpioObj, angle, minPulse, maxPulse) {
+//   const pulse = Math.round(minPulse + (angle / 180) * (maxPulse - minPulse));
+//   console.log(`angle=${angle}, pulse=${pulse}`);
+//   gpioObj.setServoPulsewidth(pulse);
+//   setTimeout(() => {
+//     gpioObj.setServoPulsewidth(0);
+//   }, 500);
+// }
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
@@ -128,7 +128,6 @@ if (process.platform === 'linux') {
     console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE);
     console.log('global.SERVO1_PIN ===> ' , global.SERVO1_PIN);
     console.log('global.SERVO2_PIN ===> ' , global.SERVO2_PIN);
-
 
     //=== LED1 ***
     global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
@@ -146,18 +145,15 @@ if (process.platform === 'linux') {
     global.btn1.pullUpDown(2); // PUD_UP
 
     // สร้าง object servo1, servo2
-    global.servo1 = global.gpio.gpio(18);
-    global.servo2 = global.gpio.gpio(13);
-    console.log('DEBUG global.servo1:', global.servo1);
-    console.log('DEBUG global.servo2:', global.servo2);
-    // เรียกแบบนี้
-    setAngle(global.servo1, 100, 600, 2400);
-    setTimeout(() => setAngle(global.servo1, 80, 600, 2400), 1000);
-    setTimeout(() => setAngle(global.servo1, 90, 600, 2400), 2000);
-
-    setAngle(global.servo2, 100, 600, 2400);
-    setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
-    setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
+    global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
+    global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
+    // // เรียกแบบนี้
+    // setAngle(global.servo1, 100, 600, 2400);
+    // setTimeout(() => setAngle(global.servo1, 80, 600, 2400), 1000);
+    // setTimeout(() => setAngle(global.servo1, 90, 600, 2400), 2000);
+    // setAngle(global.servo2, 100, 600, 2400);
+    // setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
+    // setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
 
     //=== ตรวจสอบค่าปุ่มรอบแรก
     global.btn1.read().then( val => {
