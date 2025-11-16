@@ -92,10 +92,9 @@ router.get(PATH_MAIN, async (req, res) => {
 })
 
 
-let LEFT_START = 90
-let RIGHT_START = 90
-let UP_START = 90
-let DOWN_START = 90
+let VERTICAL_START = 90
+let HORIZONTAL_START = 90
+
 
 //=============================================
 // เมื่อกดสวิตช์บนเว็บ
@@ -120,29 +119,29 @@ router.post(PATH_REQUEST,  async (req, res) => {
     //=== ใช้ - servo2
     if(direction == 'left'){ // ใช้ - servo2      
       let sub = 7
-      LEFT_START += sub
-      if(LEFT_START > 120) LEFT_START = 120
-      myServo.setAngle(global.servo2, LEFT_START, 600, 2400)
+      HORIZONTAL_START += sub
+      if(HORIZONTAL_START > 120) HORIZONTAL_START = 120
+      myServo.setAngle(global.servo2, HORIZONTAL_START, 600, 2400)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){ // ใช้ - servo2
       let sub = 7
-      RIGHT_START -= sub
-      if(RIGHT_START < 60) RIGHT_START = 60
-      myServo.setAngle(global.servo2, RIGHT_START, 600, 2400)
+      HORIZONTAL_START -= sub
+      if(HORIZONTAL_START < 60) HORIZONTAL_START = 60
+      myServo.setAngle(global.servo2, HORIZONTAL_START, 600, 2400)
       return  res.send({ status: 'ok right', direction: direction });
     }
     //=== ใช้ - servo1
     else if(direction == 'up'){ // ใช้ - servo1
       let sub = 10
-      UP_START -= sub
-      if(UP_START < 60) UP_START = 60
-      myServo.setAngle(global.servo1, UP_START, 600, 2400)
+      VERTICAL_START -= sub
+      if(VERTICAL_START < 60) VERTICAL_START = 60
+      myServo.setAngle(global.servo1, VERTICAL_START, 600, 2400)
       return  res.send({ status: 'ok down', direction: direction });
     }else if(direction == 'down'){ // ใช้ - servo1
       let sub = 10
-      DOWN_START += sub
-      if(DOWN_START > 120) DOWN_START = 120
-      myServo.setAngle(global.servo1, DOWN_START, 600, 2400)
+      VERTICAL_START += sub
+      if(VERTICAL_START > 120) VERTICAL_START = 120
+      myServo.setAngle(global.servo1, VERTICAL_START, 600, 2400)
       return  res.send({ status: 'ok up', direction: direction });  
     }
     //=== กลาง
