@@ -16,8 +16,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
   //=== อ่านค่าจาก LED1_STATE และ RELAY1_STATE แล้วส่งไปที่หน้า switch
   const led1State = typeof global.LED1_STATE === 'number' ? global.LED1_STATE : 0;
   const relay1State = typeof global.RELAY1_STATE === 'number' ? global.RELAY1_STATE : 1;
-  const servo1Pin = typeof global.SERVO1_PIN === 'number' ? global.SERVO1_PIN : 18;
-  const servo2Pin = typeof global.SERVO2_PIN === 'number' ? global.SERVO2_PIN : 13;
+  // const servo1Pin = typeof global.SERVO1_PIN === 'number' ? global.SERVO1_PIN : 18;
+  // const servo2Pin = typeof global.SERVO2_PIN === 'number' ? global.SERVO2_PIN : 13;
   console.log(`LED1_STATE = ${led1State} , RELAY1_STATE = ${relay1State}`)
 
   try {
@@ -74,10 +74,10 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
       global.RELAY1_STATE = switchState === 'on' ? 0 : 1;      // Active Low
 
 
-      //=== 3.) ทดสอบหมุนมอเตอร์เซอร์โว
-      await global.servo1.modeSet('output');
-      await global.servo2.modeSet('output');
-      
+      // //=== 3.) ทดสอบหมุนมอเตอร์เซอร์โว
+      // await global.servo1.modeSet('output');
+      // await global.servo2.modeSet('output');
+
 
       //=== 3.) Boardcast ผ่าน WebSocket ด้วย
       if(global.io){
