@@ -92,8 +92,8 @@ router.get(PATH_MAIN, async (req, res) => {
 })
 
 
-let VERTICAL_START = 90
-let HORIZONTAL_START = 90
+let VER = 90
+let HOR = 90
 
 
 //=============================================
@@ -118,30 +118,30 @@ router.post(PATH_REQUEST,  async (req, res) => {
 
     //=== ใช้ - servo2
     if(direction == 'left'){ // ใช้ - servo2      
-      let sub = 7
-      HORIZONTAL_START += sub
-      if(HORIZONTAL_START > 120) HORIZONTAL_START = 120
-      myServo.setAngle(global.servo2, HORIZONTAL_START, 600, 2400)
+      let sub = 6
+      HOR += sub
+      if(HOR > 110) HOR = 110
+      myServo.setAngle(global.servo2, HOR, 600, 2400)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){ // ใช้ - servo2
-      let sub = 7
-      HORIZONTAL_START -= sub
-      if(HORIZONTAL_START < 60) HORIZONTAL_START = 60
-      myServo.setAngle(global.servo2, HORIZONTAL_START, 600, 2400)
+      let sub = 6
+      HOR -= sub
+      if(HOR < 70) HOR = 70
+      myServo.setAngle(global.servo2, HOR, 700, 2400)
       return  res.send({ status: 'ok right', direction: direction });
     }
     //=== ใช้ - servo1
     else if(direction == 'up'){ // ใช้ - servo1
-      let sub = 10
-      VERTICAL_START -= sub
-      if(VERTICAL_START < 60) VERTICAL_START = 60
-      myServo.setAngle(global.servo1, VERTICAL_START, 600, 2400)
+      let sub = 7
+      VER -= sub
+      if(VER < 70) VER = 70
+      myServo.setAngle(global.servo1, VER, 600, 2400)
       return  res.send({ status: 'ok down', direction: direction });
     }else if(direction == 'down'){ // ใช้ - servo1
-      let sub = 10
-      VERTICAL_START += sub
-      if(VERTICAL_START > 120) VERTICAL_START = 120
-      myServo.setAngle(global.servo1, VERTICAL_START, 600, 2400)
+      let sub = 7
+      VER += sub
+      if(VER > 110) VER = 110
+      myServo.setAngle(global.servo1, VER, 600, 2400)
       return  res.send({ status: 'ok up', direction: direction });  
     }
     //=== กลาง
