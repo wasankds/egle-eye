@@ -1,3 +1,4 @@
+// import path from 'node:path';
 import 'dotenv/config'
 import { exec } from 'child_process';
 import { Low } from 'lowdb'
@@ -8,7 +9,6 @@ import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
 import flash from 'connect-flash'
-import path from 'node:path';
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
@@ -108,6 +108,14 @@ server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
+function setAngle(servo, angle, minPulse, maxPulse) {
+  const pulse = Math.round(minPulse + (angle / 180) * (maxPulse - minPulse));
+  console.log(`angle=${angle}, pulse=${pulse}`);
+  servo.servoWrite(pulse);
+  setTimeout(() => {
+    servo.servoWrite(0);
+  }, 500);
+}
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
@@ -133,6 +141,18 @@ if (process.platform === 'linux') {
     global.btn1 = global.gpio.gpio(global.BTN1_PIN);
     global.btn1.modeSet('input');
     global.btn1.pullUpDown(2); // PUD_UP
+
+    //=== SERVO1 ***
+    global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
+    setAngle(global.servo1, 100, 600, 2400);
+    setTimeout(() => setAngle(servo1, 80, 600, 2400), 1000);
+    setTimeout(() => setAngle(servo1, 90, 600, 2400), 2000);
+
+    //=== SERVO2 ***
+    global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
+    setAngle(global.servo2, 100, 600, 2400);
+    setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
+    setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
 
     //=== ตรวจสอบค่าปุ่มรอบแรก
     global.btn1.read().then( val => {

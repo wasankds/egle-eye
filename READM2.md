@@ -20,4 +20,10 @@ git reset --hard HEAD && git clean -fd && git pull
 ```bash
 sudo killall pigpiod
 sudo pigpiod
+```
+
+คำสั่ง scp
+
 ```bash
+ PS D:\aWK_LeaseSystem\egle-eye> scp node-servo-moter.js wasankds@192.168.1.135:~/egle-eye
+```

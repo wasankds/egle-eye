@@ -19,6 +19,8 @@ global.LED1_PIN = 17;   // พิน 11
 global.LED1_STATE = 0;   // เริ่มต้น LED ปิด (0=ปิด, 1=เปิด)
 global.RELAY1_PIN = 20;  // พิน 38
 global.RELAY1_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) - Active Low
+global.SERVO1_PIN = 18
+global.SERVO2_PIN = 13
 // Database
 global.dbName = process.env.DB_NAME
 // global.dbColl_settings = 'settings'              // ไม่ได้ใช้แล้ว
