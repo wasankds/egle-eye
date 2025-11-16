@@ -115,18 +115,27 @@ router.post(PATH_REQUEST,  async (req, res) => {
       });
     }
 
+    //=== ใช้ - servo2
     if(direction == 'left'){ // ใช้ - servo2
       myServo.setAngle(global.servo2, 80, 600, 2400)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){ // ใช้ - servo2
       myServo.setAngle(global.servo2, 100, 600, 2400)
       return  res.send({ status: 'ok right', direction: direction });
-    }else if(direction == 'up'){ // ใช้ - servo1
+    }
+    //=== ใช้ - servo1
+    else if(direction == 'up'){ // ใช้ - servo1
       myServo.setAngle(global.servo1, 80, 600, 2400)
       return  res.send({ status: 'ok up', direction: direction });  
     }else if(direction == 'down'){ // ใช้ - servo1
       myServo.setAngle(global.servo1, 100, 600, 2400)
       return  res.send({ status: 'ok down', direction: direction });
+    }
+    //=== กลาง
+    else if(direction == 'center'){
+      myServo.setAngle(global.servo1, 90, 600, 2400)
+      myServo.setAngle(global.servo2, 90, 600, 2400)
+      return  res.send({ status: 'ok center', direction: direction });
     }else{
       return  res.send({
         status: 'error direction',
