@@ -142,17 +142,17 @@ if (process.platform === 'linux') {
     global.btn1.modeSet('input');
     global.btn1.pullUpDown(2); // PUD_UP
 
-    //=== SERVO1 ***
-    global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
-    setAngle(global.servo1, 100, 600, 2400);
-    setTimeout(() => setAngle(servo1, 80, 600, 2400), 1000);
-    setTimeout(() => setAngle(servo1, 90, 600, 2400), 2000);
+    // //=== SERVO1 ***
+    // global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
+    // setAngle(global.servo1, 100, 600, 2400);
+    // setTimeout(() => setAngle(servo1, 80, 600, 2400), 1000);
+    // setTimeout(() => setAngle(servo1, 90, 600, 2400), 2000);
 
-    //=== SERVO2 ***
-    global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
-    setAngle(global.servo2, 100, 600, 2400);
-    setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
-    setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
+    // //=== SERVO2 ***
+    // global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
+    // setAngle(global.servo2, 100, 600, 2400);
+    // setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
+    // setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
 
     //=== ตรวจสอบค่าปุ่มรอบแรก
     global.btn1.read().then( val => {
