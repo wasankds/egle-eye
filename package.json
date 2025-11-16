@@ -30,7 +30,8 @@
     "kill-mac": "pkill -9 node",
     "kill-linux": "pkill -9 node",
     "node-v": "node --version",
-    "git1": "git add . && git commit -m \"%date% %time%\" && git push origin main"
+    "git1": "git add . && git commit -m \"%date% %time%\" && git push origin main",
+    "git-gc": "git gc"
   },
   "dependencies": {
     "archiver": "^7.0.1",
