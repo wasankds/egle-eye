@@ -126,6 +126,9 @@ if (process.platform === 'linux') {
     console.log('<--- ✅ pigpio-client connected --->');
     console.log('global.LED1_STATE ===> ' , global.LED1_STATE);
     console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE);
+    console.log('global.SERVO1_PIN ===> ' , global.SERVO1_PIN);
+    console.log('global.SERVO2_PIN ===> ' , global.SERVO2_PIN);
+
 
     //=== LED1 ***
     global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
@@ -143,8 +146,8 @@ if (process.platform === 'linux') {
     global.btn1.pullUpDown(2); // PUD_UP
 
     // สร้าง object servo1, servo2
-    global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
-    global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
+    global.servo1 = global.gpio.gpio(18);
+    global.servo2 = global.gpio.gpio(13);
     // เรียกแบบนี้
     setAngle(global.servo1, 100, 600, 2400);
     setTimeout(() => setAngle(global.servo1, 80, 600, 2400), 1000);
