@@ -13,9 +13,8 @@ const PATH_STREAM = `${PATH_MAIN}/stream`
 
 
 router.get(PATH_STREAM, (req, res) => {
-  console.log(`---- ${req.originalUrl} ----`)
+  console.log(`---- ${req.originalUrl} ----`);
 
-  // ตั้ง header สำหรับ MJPEG
   res.writeHead(200, {
     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
     'Cache-Control': 'no-cache',
@@ -23,28 +22,27 @@ router.get(PATH_STREAM, (req, res) => {
     'Pragma': 'no-cache'
   });
 
-  // เรียก ffmpeg หรือ raspivid เฉพาะตอน client connect
-  // ตัวอย่างนี้ใช้ ffmpeg (สำหรับ USB webcam)
-  const ffmpeg = spawn('ffmpeg', [
-    '-f', 'v4l2',
-    '-i', '/dev/video0', // เปลี่ยนเป็นกล้องที่คุณใช้
-    '-f', 'mjpeg',
-    '-q', '5',
-    'pipe:1'
+  // ใช้ rpicam-vid สำหรับ MJPEG stream
+  const cam = spawn('rpicam-vid', [
+    '-t', '0',                // ไม่จำกัดเวลา
+    '--width', '640',
+    '--height', '480',
+    '--codec', 'mjpeg',
+    '-o', '-'                 // output ไป stdout
   ]);
 
-  ffmpeg.stdout.on('data', (data) => {
+  cam.stdout.on('data', (data) => {
     res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${data.length}\r\n\r\n`);
     res.write(data);
     res.write('\r\n');
   });
 
-  ffmpeg.stderr.on('data', (data) => {
-    // log error
+  cam.stderr.on('data', (data) => {
+    console.log('rpicam-vid stderr:', data.toString());
   });
 
   req.on('close', () => {
-    ffmpeg.kill('SIGINT');
+    cam.kill('SIGINT');
   });
 });
 
