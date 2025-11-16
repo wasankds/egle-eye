@@ -92,7 +92,10 @@ router.get(PATH_MAIN, async (req, res) => {
 })
 
 
-
+let LEFT_START = 90
+let RIGHT_START = 90
+let UP_START = 90
+let DOWN_START = 90
 
 //=============================================
 // เมื่อกดสวิตช์บนเว็บ
@@ -105,7 +108,6 @@ router.post(PATH_REQUEST,  async (req, res) => {
 
   const { direction } = req.body;
 
-
   try {
 
     if (!global.gpio) {
@@ -116,19 +118,31 @@ router.post(PATH_REQUEST,  async (req, res) => {
     }
 
     //=== ใช้ - servo2
-    if(direction == 'left'){ // ใช้ - servo2
-      myServo.setAngle(global.servo2, 85, 600, 2400)
+    if(direction == 'left'){ // ใช้ - servo2      
+      let sub = 10
+      LEFT_START += sub
+      if(LEFT_START > 180) LEFT_START = 180
+      myServo.setAngle(global.servo2, LEFT_START, 600, 2400)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){ // ใช้ - servo2
-      myServo.setAngle(global.servo2, 95, 600, 2400)
+      let sub = 10
+      RIGHT_START -= sub
+      if(RIGHT_START < 0) RIGHT_START = 0
+      myServo.setAngle(global.servo2, RIGHT_START, 600, 2400)
       return  res.send({ status: 'ok right', direction: direction });
     }
     //=== ใช้ - servo1
     else if(direction == 'up'){ // ใช้ - servo1
-      myServo.setAngle(global.servo1, 85, 600, 2400)
+      let sub = 10
+      UP_START += sub
+      if(UP_START > 180) UP_START = 180
+      myServo.setAngle(global.servo1, UP_START, 600, 2400)
       return  res.send({ status: 'ok up', direction: direction });  
     }else if(direction == 'down'){ // ใช้ - servo1
-      myServo.setAngle(global.servo1, 95, 600, 2400)
+      let sub = 10
+      DOWN_START -= sub
+      if(DOWN_START < 0) DOWN_START = 0
+      myServo.setAngle(global.servo1, DOWN_START, 600, 2400)
       return  res.send({ status: 'ok down', direction: direction });
     }
     //=== กลาง
