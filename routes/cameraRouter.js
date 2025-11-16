@@ -53,9 +53,9 @@ router.get(PATH_STREAM, (req, res) => {
     }
   });
 
-  //== Handle stderr - ก็คือ ข้อความแจ้งเตือนต่างๆ
+  //== Handle stderr output
   cam.stderr.on('data', (data) => {
-    console.log('rpicam-vid stderr ===> ', data.toString());
+    // console.log('rpicam-vid stderr ===> ', data.toString());
   });
 
   //== เมื่อ client ปิดการเชื่อมต่อ
@@ -104,7 +104,7 @@ router.post(PATH_REQUEST,  async (req, res) => {
   // req.body ===>  { action: 'move', direction: 'right' }
 
   const { direction } = req.body;
-  
+
 
   try {
 
