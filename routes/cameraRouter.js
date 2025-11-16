@@ -16,51 +16,68 @@ const PATH_STREAM = `${PATH_MAIN}/stream`
 ps aux | grep rpicam-vid
 sudo killall rpicam-vid
 */
+// ด้านบนสุดของ cameraRouter.js
+let mjpegClients = [];
+let mjpegProcess = null;
+let lastFrame = null;
+
+function startMjpegRelay() {
+  if (mjpegProcess) return;
+  mjpegProcess = spawn('rpicam-vid', [
+    '-t', '0',
+    '--width', '640',
+    '--height', '480',
+    '--codec', 'mjpeg',
+    '--framerate', '10',
+    '-o', '-'
+  ]);
+  let buffer = Buffer.alloc(0);
+  mjpegProcess.stdout.on('data', (data) => {
+    buffer = Buffer.concat([buffer, data]);
+    let start, end;
+    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
+           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
+      const frame = buffer.slice(start, end + 2);
+      lastFrame = frame;
+      // broadcast to all clients
+      mjpegClients.forEach(res => {
+        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+        res.write(frame);
+        res.write('\r\n');
+      });
+      buffer = buffer.slice(end + 2);
+    }
+  });
+  mjpegProcess.on('exit', () => {
+    mjpegProcess = null;
+    mjpegClients.forEach(res => res.end());
+    mjpegClients = [];
+  });
+}
+
+// ใน router.get(PATH_STREAM, ...)
 router.get(PATH_STREAM, (req, res) => {
-  console.log(`---- ${req.originalUrl} ----`);
-
-  if(process.platform !== 'linux') return
-
+  if(process.platform !== 'linux') return;
   res.writeHead(200, {
     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
     'Cache-Control': 'no-cache',
     'Connection': 'close',
     'Pragma': 'no-cache'
   });
-
-  const cam = spawn('rpicam-vid', [
-    '-t', '0',
-    '--width', '640',
-    '--height', '480',
-    '--codec', 'mjpeg',
-     '--framerate', '10',   // เพิ่มบรรทัดนี้ - ถ้าเอาออก จะทำให้โหลด CPU สูงมาก
-    '-o', '-'
-  ]);
-
-  let buffer = Buffer.alloc(0);
-
-  cam.stdout.on('data', (data) => {
-    buffer = Buffer.concat([buffer, data]);
-    // หา JPEG frame (0xFFD8 ... 0xFFD9)
-    let start, end;
-    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
-           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
-      const frame = buffer.slice(start, end + 2);
-      res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-      res.write(frame);
-      res.write('\r\n');
-      buffer = buffer.slice(end + 2);
-    }
-  });
-
-  //== Handle stderr output
-  cam.stderr.on('data', (data) => {
-    // console.log('rpicam-vid stderr ===> ', data.toString());
-  });
-
-  //== เมื่อ client ปิดการเชื่อมต่อ
+  mjpegClients.push(res);
+  startMjpegRelay();
+  // ส่ง frame ล่าสุดทันที (ลดอาการจอดำ)
+  if (lastFrame) {
+    res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${lastFrame.length}\r\n\r\n`);
+    res.write(lastFrame);
+    res.write('\r\n');
+  }
   req.on('close', () => {
-    cam.kill('SIGINT');
+    mjpegClients = mjpegClients.filter(r => r !== res);
+    if (mjpegClients.length === 0 && mjpegProcess) {
+      mjpegProcess.kill('SIGINT');
+      mjpegProcess = null;
+    }
   });
 });
 
@@ -118,32 +135,34 @@ router.post(PATH_REQUEST,  async (req, res) => {
 
     //=== ใช้ - servo2
     if(direction == 'left'){ // ใช้ - servo2      
-      let sub = 6
+      let sub = 7
       HOR += sub
-      if(HOR > 110) HOR = 110
+      if(HOR > 120) HOR = 120
       myServo.setAngle(global.servo2, HOR, 600, 2400)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){ // ใช้ - servo2
-      let sub = 6
+      let sub = 7
       HOR -= sub
-      if(HOR < 70) HOR = 70
+      if(HOR < 60) HOR = 60
       myServo.setAngle(global.servo2, HOR, 700, 2400)
       return  res.send({ status: 'ok right', direction: direction });
     }
+
     //=== ใช้ - servo1
     else if(direction == 'up'){ // ใช้ - servo1
       let sub = 7
       VER -= sub
-      if(VER < 70) VER = 70
+      if(VER < 60) VER = 60
       myServo.setAngle(global.servo1, VER, 600, 2400)
       return  res.send({ status: 'ok down', direction: direction });
     }else if(direction == 'down'){ // ใช้ - servo1
       let sub = 7
       VER += sub
-      if(VER > 110) VER = 110
+      if(VER > 120) VER = 120
       myServo.setAngle(global.servo1, VER, 600, 2400)
       return  res.send({ status: 'ok up', direction: direction });  
     }
+
     //=== กลาง
     else if(direction == 'center'){
       myServo.setAngle(global.servo1, 90, 600, 2400)
