@@ -38,7 +38,15 @@
   <main>
 
     <section class="flex-row">
-      <img src="<%= PATH_STREAM %>" style="width:100%;">
+      <div class="al-c">
+        <% if(!IS_STREAM) { %>
+          <img class="bdr3" 
+               style="max-width:640px;height:auto;" 
+               src="/images/no-camera.jpg">
+        <% }else{ %>
+          <img src="<%= PATH_STREAM %>" style="width:100%;">
+        <% } %>
+      </div>
     </section>  
 
   </main>  

@@ -19,6 +19,8 @@ sudo killall rpicam-vid
 router.get(PATH_STREAM, (req, res) => {
   console.log(`---- ${req.originalUrl} ----`);
 
+  if(process.platform !== 'linux') return
+
   res.writeHead(200, {
     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
     'Cache-Control': 'no-cache',
@@ -51,10 +53,12 @@ router.get(PATH_STREAM, (req, res) => {
     }
   });
 
+  //== Handle stderr - ก็คือ ข้อความแจ้งเตือนต่างๆ
   cam.stderr.on('data', (data) => {
-    console.log('rpicam-vid stderr:', data.toString());
+    console.log('rpicam-vid stderr ===> ', data.toString());
   });
 
+  //== เมื่อ client ปิดการเชื่อมต่อ
   req.on('close', () => {
     cam.kill('SIGINT');
   });
@@ -78,6 +82,7 @@ router.get(PATH_MAIN, async (req, res) => {
       PATH_MAIN,
       PATH_REQUEST,
       PATH_STREAM ,
+      IS_STREAM  :  process.platform === 'linux'
     })
     res.send(html)
   } catch (error) {
