@@ -111,9 +111,9 @@ server.listen(PORT, () => {
 function setAngle(gpioObj, angle, minPulse, maxPulse) {
   const pulse = Math.round(minPulse + (angle / 180) * (maxPulse - minPulse));
   console.log(`angle=${angle}, pulse=${pulse}`);
-  gpioObj.servoWrite(pulse);
+  gpioObj.setServoPulsewidth(pulse);
   setTimeout(() => {
-    gpioObj.servoWrite(0);
+    gpioObj.setServoPulsewidth(0);
   }, 500);
 }
 
