@@ -4,7 +4,7 @@
     'btn-cam-down': 'down',
     'btn-cam-left': 'left',
     'btn-cam-right': 'right',
-    // 'btn-cam-home': 'home'
+    'btn-cam-home': 'home'
   };
 
   Object.keys(camBtnMap).forEach(id => {

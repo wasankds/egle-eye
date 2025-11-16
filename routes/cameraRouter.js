@@ -55,7 +55,16 @@ function startMjpegRelay() {
   });
 }
 
-// ใน router.get(PATH_STREAM, ...)
+
+//=============================================
+// ถ้าไม่มี client connect เลย rpicam-vid จะไม่รัน
+// ถ้ามี client connect อย่างน้อย 1 คน rpicam-vid จะรันและส่ง stream ให้ทุก client
+// ถ้า client ทุกคน disconnect หมด process rpicam-vid จะถูก kill ทันที (หยุดทำงาน)
+// 
+// client connect ในที่นี้หมายถึง
+// มีการเปิดหน้าเว็บที่มี <img src="/camera/stream">
+// หรือมีโปรแกรม/แอปอื่น (เช่น VLC, ffplay, ฯลฯ) ที่เข้า URL /camera/stream
+// 
 router.get(PATH_STREAM, (req, res) => {
   if(process.platform !== 'linux') return;
   res.writeHead(200, {
@@ -66,6 +75,7 @@ router.get(PATH_STREAM, (req, res) => {
   });
   mjpegClients.push(res);
   startMjpegRelay();
+
   // ส่ง frame ล่าสุดทันที (ลดอาการจอดำ)
   if (lastFrame) {
     res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${lastFrame.length}\r\n\r\n`);
@@ -135,16 +145,16 @@ router.post(PATH_REQUEST,  async (req, res) => {
 
     //=== ใช้ - servo2
     if(direction == 'left'){ // ใช้ - servo2      
-      let sub = 7
+      let sub = 6
       HOR += sub
       if(HOR > 120) HOR = 120
-      myServo.setAngle(global.servo2, HOR, 600, 2400)
+      myServo.setAngle(global.servo2, HOR, 600, 2400, 200)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){ // ใช้ - servo2
-      let sub = 7
+      let sub = 6
       HOR -= sub
       if(HOR < 60) HOR = 60
-      myServo.setAngle(global.servo2, HOR, 700, 2400)
+      myServo.setAngle(global.servo2, HOR, 700, 2400, 200)
       return  res.send({ status: 'ok right', direction: direction });
     }
 
