@@ -117,18 +117,18 @@ router.post(PATH_REQUEST,  async (req, res) => {
 
     //=== ใช้ - servo2
     if(direction == 'left'){ // ใช้ - servo2
-      myServo.setAngle(global.servo2, 80, 600, 2400)
+      myServo.setAngle(global.servo2, 85, 600, 2400)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){ // ใช้ - servo2
-      myServo.setAngle(global.servo2, 100, 600, 2400)
+      myServo.setAngle(global.servo2, 95, 600, 2400)
       return  res.send({ status: 'ok right', direction: direction });
     }
     //=== ใช้ - servo1
     else if(direction == 'up'){ // ใช้ - servo1
-      myServo.setAngle(global.servo1, 80, 600, 2400)
+      myServo.setAngle(global.servo1, 85, 600, 2400)
       return  res.send({ status: 'ok up', direction: direction });  
     }else if(direction == 'down'){ // ใช้ - servo1
-      myServo.setAngle(global.servo1, 100, 600, 2400)
+      myServo.setAngle(global.servo1, 95, 600, 2400)
       return  res.send({ status: 'ok down', direction: direction });
     }
     //=== กลาง
