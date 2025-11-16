@@ -45,7 +45,6 @@ sudo killall rpicam-vid
 //     cam.kill('SIGINT');
 //   });
 // });
-import { spawn } from 'child_process';
 
 router.get(PATH_STREAM, (req, res) => {
   console.log(`---- ${req.originalUrl} ----`);
