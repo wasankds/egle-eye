@@ -108,12 +108,12 @@ server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
-function setAngle(servo, angle, minPulse, maxPulse) {
+function setAngle(gpioObj, angle, minPulse, maxPulse) {
   const pulse = Math.round(minPulse + (angle / 180) * (maxPulse - minPulse));
   console.log(`angle=${angle}, pulse=${pulse}`);
-  servo.servoWrite(pulse);
+  gpioObj.servoWrite(pulse);
   setTimeout(() => {
-    servo.servoWrite(0);
+    gpioObj.servoWrite(0);
   }, 500);
 }
 
@@ -142,14 +142,14 @@ if (process.platform === 'linux') {
     global.btn1.modeSet('input');
     global.btn1.pullUpDown(2); // PUD_UP
 
-    //=== SERVO1 ***
+    // สร้าง object servo1, servo2
     global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
-    setAngle(global.servo1, 100, 600, 2400);
-    setTimeout(() => setAngle(servo1, 80, 600, 2400), 1000);
-    setTimeout(() => setAngle(servo1, 90, 600, 2400), 2000);
-
-    //=== SERVO2 ***
     global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
+    // เรียกแบบนี้
+    setAngle(global.servo1, 100, 600, 2400);
+    setTimeout(() => setAngle(global.servo1, 80, 600, 2400), 1000);
+    setTimeout(() => setAngle(global.servo1, 90, 600, 2400), 2000);
+
     setAngle(global.servo2, 100, 600, 2400);
     setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
     setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
