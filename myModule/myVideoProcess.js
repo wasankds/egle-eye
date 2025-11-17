@@ -71,7 +71,7 @@ function startMjpegStreamAndRecord() {
   }
   startNewFile();
 
-  //===  cache overlay ตามวินาที
+  // cache overlay ตามวินาที
   let overlayCache = { second: null, overlay: null, timestamp: null };
   streamProcess.stdout.on('data', async (data) => {
     buffer = Buffer.concat([buffer, data]);
@@ -79,46 +79,59 @@ function startMjpegStreamAndRecord() {
     while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
            (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
       const frame = buffer.slice(start, end + 2);
-      // overlay timestamp ด้วย sharp (cache ตามวินาที)
-      let now = new Date();
-      let sec = now.getSeconds();
-      let timestamp = now.toLocaleString('sv-SE', { hour12: false });
-      if (overlayCache.second !== sec) {
-        overlayCache.second = sec;
-        overlayCache.timestamp = timestamp;
-        overlayCache.overlay = await sharp({
-          create: {
-            width: 300,
-            height: 28,
-            channels: 4,
-            background: { r: 0, g: 0, b: 0, alpha: 0 }
+        
+        try {
+          // overlay timestamp ด้วย sharp (cache ตามวินาที)
+          let now = new Date();
+          let sec = now.getSeconds();
+          let timestamp = now.toLocaleString('sv-SE', { hour12: false });
+          if (overlayCache.second !== sec) {
+            overlayCache.second = sec;
+            overlayCache.timestamp = timestamp;
+            overlayCache.overlay = await sharp({
+              create: {
+                width: 300,
+                height: 28,
+                channels: 4,
+                background: { r: 0, g: 0, b: 0, alpha: 0 }
+              }
+            })
+              .png()
+              .composite([
+                {
+                  input: Buffer.from(
+                    `<svg width="300" height="28">
+                      <text x="8" y="20" font-size="18" fill="white" font-family="Arial">${timestamp}</text>
+                    </svg>`
+                  ),
+                  top: 0,
+                  left: 0
+                }
+              ])
+              .toBuffer();
           }
-        })
-          .png()
-          .composite([
-            {
-              input: Buffer.from(
-                `<svg width="300" height="28">
-                  <text x="8" y="20" font-size="18" fill="white" font-family="Arial">${timestamp}</text>
-                </svg>`
-              ),
-              top: 0,
-              left: 0
-            }
-          ])
-          .toBuffer();
-      }
-      let frameWithTs = await sharp(frame)
-        .composite([{ input: overlayCache.overlay, top: 0, left: 0 }])
-        .jpeg()
-        .toBuffer();
-      lastFrame = frameWithTs;
-      streamClients.forEach(res => {
-        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frameWithTs.length}\r\n\r\n`);
-        res.write(frameWithTs);
-        res.write('\r\n');
-      });
-      if (fileStream) fileStream.write(frameWithTs);
+          let frameWithTs = await sharp(frame)
+            .composite([{ input: overlayCache.overlay, top: 0, left: 0 }])
+            .jpeg()
+            .toBuffer();
+          lastFrame = frameWithTs;
+          streamClients.forEach(res => {
+            res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frameWithTs.length}\r\n\r\n`);
+            res.write(frameWithTs);
+            res.write('\r\n');
+          });
+          if (fileStream) fileStream.write(frameWithTs);
+        } catch (err) {
+          console.error('sharp error:', err);
+          // ถ้า sharp error ให้ส่ง frame เดิม (ไม่มี timestamp) ไปแทน
+          lastFrame = frame;
+          streamClients.forEach(res => {
+            res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+            res.write(frame);
+            res.write('\r\n');
+          });
+          if (fileStream) fileStream.write(frame);
+        }
       buffer = buffer.slice(end + 2);
     }
     if (Date.now() - fileStartTime > recordingDurationMs) {
@@ -169,13 +182,11 @@ function cleanup() {
       console.log('Error killing streamProcess:', err.message);
     }
   }
-  // ไม่ควรเรียก process.exit() ที่นี่ถ้า cleanup ถูกเรียกซ้ำหรือจาก event อื่น
-  // ให้ process.exit() เฉพาะกรณี SIGINT/SIGTERM จริงเท่านั้น
+  process.exit();
 }
-process.once('SIGINT', () => { cleanup(); process.exit(); });
-process.once('SIGTERM', () => { cleanup(); process.exit(); });
+process.once('SIGINT', cleanup);
+process.once('SIGTERM', cleanup);
 process.once('exit', cleanup);
-
 
 
 // สำหรับ stream MJPEG ไป client
@@ -190,8 +201,9 @@ export function addMjpegClient(res) {
   }
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
-    // ไม่ต้อง kill streamProcess ที่นี่ ให้ kill เฉพาะตอนปิดระบบเท่านั้น
-    // (streamProcess จะรัน background ตลอด เพื่อรองรับ client ใหม่ทันที)
-    // ถ้าต้องการ cleanup จริงๆ ให้ใช้ฟังก์ชัน cleanup ด้านล่าง
+    if (streamClients.length === 0 && streamProcess) {
+      streamProcess.kill('SIGINT');
+      streamProcess = null;
+    }
   });
 }
