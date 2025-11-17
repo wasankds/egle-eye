@@ -63,12 +63,14 @@ function startMjpegStreamRelay() {
 
 // บันทึก h264 แล้ว wrap เป็น mp4
 function startRecordH264() {
-  if (!recording) return;
-  if (process.platform !== 'linux') return;
+  console.log('[startRecordH264] called');
+  if (!recording) { console.log('[startRecordH264] recording=false, return'); return; }
+  if (process.platform !== 'linux') { console.log('[startRecordH264] not linux, return'); return; }
   const filename = `${myDateTime.now_name()}`;
   const h264path = path.join(global.folderVideos, filename + '.h264');
   const mp4path = path.join(global.folderVideos, filename + '.mp4');
   const h264Stream = fs.createWriteStream(h264path);
+  console.log(`[startRecordH264] spawn rpicam-vid for h264: ${h264path}`);
   const recordProcess = spawn('rpicam-vid', [
     '-t', recordingDurationMs.toString(),
     '--width', videoWidth,
@@ -80,11 +82,16 @@ function startRecordH264() {
   recordProcess.stdout.on('data', (data) => {
     h264Stream.write(data);
   });
-  recordProcess.on('exit', () => {
+  recordProcess.stderr.on('data', (data) => {
+    console.error(`[rpicam-vid h264][stderr]: ${data}`);
+  });
+  recordProcess.on('exit', (code, signal) => {
+    console.log(`[rpicam-vid h264] exit code=${code} signal=${signal}`);
     h264Stream.end();    
     // wrap h264 to mp4 (ไม่ re-encode)
     const ffmpeg = spawn(ffmpegPath, ['-y', '-framerate', '10', '-i', h264path, '-c', 'copy', mp4path]);
-    ffmpeg.on('exit', () => {
+    ffmpeg.on('exit', (ffcode, ffsignal) => {
+      console.log(`[ffmpeg] exit code=${ffcode} signal=${ffsignal}`);
       // ลบไฟล์ h264 ต้นฉบับ
       fs.unlink(h264path, () => {});
       // จำกัดจำนวนไฟล์ mp4
