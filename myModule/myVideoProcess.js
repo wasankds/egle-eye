@@ -1,4 +1,3 @@
-// let recording = true;
 import { spawn } from 'child_process';
 import path from 'node:path';
 import fs from 'fs';
@@ -8,6 +7,7 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 let streamProcess = null;
 let streamClients = [];
 let lastFrame = null;
+let recording = true;
 const videoWidth = '640';
 const videoHeight = '480';
 const videoFrameRate = '5';
