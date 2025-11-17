@@ -169,10 +169,11 @@ function cleanup() {
       console.log('Error killing streamProcess:', err.message);
     }
   }
-  process.exit();
+  // ไม่ควรเรียก process.exit() ที่นี่ถ้า cleanup ถูกเรียกซ้ำหรือจาก event อื่น
+  // ให้ process.exit() เฉพาะกรณี SIGINT/SIGTERM จริงเท่านั้น
 }
-process.once('SIGINT', cleanup);
-process.once('SIGTERM', cleanup);
+process.once('SIGINT', () => { cleanup(); process.exit(); });
+process.once('SIGTERM', () => { cleanup(); process.exit(); });
 process.once('exit', cleanup);
 
 
