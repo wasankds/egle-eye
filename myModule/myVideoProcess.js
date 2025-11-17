@@ -153,9 +153,15 @@ export function addMjpegClient(res) {
   }
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
+    // ถ้าไม่มี client เหลือ ให้หยุด streamProcess (rpicam-vid)
     if (streamClients.length === 0 && streamProcess) {
-      streamProcess.kill('SIGINT');
-      streamProcess = null;
+      try {
+        streamProcess.kill('SIGINT');
+        streamProcess = null;
+        console.log('No clients left, stopped rpicam-vid');
+      } catch (err) {
+        console.error('Error stopping rpicam-vid:', err);
+      }
     }
   });
 }
