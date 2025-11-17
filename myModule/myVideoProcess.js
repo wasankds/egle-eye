@@ -1,13 +1,11 @@
-// let recording = true;
-
-
 
 import { spawn } from 'child_process';
 import path from 'node:path';
 import fs from 'fs';
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 
-let ffmpegProcess = null;
+let recordProcess = null; // ffmpeg สำหรับบันทึกไฟล์ mp4
+let streamProcess = null; // ffmpeg สำหรับ stream MJPEG
 let streamClients = [];
 const videoWidth = '1280';
 const videoHeight = '720';
@@ -17,58 +15,33 @@ const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล�
 let fileStartTime = 0;
 let currentFilename = null;
 
-
-
-
-// ffmpeg multiplexer: stream MJPEG ไป client + save mp4
-function startFfmpegMultiplexer() {
-  if (ffmpegProcess) return;
+// ====== บันทึกไฟล์ mp4 ตลอดเวลา (ไม่ต้องรอ client) ======
+function startRecordProcess() {
+  if (recordProcess) return;
   if (process.platform !== 'linux') return;
   if (!fs.existsSync(global.folderVideos)) {
     fs.mkdirSync(global.folderVideos, { recursive: true });
     console.log('Created videos folder:', global.folderVideos);
   }
-  startNewFfmpegProcessAndFile();
+  startNewRecordFile();
 }
 
-function startNewFfmpegProcessAndFile() {
-  if (ffmpegProcess) {
-    try { ffmpegProcess.kill('SIGTERM'); } catch {}
-    ffmpegProcess = null;
+function startNewRecordFile() {
+  if (recordProcess) {
+    try { recordProcess.kill('SIGTERM'); } catch {}
+    recordProcess = null;
   }
-  streamClients.forEach(res => { try { res.end(); } catch {} });
-  streamClients = [];
-
   currentFilename = `${myDateTime.now_name()}.mp4`;
   fileStartTime = Date.now();
   console.log('Start new video file:', currentFilename);
-
-  // rpicam-vid --codec h264 | ffmpeg -i - -c:v copy -f mp4 <file> -f mjpeg pipe:1
-  ffmpegProcess = spawn('bash', ['-c',
-    `rpicam-vid -t 0 --width ${videoWidth} --height ${videoHeight} --codec h264 --framerate ${videoFrameRate} -o - | ffmpeg -hide_banner -loglevel error -y -i - -c:v copy -f mp4 '${path.join(global.folderVideos, currentFilename)}' -f mjpeg pipe:1`
+  recordProcess = spawn('bash', ['-c',
+    `rpicam-vid -t 0 --width ${videoWidth} --height ${videoHeight} --codec h264 --framerate ${videoFrameRate} -o - | ffmpeg -hide_banner -loglevel error -y -i - -c:v copy -f mp4 '${path.join(global.folderVideos, currentFilename)}'`
   ]);
-
-  let buffer = Buffer.alloc(0);
-  ffmpegProcess.stdout.on('data', (data) => {
-    buffer = Buffer.concat([buffer, data]);
-    let start, end;
-    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
-           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
-      const frame = buffer.slice(start, end + 2);
-      streamClients.forEach(res => {
-        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-        res.write(frame);
-        res.write('\r\n');
-      });
-      buffer = buffer.slice(end + 2);
-    }
-  });
-
   // ตัดไฟล์ใหม่เมื่อครบเวลา
   const interval = setInterval(() => {
     if (Date.now() - fileStartTime > recordingDurationMs) {
       clearInterval(interval);
-      startNewFfmpegProcessAndFile();
+      startNewRecordFile();
       // จำกัดจำนวนไฟล์ mp4
       fs.readdir(global.folderVideos, (err, files) => {
         if (!err) {
@@ -87,9 +60,35 @@ function startNewFfmpegProcessAndFile() {
       });
     }
   }, 1000);
+  recordProcess.on('exit', () => {
+    recordProcess = null;
+  });
+}
 
-  ffmpegProcess.on('exit', () => {
-    ffmpegProcess = null;
+// ====== stream MJPEG เฉพาะเมื่อมี client connect ======
+function startStreamProcess() {
+  if (streamProcess) return;
+  if (process.platform !== 'linux') return;
+  streamProcess = spawn('bash', ['-c',
+    `rpicam-vid -t 0 --width ${videoWidth} --height ${videoHeight} --codec mjpeg --framerate ${videoFrameRate} -o -`
+  ]);
+  let buffer = Buffer.alloc(0);
+  streamProcess.stdout.on('data', (data) => {
+    buffer = Buffer.concat([buffer, data]);
+    let start, end;
+    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
+           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
+      const frame = buffer.slice(start, end + 2);
+      streamClients.forEach(res => {
+        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+        res.write(frame);
+        res.write('\r\n');
+      });
+      buffer = buffer.slice(end + 2);
+    }
+  });
+  streamProcess.on('exit', () => {
+    streamProcess = null;
     streamClients.forEach(res => { try { res.end(); } catch {} });
     streamClients = [];
   });
@@ -98,21 +97,26 @@ function startNewFfmpegProcessAndFile() {
 // เริ่มอัตโนมัติเมื่อเปิดระบบ
 if (process.platform === 'linux') {
   setTimeout(() => {
-    startFfmpegMultiplexer();
+    startRecordProcess();
   }, 3000);
 }
 
-
-
-//==============================================
 // cleanup ตอนปิดระบบ
 function cleanup() {
-  if (ffmpegProcess && !ffmpegProcess.killed) {
+  if (recordProcess && !recordProcess.killed) {
     try {
-      ffmpegProcess.kill('SIGTERM');
-      console.log('ffmpegProcess killed (exit/terminate)');
+      recordProcess.kill('SIGTERM');
+      console.log('recordProcess killed (exit/terminate)');
     } catch (err) {
-      console.log('Error killing ffmpegProcess:', err.message);
+      console.log('Error killing recordProcess:', err.message);
+    }
+  }
+  if (streamProcess && !streamProcess.killed) {
+    try {
+      streamProcess.kill('SIGTERM');
+      console.log('streamProcess killed (exit/terminate)');
+    } catch (err) {
+      console.log('Error killing streamProcess:', err.message);
     }
   }
   process.exit();
@@ -121,22 +125,15 @@ process.once('SIGINT', cleanup);
 process.once('SIGTERM', cleanup);
 process.once('exit', cleanup);
 
-
-
-// สำหรับ stream H264 ไป client (เช่น VLC, ffplay)
-
-
-
-
 // สำหรับ stream MJPEG ไป client (browser, VLC, ffplay)
 export function addMjpegClient(res) {
-  if (!ffmpegProcess) startFfmpegMultiplexer();
+  if (!streamProcess) startStreamProcess();
   streamClients.push(res);
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
-    if (streamClients.length === 0 && ffmpegProcess) {
-      try { ffmpegProcess.kill('SIGINT'); } catch {}
-      ffmpegProcess = null;
+    if (streamClients.length === 0 && streamProcess) {
+      try { streamProcess.kill('SIGINT'); } catch {}
+      streamProcess = null;
     }
   });
 }
