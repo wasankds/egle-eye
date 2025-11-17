@@ -13,10 +13,12 @@ console.log('videosDir:', videosDir);
 console.log('mp4Dir:', mp4Dir);
 
 if(!fs.existsSync(videosDir)) {
-  return console.error('Videos directory does not exist:', videosDir);
+  console.error('Videos directory does not exist:', videosDir);
+  return
 }
 if(!fs.existsSync(mp4Dir)) {
-  return console.error('MP4 directory does not exist:', mp4Dir);
+  console.error('MP4 directory does not exist:', mp4Dir);
+  return
 }
 
 const FRAMERATE = 10; // ปรับตามที่บันทึกจริง
