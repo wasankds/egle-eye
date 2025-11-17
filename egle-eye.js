@@ -8,9 +8,10 @@ import express from 'express';
 import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
-// redis adapter
+// redis adapter - start
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createClient } from 'redis';
+// redis adapter - end
 import flash from 'connect-flash'
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
@@ -40,7 +41,6 @@ await pubClient.connect();
 await subClient.connect();
 // redis adapter - end
 io.adapter(createAdapter(pubClient, subClient));
-console.log('Socket.io Redis adapter enabled');
 global.io = io;
 //===
 // ตรวจสอบไฟล์ db.json ถ้าไม่มีหรือว่างเปล่า ให้สร้างด้วย default data
