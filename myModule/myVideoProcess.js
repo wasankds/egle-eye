@@ -1,5 +1,19 @@
 
 
+/* 
+
+- ใช้ process เดียว (rpicam-vid --codec mjpeg ...) สำหรับทั้ง stream MJPEG ไป client และบันทึกไฟล์ .mjpeg พร้อมกัน
+- ตัดไฟล์ใหม่ทุก 1 นาที, จำกัดจำนวนไฟล์ไม่เกิน 100 ไฟล์ (ลบไฟล์เก่าสุดอัตโนมัติ)
+- ประหยัด resource ไม่ต้อง encode ซ้ำ
+
+สรุปทางเลือก:
+stream MJPEG + บันทึก MJPEG (ที่ทำอยู่): ดูสดบนเว็บได้, ดูย้อนหลังต้องแปลงไฟล์
+stream h264 + บันทึก h264: ดูย้อนหลังด้วย VLC ได้, แต่ browser ดูสดไม่ได้ (ต้องใช้ player ที่รองรับ h264 stream เช่น ffplay, VLC)
+stream h264 แล้วแปลงเป็น MJPEG ใน Node.js: ใช้ resource สูงขึ้น (ต้อง decode h264 → jpeg ทุก frame)
+ใช้ ffmpeg/gstreamer เป็น multiplexer: ซับซ้อนขึ้น, แต่สามารถแยก stream และบันทึกจาก source เดียวได้
+
+*/
+
 
 
 import { spawn } from 'child_process';
@@ -10,18 +24,16 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 // MJPEG stream relay + record h264 + auto wrap to mp4
 let streamProcess = null;
 let streamClients = [];
-let lastFrame = null;
 let recording = true;
-const videoWidth = '640';
-const videoHeight = '480';
-const videoFrameRate = '5';
+const videoWidth = '1280';
+const videoHeight = '720';
+const videoFrameRate = '10';
 const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
 
 
-
-// MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
-function startMjpegStreamAndRecord() {
+// H264 stream relay + record h264 file (process เดียว ประหยัด resource)
+function startH264StreamAndRecord() {
   if (streamProcess) return;
   if (process.platform !== 'linux') return;
   let fileStream = null;
@@ -31,14 +43,13 @@ function startMjpegStreamAndRecord() {
     '-t', '0',
     '--width', videoWidth,
     '--height', videoHeight,
-    '--codec', 'mjpeg',
+    '--codec', 'h264',
     '--framerate', videoFrameRate,
     '-o', '-'
   ]);
-  let buffer = Buffer.alloc(0);
   function startNewFile() {
     if (fileStream) fileStream.end();
-    currentFilename = `${myDateTime.now_name()}.mjpeg`;
+    currentFilename = `${myDateTime.now_name()}.h264`;
     fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
     fileStartTime = Date.now();
   }
@@ -46,27 +57,17 @@ function startMjpegStreamAndRecord() {
   streamProcess.stdout.on('data', (data) => {
     // เขียนลงไฟล์
     if (fileStream) fileStream.write(data);
-    // แยก frame ส่งให้ stream
-    buffer = Buffer.concat([buffer, data]);
-    let start, end;
-    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
-           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
-      const frame = buffer.slice(start, end + 2);
-      lastFrame = frame;
-      streamClients.forEach(res => {
-        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-        res.write(frame);
-        res.write('\r\n');
-      });
-      buffer = buffer.slice(end + 2);
-    }
+    // relay stream ไป client (raw h264)
+    streamClients.forEach(res => {
+      if (!res.writableEnded) res.write(data);
+    });
     // เช็คเวลาตัดไฟล์ใหม่
     if (Date.now() - fileStartTime > recordingDurationMs) {
       startNewFile();
-      // จำกัดจำนวนไฟล์ mjpeg
+      // จำกัดจำนวนไฟล์ h264
       fs.readdir(global.folderVideos, (err, files) => {
         if (!err) {
-          const videoFiles = files.filter(f => f.endsWith('.mjpeg'));
+          const videoFiles = files.filter(f => f.endsWith('.h264'));
           if (videoFiles.length > files_maxCount) {
             videoFiles.sort();
             const oldestFile = videoFiles[0];
@@ -92,7 +93,7 @@ function startMjpegStreamAndRecord() {
 // เริ่มอัตโนมัติเมื่อเปิดระบบ
 if (process.platform === 'linux') {
   setTimeout(() => {
-    startMjpegStreamAndRecord();
+    startH264StreamAndRecord();
   }, 3000);
 }
 
@@ -118,15 +119,9 @@ process.once('exit', cleanup);
 
 
 
-// สำหรับ stream MJPEG ไป client
-export function addMjpegClient(res) {
+// สำหรับ stream H264 ไป client (เช่น VLC, ffplay)
+export function addH264Client(res) {
   streamClients.push(res);
-  // ส่ง frame ล่าสุดทันที (ลดอาการจอดำ)
-  if (lastFrame) {
-    res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${lastFrame.length}\r\n\r\n`);
-    res.write(lastFrame);
-    res.write('\r\n');
-  }
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
     if (streamClients.length === 0 && streamProcess) {
