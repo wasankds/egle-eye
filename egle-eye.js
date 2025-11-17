@@ -113,21 +113,11 @@ io.on('connection', (socket) => {
   });    
 }); 
 
-// เฉพาะ process หลัก (pm2 id == 0 หรือไม่มี pm2) เท่านั้นที่ listen port 80
-if (!process.env.pm_id || process.env.pm_id === '0') {
-  server.listen(PORT, () => {
-    console.log('Server running on port', PORT);
-  });
-}
 
-// function setAngle(gpioObj, angle, minPulse, maxPulse) {
-//   const pulse = Math.round(minPulse + (angle / 180) * (maxPulse - minPulse));
-//   console.log(`angle=${angle}, pulse=${pulse}`);
-//   gpioObj.setServoPulsewidth(pulse);
-//   setTimeout(() => {
-//     gpioObj.setServoPulsewidth(0);
-//   }, 500);
-// }
+server.listen(PORT, () => {
+  console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
+});
+
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
