@@ -15,7 +15,8 @@ let lastFrame = null;
 let frameListeners = [];
 const videoWidth = 1280;
 const videoHeight = 720;
-const recordingDurationMs = 5 * 60 * 1000; // 5 นาทีต่อไฟล์ (เปลี่ยนได้)
+const files_maxCount = 100;
+const recordingDurationMs = 1 * 60 * 1000; // 5 นาทีต่อไฟล์ (เปลี่ยนได้)
 
 
 //==============================================
@@ -40,11 +41,13 @@ function startVideoStreamRelay() {
   if (videoProcess) return;
   if (process.platform !== 'linux') return;
 
-  // เตรียมไฟล์ใหม่
-  const filename = `${myDateTime.now_name()}.mjpeg`;
+
+  // เตรียมไฟล์ใหม่ (H.264)
+  const filename = `${myDateTime.now_name()}.h264`;
   const filepath = path.join(global.folderVideos, filename);
   fileStream = fs.createWriteStream(filepath);
 
+  // process สำหรับ stream MJPEG ไป client
   videoProcess = spawn('rpicam-vid', [
     '-t', '0',
     '--width', videoWidth.toString(),
@@ -54,11 +57,18 @@ function startVideoStreamRelay() {
     '-o', '-'
   ]);
 
+  // process สำหรับบันทึก H.264
+  const recordProcess = spawn('rpicam-vid', [
+    '-t', recordingDurationMs.toString(),
+    '--width', videoWidth.toString(),
+    '--height', videoHeight.toString(),
+    '--codec', 'h264',
+    '-o', filepath
+  ]);
+
   let buffer = Buffer.alloc(0);
   videoProcess.stdout.on('data', (data) => {
-    // เขียนลงไฟล์
-    if (fileStream) fileStream.write(data);
-    // แยก frame ส่งให้ stream
+    // แยก frame ส่งให้ stream (ไม่เขียนลงไฟล์)
     buffer = Buffer.concat([buffer, data]);
     let start, end;
     while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
@@ -69,24 +79,44 @@ function startVideoStreamRelay() {
     }
   });
 
+
   videoProcess.on('exit', () => {
     videoProcess = null;
-    if (fileStream) {
-      fileStream.end();
-      fileStream = null;
-    }
+    // ไม่ต้องปิด fileStream ที่นี่ (ปิดใน recordProcess)
     // เริ่มไฟล์ใหม่ถ้ายังต้องการบันทึก
     if (recording) setTimeout(startVideoStreamRelay, 1000);
   });
 
-  // ตัดไฟล์ใหม่ทุก N นาที
-  setTimeout(() => {
+  recordProcess.on('exit', () => {
     if (fileStream) {
       fileStream.end();
       fileStream = null;
     }
+    // ตรวจสอบจำนวนไฟล์ .h264 ใน global.folderVideos
+    fs.readdir(global.folderVideos, (err, files) => {
+      if (!err) {
+        const videoFiles = files.filter(f => f.endsWith('.h264'));
+        if (videoFiles.length > files_maxCount) {
+          videoFiles.sort();
+          const oldestFile = videoFiles[0];
+          if (oldestFile) {
+            fs.unlink(path.join(global.folderVideos, oldestFile), err => {
+              if (err) console.error(`Error deleting file ${oldestFile}:`, err);
+              else console.log(`Deleted oldest video file: ${oldestFile}`);
+            });
+          }
+        }
+      }
+    });
+  });
+
+  // ตัดไฟล์ใหม่ทุก N นาที (เฉพาะ MJPEG stream process)
+  setTimeout(() => {
     if (videoProcess) {
-      videoProcess.kill('SIGUSR1'); // ส่งสัญญาณให้ process จบ (หรือ SIGINT)
+      videoProcess.kill('SIGUSR1');
+    }
+    if (recordProcess) {
+      recordProcess.kill('SIGINT');
     }
   }, recordingDurationMs);
 }
