@@ -77,28 +77,27 @@ function startMjpegStreamAndRecord() {
     while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
            (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
       const frame = buffer.slice(start, end + 2);
+
       // วาด timestamp ด้วย sharp
-      let timestamp = myDateTime.now();
+      let timestamp = new Date().toLocaleString('sv-SE', { hour12: false });
       let overlay = await sharp({
         create: {
-          width: 400,
-          height: 40,
+          width: 300,
+          height: 28,
           channels: 4,
-          background: { r: 0, g: 0, b: 0, alpha: 0.5 }
+          background: { r: 0, g: 0, b: 0, alpha: 0 } // โปร่งใส
         }
-      }).png()
-        .composite([
+      }).png().composite([
           {
             input: Buffer.from(
-              `<svg width="400" height="40">
-                <text x="10" y="28" font-size="28" fill="white" font-family="Arial">${timestamp}</text>
+              `<svg width="300" height="28">
+                <text x="8" y="20" font-size="18" fill="white" font-family="Arial">${timestamp}</text>
               </svg>`
             ),
             top: 0,
             left: 0
           }
-        ])
-        .toBuffer();
+        ]).toBuffer();
       let frameWithTs = await sharp(frame)
         .composite([{ input: overlay, top: 0, left: 0 }])
         .jpeg()
