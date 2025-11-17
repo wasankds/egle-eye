@@ -108,7 +108,7 @@ global.NAV_LEFT = [
   {
     path: '/videos',
     title: PAGE_VIDEOS,
-    icon: 'fas fa-video',
+    icon: 'fas fa-file-video',
     menuColor : 'menu-green',
     userAuthorities: ['O','A','U'],
     separator: false,
