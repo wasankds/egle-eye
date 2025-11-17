@@ -1,51 +1,66 @@
-
 import { spawn } from 'child_process';
 import path from 'node:path';
 import fs from 'fs';
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 
-let recordProcess = null; // ffmpeg สำหรับบันทึกไฟล์ mp4
-let streamProcess = null; // ffmpeg สำหรับ stream MJPEG
+// MJPEG stream relay + record h264 + auto wrap to mp4
+let streamProcess = null;
 let streamClients = [];
-const videoWidth = '1280';
-const videoHeight = '720';
-const videoFrameRate = '10';
+let lastFrame = null;
+let recording = true;
+const videoWidth = '640';
+const videoHeight = '480';
+const videoFrameRate = '5';
 const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
-let fileStartTime = 0;
-let currentFilename = null;
 
-// ====== บันทึกไฟล์ mp4 ตลอดเวลา (ไม่ต้องรอ client) ======
-function startRecordProcess() {
-  if (recordProcess) return;
+// MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
+function startMjpegStreamAndRecord() {
+  if (streamProcess) return;
   if (process.platform !== 'linux') return;
-  if (!fs.existsSync(global.folderVideos)) {
-    fs.mkdirSync(global.folderVideos, { recursive: true });
-    console.log('Created videos folder:', global.folderVideos);
-  }
-  startNewRecordFile();
-}
-
-function startNewRecordFile() {
-  if (recordProcess) {
-    try { recordProcess.kill('SIGTERM'); } catch {}
-    recordProcess = null;
-  }
-  currentFilename = `${myDateTime.now_name()}.mp4`;
-  fileStartTime = Date.now();
-  console.log('Start new video file:', currentFilename);
-  recordProcess = spawn('bash', ['-c',
-    `rpicam-vid -t 0 --width ${videoWidth} --height ${videoHeight} --codec h264 --framerate ${videoFrameRate} -o - | ffmpeg -hide_banner -loglevel error -y -i - -c:v copy -f mp4 '${path.join(global.folderVideos, currentFilename)}'`
+  let fileStream = null;
+  let fileStartTime = Date.now();
+  let currentFilename = null;
+  streamProcess = spawn('rpicam-vid', [
+    '-t', '0',
+    '--width', videoWidth,
+    '--height', videoHeight,
+    '--codec', 'mjpeg',
+    '--framerate', videoFrameRate,
+    '-o', '-'
   ]);
-  // ตัดไฟล์ใหม่เมื่อครบเวลา
-  const interval = setInterval(() => {
+  let buffer = Buffer.alloc(0);
+  function startNewFile() {
+    if (fileStream) fileStream.end();
+    currentFilename = `${myDateTime.now_name()}.mjpeg`;
+    fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
+    fileStartTime = Date.now();
+  }
+  startNewFile();
+  streamProcess.stdout.on('data', (data) => {
+    // เขียนลงไฟล์
+    if (fileStream) fileStream.write(data);
+    // แยก frame ส่งให้ stream
+    buffer = Buffer.concat([buffer, data]);
+    let start, end;
+    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
+           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
+      const frame = buffer.slice(start, end + 2);
+      lastFrame = frame;
+      streamClients.forEach(res => {
+        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+        res.write(frame);
+        res.write('\r\n');
+      });
+      buffer = buffer.slice(end + 2);
+    }
+    // เช็คเวลาตัดไฟล์ใหม่
     if (Date.now() - fileStartTime > recordingDurationMs) {
-      clearInterval(interval);
-      startNewRecordFile();
-      // จำกัดจำนวนไฟล์ mp4
+      startNewFile();
+      // จำกัดจำนวนไฟล์ mjpeg
       fs.readdir(global.folderVideos, (err, files) => {
         if (!err) {
-          const videoFiles = files.filter(f => f.endsWith('.mp4'));
+          const videoFiles = files.filter(f => f.endsWith('.mjpeg'));
           if (videoFiles.length > files_maxCount) {
             videoFiles.sort();
             const oldestFile = videoFiles[0];
@@ -59,37 +74,11 @@ function startNewRecordFile() {
         }
       });
     }
-  }, 1000);
-  recordProcess.on('exit', () => {
-    recordProcess = null;
-  });
-}
-
-// ====== stream MJPEG เฉพาะเมื่อมี client connect ======
-function startStreamProcess() {
-  if (streamProcess) return;
-  if (process.platform !== 'linux') return;
-  streamProcess = spawn('bash', ['-c',
-    `rpicam-vid -t 0 --width ${videoWidth} --height ${videoHeight} --codec mjpeg --framerate ${videoFrameRate} -o -`
-  ]);
-  let buffer = Buffer.alloc(0);
-  streamProcess.stdout.on('data', (data) => {
-    buffer = Buffer.concat([buffer, data]);
-    let start, end;
-    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
-           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
-      const frame = buffer.slice(start, end + 2);
-      streamClients.forEach(res => {
-        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-        res.write(frame);
-        res.write('\r\n');
-      });
-      buffer = buffer.slice(end + 2);
-    }
   });
   streamProcess.on('exit', () => {
     streamProcess = null;
-    streamClients.forEach(res => { try { res.end(); } catch {} });
+    if (fileStream) fileStream.end();
+    streamClients.forEach(res => res.end());
     streamClients = [];
   });
 }
@@ -97,20 +86,16 @@ function startStreamProcess() {
 // เริ่มอัตโนมัติเมื่อเปิดระบบ
 if (process.platform === 'linux') {
   setTimeout(() => {
-    startRecordProcess();
+    startMjpegStreamAndRecord();
   }, 3000);
 }
 
+
+
+//==============================================
 // cleanup ตอนปิดระบบ
 function cleanup() {
-  if (recordProcess && !recordProcess.killed) {
-    try {
-      recordProcess.kill('SIGTERM');
-      console.log('recordProcess killed (exit/terminate)');
-    } catch (err) {
-      console.log('Error killing recordProcess:', err.message);
-    }
-  }
+  recording = false;
   if (streamProcess && !streamProcess.killed) {
     try {
       streamProcess.kill('SIGTERM');
@@ -125,14 +110,22 @@ process.once('SIGINT', cleanup);
 process.once('SIGTERM', cleanup);
 process.once('exit', cleanup);
 
-// สำหรับ stream MJPEG ไป client (browser, VLC, ffplay)
+
+
+// สำหรับ stream MJPEG ไป client
+// ไปแก้ที่ cameraRouter.js ด้วย - ใช้ addMjpegClient
 export function addMjpegClient(res) {
-  if (!streamProcess) startStreamProcess();
   streamClients.push(res);
+  // ส่ง frame ล่าสุดทันที (ลดอาการจอดำ)
+  if (lastFrame) {
+    res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${lastFrame.length}\r\n\r\n`);
+    res.write(lastFrame);
+    res.write('\r\n');
+  }
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
     if (streamClients.length === 0 && streamProcess) {
-      try { streamProcess.kill('SIGINT'); } catch {}
+      streamProcess.kill('SIGINT');
       streamProcess = null;
     }
   });
