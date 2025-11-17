@@ -15,9 +15,9 @@ git pull                   # ดึงโค้ดล่าสุดจากร
 git reset --hard HEAD && git clean -fd && git pull  
 ```
 
-## ฉันต้องการสร้าง branch ชื่อ camera-stream
+## สร้าง branch ชื่อ camera-stream
 จากนั้น commit เก็บไว้
-จากนั้นกลับไปทำงานต่อที่ main โดยไม่ยุ่งกับbranch ชื่อ camera-stream
+จากนั้นกลับไปทำงานต่อที่ main โดยไม่ยุ่งกับ branch ชื่อ camera-stream
 
 ```bash
 git checkout -b camera-stream
