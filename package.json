@@ -8,7 +8,6 @@
     "dev": "nodemon egle-eye.js",
     "app": "sudo node egle-eye.js",
     "start": "pm2 start egle-eye.js -i 0",
-    "start-eco" : "pm2 start ecosystem.config.cjs",
     "start1": "pm2 start egle-eye.js -i 1",
     "stop": "pm2 stop egle-eye.js",
     "restart": "pm2 restart egle-eye.js",
