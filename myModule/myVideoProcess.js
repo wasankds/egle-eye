@@ -30,8 +30,33 @@ function startMjpegStreamAndRecord() {
     '-o', '-'
   ]);
   let buffer = Buffer.alloc(0);
+  let prevFilename = null;
+  
   function startNewFile() {
     if (fileStream) fileStream.end();
+    // ก่อนจะเปลี่ยนไฟล์ใหม่ ให้แปลงไฟล์ก่อนหน้าจาก .mjpeg เป็น .mp4
+    if (prevFilename) {
+      const mjpegPath = path.join(global.folderVideos, prevFilename);
+      const mp4Path = mjpegPath.replace(/\.mjpeg$/, '.mp4');
+      // ffmpeg -y -i input.mjpeg -c:v copy output.mp4
+      const ffmpeg = spawn('ffmpeg', ['-y', '-i', mjpegPath, '-c:v', 'copy', mp4Path]);
+      ffmpeg.on('exit', (code) => {
+        if (code === 0) {
+          console.log('Converted', prevFilename, 'to', mp4Path);
+          // ลบไฟล์ mjpeg หลังแปลงสำเร็จ
+          fs.unlink(mjpegPath, (err) => {
+            if (err) {
+              console.error('Error deleting', mjpegPath, err);
+            } else {
+              console.log('Deleted original mjpeg file:', mjpegPath);
+            }
+          });
+        } else {
+          console.log('Failed to convert', prevFilename, 'to mp4');
+        }
+      });
+    }
+    prevFilename = currentFilename;
     currentFilename = `${myDateTime.now_name()}.mjpeg`;
     fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
     fileStartTime = Date.now();
