@@ -24,10 +24,11 @@ done
 
 # 
 # วิธีใช้:
-
 # บันทึกไฟล์นี้เป็น sh-convert-mjpeg-to-mp4.sh ในโฟลเดอร์ที่มีไฟล์ .mjpeg
+
 # ให้สิทธิ์รัน:
 # chmod +x sh-convert-mjpeg-to-mp4.sh
+
 # รันสคริปต์:
 # ./sh-convert-mjpeg-to-mp4.sh
 

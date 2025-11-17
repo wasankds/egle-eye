@@ -143,8 +143,9 @@ process.once('exit', cleanup);
 
 // สำหรับ stream MJPEG ไป client
 // ไปแก้ที่ cameraRouter.js ด้วย - ใช้ addMjpegClient
-export function addMjpegClient(res) {
+export function addMjpegClient(res) {  
   streamClients.push(res);
+  console.log(`o - MJPEG client connected ===> : ${streamClients.length}`);
   // ส่ง frame ล่าสุดทันที (ลดอาการจอดำ)
   if (lastFrame) {
     res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${lastFrame.length}\r\n\r\n`);
@@ -153,6 +154,8 @@ export function addMjpegClient(res) {
   }
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
+    console.log(`x - MJPEG client disconnected ===> : ${streamClients.length}`);
+
     // ถ้าไม่มี client เหลือ ให้หยุด streamProcess (rpicam-vid)
     if (streamClients.length === 0 && streamProcess) {
       try {
