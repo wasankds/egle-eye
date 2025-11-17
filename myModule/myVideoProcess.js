@@ -11,8 +11,8 @@ let recording = true; // เปิดปิดการบันทึก - ห�
 const videoWidth = process.env.VIDEO_WIDTH || '640';
 const videoHeight = process.env.VIDEO_HEIGHT || '480';
 const videoFrameRate = process.env.VIDEO_FRAMERATE || '10';
-const files_maxCount = 100;
-const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
+const files_maxCount = 500;
+const recordingDurationMs = 5 * 60 * 1000; // 5 นาทีต่อไฟล์
 
 
 // MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
