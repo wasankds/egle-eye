@@ -43,8 +43,12 @@ function startMjpegStreamAndRecord() {
     
     // ทุกครั้งที่เริ่มไฟล์ใหม่ จะสั่งแปลงไฟล์ .mjpeg ก่อนหน้าเป็น .mp4 แบบ background (ไม่รอผลลัพธ์)
     if (prevFilename) {
-      const mjpegPath = path.join(global.folderVideos, prevFilename);
-      const mp4Path = mjpegPath.replace(/\.mjpeg$/, '.mp4');
+        const mjpegPath = path.join(global.folderVideos, prevFilename);
+        const mp4Folder = path.join(global.folderVideosMp4);
+        if (!fs.existsSync(mp4Folder)) {
+          fs.mkdirSync(mp4Folder, { recursive: true });
+        }
+        const mp4Path = path.join(mp4Folder, path.basename(prevFilename, '.mjpeg') + '.mp4');
       const ffmpeg = spawn('ffmpeg', [
         '-y',
         '-framerate', videoFrameRate, // เพิ่มบรรทัดนี้
