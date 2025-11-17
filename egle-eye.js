@@ -8,6 +8,9 @@ import express from 'express';
 import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
+// redis adapter
+import { createAdapter } from '@socket.io/redis-adapter';
+import { createClient } from 'redis';
 import flash from 'connect-flash'
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
@@ -24,12 +27,20 @@ const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js
 const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
 await import(`./${global.myModuleFolder}/myGlobal.js`)
 await import(`./${global.myModuleFolder}/myVideoProcess.js`) // ใช้จริงให้เปิด 
-// // const myDateTime = await import(`./${global.myModuleFolder}/myDateTime.js`)
-// // await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
+// const myDateTime = await import(`./${global.myModuleFolder}/myDateTime.js`)
+// await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
 //===
 const app = express();
 const server = createServer(app)
 const io = new Server(server)
+// redis adapter - start
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+await pubClient.connect();
+await subClient.connect();
+// redis adapter - end
+io.adapter(createAdapter(pubClient, subClient));
+console.log('Socket.io Redis adapter enabled');
 global.io = io;
 //===
 // ตรวจสอบไฟล์ db.json ถ้าไม่มีหรือว่างเปล่า ให้สร้างด้วย default data

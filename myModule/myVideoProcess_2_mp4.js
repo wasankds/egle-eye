@@ -7,10 +7,11 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 let streamProcess = null;
 let streamClients = [];
 let lastFrame = null;
-let recording = true;
+let recording = true; // เปิดปิดการบันทึก - ห้ามลบ
 const videoWidth = process.env.VIDEO_WIDTH || '640';
 const videoHeight = process.env.VIDEO_HEIGHT || '480';
 const videoFrameRate = process.env.VIDEO_FRAMERATE || '10';
+
 const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
 
@@ -32,6 +33,7 @@ function startMjpegStreamAndRecord() {
   let buffer = Buffer.alloc(0);
   let prevFilename = null;
   
+  //=======================================
   function startNewFile() {
     if (fileStream) fileStream.end();
     
@@ -69,6 +71,8 @@ function startMjpegStreamAndRecord() {
     fileStartTime = Date.now();
   }
   startNewFile();
+
+  //=======================================
   streamProcess.stdout.on('data', (data) => {
     // เขียนลงไฟล์
     if (fileStream) fileStream.write(data);
