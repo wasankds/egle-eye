@@ -45,3 +45,19 @@ sudo pigpiod
 ```bash
  PS D:\aWK_LeaseSystem\egle-eye> scp wasankds@192.168.1.135:~/egle-eye/videos/2025-11-16_10-18-04.h264 .
 ```
+
+```bash
+## ใช้คำสั่งนี้บน Raspberry Pi เพื่อตรวจสอบและ kill ทุก process ที่เกี่ยวกับ rpicam-vid หรือ libcamera
+
+ps aux | grep rpicam
+sudo killall rpicam-vid
+
+ps aux | grep libcamera
+sudo killall libcamera-vid
+```
+
+```bash
+หรือ kill แบบ force (ถ้ายังไม่หยุด):
+sudo killall -9 rpicam-vid
+sudo killall -9 libcamera-vid
+```

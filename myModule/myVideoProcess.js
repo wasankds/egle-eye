@@ -36,6 +36,11 @@ const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล�
 function startH264StreamAndRecord() {
   if (streamProcess) return;
   if (process.platform !== 'linux') return;
+  // ตรวจสอบและสร้างโฟลเดอร์ videos ถ้ายังไม่มี
+  if (!fs.existsSync(global.folderVideos)) {
+    fs.mkdirSync(global.folderVideos, { recursive: true });
+    console.log('Created videos folder:', global.folderVideos);
+  }
   let fileStream = null;
   let fileStartTime = Date.now();
   let currentFilename = null;
@@ -52,6 +57,7 @@ function startH264StreamAndRecord() {
     currentFilename = `${myDateTime.now_name()}.h264`;
     fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
     fileStartTime = Date.now();
+    console.log('Start new video file:', currentFilename);
   }
   startNewFile();
   streamProcess.stdout.on('data', (data) => {
