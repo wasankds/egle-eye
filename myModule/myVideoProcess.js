@@ -189,9 +189,8 @@ export function addMjpegClient(res) {
   }
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
-    if (streamClients.length === 0 && streamProcess) {
-      streamProcess.kill('SIGINT');
-      streamProcess = null;
-    }
+    // ไม่ต้อง kill streamProcess ที่นี่ ให้ kill เฉพาะตอนปิดระบบเท่านั้น
+    // (streamProcess จะรัน background ตลอด เพื่อรองรับ client ใหม่ทันที)
+    // ถ้าต้องการ cleanup จริงๆ ให้ใช้ฟังก์ชัน cleanup ด้านล่าง
   });
 }
