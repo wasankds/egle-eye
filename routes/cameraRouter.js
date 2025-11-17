@@ -7,7 +7,8 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
 // import { lastFrame, onFrame, startVideoStreamRelay } from '../myModule/myVideoProcess.js';
-const { lastFrame, onFrame, startVideoStreamRelay } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
+// const { lastFrame, onFrame, startVideoStreamRelay } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
+const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
 const PATH_MAIN = '/camera'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_REQUEST = `${PATH_MAIN}/request`
@@ -33,8 +34,8 @@ let removeFrameListener = null;
 // มีการเปิดหน้าเว็บที่มี <img src="/camera/stream">
 // หรือมีโปรแกรม/แอปอื่น (เช่น VLC, ffplay, ฯลฯ) ที่เข้า URL /camera/stream
 // 
-
 router.get(PATH_STREAM, (req, res) => {
+
   if(process.platform !== 'linux') return;
   res.writeHead(200, {
     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
@@ -42,30 +43,12 @@ router.get(PATH_STREAM, (req, res) => {
     'Connection': 'close',
     'Pragma': 'no-cache'
   });
-  mjpegClients.push(res);
-  startVideoStreamRelay(); // เผื่อ process ยังไม่ start
-
-  // ส่ง frame ล่าสุดทันที (ลดอาการจอดำ)
-  if (lastFrame) {
-    res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${lastFrame.length}\r\n\r\n`);
-    res.write(lastFrame);
-    res.write('\r\n');
-  }
-
-  // ส่ง frame ใหม่ทุกครั้งที่มีการอัปเดต
-  const sendFrame = (frame) => {
-    if (!res.writableEnded) {
-      res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-      res.write(frame);
-      res.write('\r\n');
-    }
-  };
-  const removeListener = onFrame(sendFrame);
-
-  req.on('close', () => {
-    mjpegClients = mjpegClients.filter(r => r !== res);
-    removeListener();
-  });
+  addMjpegClient(res);
+  
+  // req.on('close', () => {
+  //   mjpegClients = mjpegClients.filter(r => r !== res);
+  //   removeListener();
+  // });
 });
 
 //=============================================
