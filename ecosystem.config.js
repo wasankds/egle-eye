@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'egle-eye-web',
       script: 'egle-eye.js',
-      instances: 'max', // หรือระบุจำนวน core เช่น 4
+      instances: 'max',
       exec_mode: 'cluster'
     },
     {
