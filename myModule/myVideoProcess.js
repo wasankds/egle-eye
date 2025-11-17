@@ -144,8 +144,13 @@ process.once('exit', cleanup);
 // สำหรับ stream MJPEG ไป client
 // ไปแก้ที่ cameraRouter.js ด้วย - ใช้ addMjpegClient
 export function addMjpegClient(res) {  
+  // ถ้าไม่มี streamProcess ให้ start ใหม่ (หลัง disconnect หมดแล้วมี client ใหม่)
+  if (!streamProcess) {
+    startMjpegStreamAndRecord();
+  }
   streamClients.push(res);
   console.log(`o - MJPEG client connected ===> : ${streamClients.length}`);
+  
   // ส่ง frame ล่าสุดทันที (ลดอาการจอดำ)
   if (lastFrame) {
     res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${lastFrame.length}\r\n\r\n`);
