@@ -130,17 +130,13 @@ if (process.platform === 'linux') {
 // cleanup ตอนปิดระบบ
 function cleanup() {
   recording = false;
-  if (videoProcess && !videoProcess.killed) {
+  if (streamProcess && !streamProcess.killed) {
     try {
-      videoProcess.kill('SIGTERM');
-      console.log('rpicam-vid process killed (exit/terminate)');
+      streamProcess.kill('SIGTERM');
+      console.log('streamProcess killed (exit/terminate)');
     } catch (err) {
-      console.log('Error killing rpicam-vid:', err.message);
+      console.log('Error killing streamProcess:', err.message);
     }
-  }
-  if (fileStream) {
-    fileStream.end();
-    fileStream = null;
   }
   process.exit();
 }
