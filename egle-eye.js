@@ -8,10 +8,10 @@ import express from 'express';
 import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
-// redis adapter - start
-import { createAdapter } from '@socket.io/redis-adapter';
-import { createClient } from 'redis';
-// redis adapter - end
+// // redis adapter - start
+// import { createAdapter } from '@socket.io/redis-adapter';
+// import { createClient } from 'redis';
+// // redis adapter - end
 import flash from 'connect-flash'
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
@@ -34,13 +34,13 @@ await import(`./${global.myModuleFolder}/myVideoProcess.js`) // ใช้จร�
 const app = express();
 const server = createServer(app)
 const io = new Server(server)
-// redis adapter - start
-const pubClient = createClient({ url: 'redis://localhost:6379' });
-const subClient = pubClient.duplicate();
-await pubClient.connect();
-await subClient.connect();
+// // redis adapter - start
+// const pubClient = createClient({ url: 'redis://localhost:6379' });
+// const subClient = pubClient.duplicate();
+// await pubClient.connect();
+// await subClient.connect();
+// io.adapter(createAdapter(pubClient, subClient));
 // redis adapter - end
-io.adapter(createAdapter(pubClient, subClient));
 global.io = io;
 //===
 // ตรวจสอบไฟล์ db.json ถ้าไม่มีหรือว่างเปล่า ให้สร้างด้วย default data
