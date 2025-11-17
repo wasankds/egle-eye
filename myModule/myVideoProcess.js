@@ -1,18 +1,4 @@
-
-
-/* 
-
-- ใช้ process เดียว (rpicam-vid --codec mjpeg ...) สำหรับทั้ง stream MJPEG ไป client และบันทึกไฟล์ .mjpeg พร้อมกัน
-- ตัดไฟล์ใหม่ทุก 1 นาที, จำกัดจำนวนไฟล์ไม่เกิน 100 ไฟล์ (ลบไฟล์เก่าสุดอัตโนมัติ)
-- ประหยัด resource ไม่ต้อง encode ซ้ำ
-
-สรุปทางเลือก:
-stream MJPEG + บันทึก MJPEG (ที่ทำอยู่): ดูสดบนเว็บได้, ดูย้อนหลังต้องแปลงไฟล์
-stream h264 + บันทึก h264: ดูย้อนหลังด้วย VLC ได้, แต่ browser ดูสดไม่ได้ (ต้องใช้ player ที่รองรับ h264 stream เช่น ffplay, VLC)
-stream h264 แล้วแปลงเป็น MJPEG ใน Node.js: ใช้ resource สูงขึ้น (ต้อง decode h264 → jpeg ทุก frame)
-ใช้ ffmpeg/gstreamer เป็น multiplexer: ซับซ้อนขึ้น, แต่สามารถแยก stream และบันทึกจาก source เดียวได้
-
-*/
+// let recording = true;
 
 
 
@@ -21,24 +7,20 @@ import path from 'node:path';
 import fs from 'fs';
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 
-// MJPEG stream relay + record h264 + auto wrap to mp4
-
-
 let ffmpegProcess = null;
 let streamClients = [];
-let fileStartTime = 0;
-let currentFilename = null;
-let recording = true;
 const videoWidth = '1280';
 const videoHeight = '720';
 const videoFrameRate = '10';
 const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
+let fileStartTime = 0;
+let currentFilename = null;
 
 
-// H264 stream relay + record h264 file (process เดียว ประหยัด resource)
 
 
+// ffmpeg multiplexer: stream MJPEG ไป client + save mp4
 function startFfmpegMultiplexer() {
   if (ffmpegProcess) return;
   if (process.platform !== 'linux') return;
@@ -61,15 +43,25 @@ function startNewFfmpegProcessAndFile() {
   fileStartTime = Date.now();
   console.log('Start new video file:', currentFilename);
 
-  // rpicam-vid --codec h264 | ffmpeg -i - -c:v copy -f h264 pipe:1 -f mp4 <file>
+  // rpicam-vid --codec h264 | ffmpeg -i - -c:v copy -f mp4 <file> -f mjpeg pipe:1
   ffmpegProcess = spawn('bash', ['-c',
-    `rpicam-vid -t 0 --width ${videoWidth} --height ${videoHeight} --codec h264 --framerate ${videoFrameRate} -o - | ffmpeg -hide_banner -loglevel error -y -i - -c:v copy -f h264 pipe:1 -f mp4 '${path.join(global.folderVideos, currentFilename)}'`
+    `rpicam-vid -t 0 --width ${videoWidth} --height ${videoHeight} --codec h264 --framerate ${videoFrameRate} -o - | ffmpeg -hide_banner -loglevel error -y -i - -c:v copy -f mp4 '${path.join(global.folderVideos, currentFilename)}' -f mjpeg pipe:1`
   ]);
 
+  let buffer = Buffer.alloc(0);
   ffmpegProcess.stdout.on('data', (data) => {
-    streamClients.forEach(res => {
-      if (!res.writableEnded) res.write(data);
-    });
+    buffer = Buffer.concat([buffer, data]);
+    let start, end;
+    while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
+           (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
+      const frame = buffer.slice(start, end + 2);
+      streamClients.forEach(res => {
+        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+        res.write(frame);
+        res.write('\r\n');
+      });
+      buffer = buffer.slice(end + 2);
+    }
   });
 
   // ตัดไฟล์ใหม่เมื่อครบเวลา
@@ -115,13 +107,12 @@ if (process.platform === 'linux') {
 //==============================================
 // cleanup ตอนปิดระบบ
 function cleanup() {
-  recording = false;
-  if (streamProcess && !streamProcess.killed) {
+  if (ffmpegProcess && !ffmpegProcess.killed) {
     try {
-      streamProcess.kill('SIGTERM');
-      console.log('streamProcess killed (exit/terminate)');
+      ffmpegProcess.kill('SIGTERM');
+      console.log('ffmpegProcess killed (exit/terminate)');
     } catch (err) {
-      console.log('Error killing streamProcess:', err.message);
+      console.log('Error killing ffmpegProcess:', err.message);
     }
   }
   process.exit();
@@ -135,8 +126,10 @@ process.once('exit', cleanup);
 // สำหรับ stream H264 ไป client (เช่น VLC, ffplay)
 
 
-export function addH264Client(res) {
-  // ถ้าไม่มี process ให้เริ่มใหม่ (กรณี client แรก)
+
+
+// สำหรับ stream MJPEG ไป client (browser, VLC, ffplay)
+export function addMjpegClient(res) {
   if (!ffmpegProcess) startFfmpegMultiplexer();
   streamClients.push(res);
   res.on('close', () => {

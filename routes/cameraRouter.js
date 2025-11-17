@@ -8,7 +8,7 @@ const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
 // import { lastFrame, onFrame, startVideoStreamRelay } from '../myModule/myVideoProcess.js';
 // const { lastFrame, onFrame, startVideoStreamRelay } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
-const { addH264Client } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
+const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
 const PATH_MAIN = '/camera'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_REQUEST = `${PATH_MAIN}/request`
@@ -37,12 +37,12 @@ let removeFrameListener = null;
 router.get(PATH_STREAM, (req, res) => {
   if(process.platform !== 'linux') return;
   res.writeHead(200, {
-    'Content-Type': 'video/h264',
+    'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
     'Cache-Control': 'no-cache',
     'Connection': 'close',
     'Pragma': 'no-cache'
   });
-  addH264Client(res);
+  addMjpegClient(res);
 });
 
 //=============================================
