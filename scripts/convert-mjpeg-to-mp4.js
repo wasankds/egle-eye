@@ -85,6 +85,6 @@ schedule.scheduleJob('0 2 * * *', () => {
 
 // ถ้าคุณต้องการ “ทดสอบ” หรือ “สั่งแปลงไฟล์ทันที” (ไม่ต้องรอ schedule)
 // node scripts/convert-mjpeg-to-mp4.js
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   convertAllMjpegToMp4();
 }
