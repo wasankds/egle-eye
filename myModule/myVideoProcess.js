@@ -13,12 +13,28 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 let streamProcess = null;
 let streamClients = [];
 let lastFrame = null;
-let recording = true;
+let recording = true; // ห้ามลบ 
 const videoWidth = process.env.VIDEO_WIDTH || '640';
 const videoHeight = process.env.VIDEO_HEIGHT || '480';
 const videoFrameRate = process.env.VIDEO_FRAME_RATE || '10'
-const files_maxCount = 100;
+const files_maxCount = 5;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
+
+//==== ลบไฟล์ .mjpeg ทั้งหมดเมื่อเริ่มระบบ
+fs.readdir(global.folderVideos, (err, files) => {
+  if (!err) {
+    const videoFiles = files.filter(f => f.endsWith('.mjpeg'));
+    videoFiles.forEach(file => {
+      console.log('Deleting old mjpeg file on startup:', file);
+      fs.unlink(path.join(global.folderVideos, file), err => {  
+        if (err) {
+          console.error(`Error deleting file ${file}:`, err);
+        }
+      });
+    });
+  }
+});
+
 
 // MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
 function startMjpegStreamAndRecord() {
@@ -51,7 +67,7 @@ function startMjpegStreamAndRecord() {
         const mp4Path = path.join(mp4Folder, path.basename(prevFilename, '.mjpeg') + '.mp4');
       const ffmpeg = spawn('ffmpeg', [
         '-y',
-        '-framerate', videoFrameRate, // เพิ่มบรรทัดนี้
+        '-framerate', videoFrameRate,
         '-i', mjpegPath,
         '-c:v', 'libx264',
         '-pix_fmt', 'yuv420p',
@@ -158,17 +174,19 @@ function startMjpegStreamAndRecord() {
     // ตรวจสอบเวลาสิ้นสุดไฟล์ - ถ้าเกินเวลาที่กำหนดให้เริ่มไฟล์ใหม่
     if (Date.now() - fileStartTime > recordingDurationMs) {
       startNewFile();
-      fs.readdir(global.folderVideos, (err, files) => {
+
+      // ลบไฟล์ .mp4 ในโฟลเดอร์ videos-mp4 เก่าเกินจำนวนที่กำหนด
+      fs.readdir(global.folderVideosMp4, (err, files) => {
         if (!err) {
 
-          const videoFiles = files.filter(f => f.endsWith('.mjpeg'));
+          const videoFiles = files.filter(f => f.endsWith('.mp4'));
           if (videoFiles.length > files_maxCount) {
             videoFiles.sort();
             const oldestFile = videoFiles[0];
 
-            // ลบไฟล์เก่า .mjpeg
+            // ลบไฟล์เก่า .mp4
             if (oldestFile) {
-              fs.unlink(path.join(global.folderVideos, oldestFile), err => {
+              fs.unlink(path.join(global.folderVideosMp4, oldestFile), err => {
                 if (err) console.error(`Error deleting file ${oldestFile}:`, err);
                 else console.log(`Deleted oldest video file: ${oldestFile}`);
               });
