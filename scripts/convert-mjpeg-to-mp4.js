@@ -4,9 +4,6 @@ import path from 'node:path';
 import fs from 'fs';
 import schedule from 'node-schedule';
 import { fileURLToPath } from 'url';
-
-// กำหนด path
-import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const videosDir = path.resolve(__dirname, '../videos');
