@@ -28,7 +28,7 @@ function startMjpegRelay() {
     '--width', '640',
     '--height', '480',
     '--codec', 'mjpeg',
-    '--framerate', '10',
+    '--framerate', '10', // ถ้าไม่ระบุใช้ค่าเริ่มต้น 30 fps
     '-o', '-'
   ]);
   let buffer = Buffer.alloc(0);

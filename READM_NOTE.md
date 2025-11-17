@@ -9,27 +9,38 @@ git clean -fd              # ลบไฟล์และโฟลเดอร์
 git pull                   # ดึงโค้ดล่าสุดจากรีโมต
 ```
 
-รันคำสั่งเดียวเลย
+##   รันคำสั่งเดียวเลย
 
 ```bash
 git reset --hard HEAD && git clean -fd && git pull  
 ```
 
-ปิด pigpiod
+## ฉันต้องการสร้าง branch ชื่อ camera-stream
+จากนั้น commit เก็บไว้
+จากนั้นกลับไปทำงานต่อที่ main โดยไม่ยุ่งกับbranch ชื่อ camera-stream
+
+```bash
+git checkout -b camera-stream
+git add .
+git commit -m "feat: implement efficient multi-client camera stream relay"
+git checkout main
+```
+
+
+
+## ปิด pigpiod
 
 ```bash
 sudo killall pigpiod
 sudo pigpiod
 ```
 
-คำสั่ง scp
+## คำสั่ง scp
 
 ```bash
  PS D:\aWK_LeaseSystem\egle-eye> scp node-servo-moter.js wasankds@192.168.1.135:~/egle-eye
 ```
-
-
-คำสั่ง scp - ก๊อปี้ไฟล์ video
+##  คำสั่ง scp - ก๊อปี้ไฟล์ video
 
 ```bash
  PS D:\aWK_LeaseSystem\egle-eye> scp wasankds@192.168.1.135:~/egle-eye/videos/2025-11-16_10-18-04.h264 .
