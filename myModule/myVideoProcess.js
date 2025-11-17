@@ -14,13 +14,18 @@ let streamProcess = null;
 let streamClients = [];
 let lastFrame = null;
 let recording = true;
-const videoWidth = '640';
-const videoHeight = '480';
-const videoFrameRate = '5';
+const videoWidth = process.env.VIDEO_WIDTH || '640';
+const videoHeight = process.env.VIDEO_HEIGHT || '480';
+const videoFrameRate = process.env.VIDEO_FRAME_RATE || '10';
 const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
 
-// MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
+// pm2 จะ set process.env.pm_id เป็น string ของเลข process (0,1,2,...)
+// ถ้าไม่มี pm2 ให้ถือว่าเป็น process หลัก
+function isMainPm2Process() {
+  return !process.env.pm_id || process.env.pm_id === '0';
+}
+
 function startMjpegStreamAndRecord() {
   if (streamProcess) return;
   if (process.platform !== 'linux') return;
@@ -37,17 +42,16 @@ function startMjpegStreamAndRecord() {
   ]);
   let buffer = Buffer.alloc(0);
   let prevFilename = null;
-  
+
   function startNewFile() {
+    if (!isMainPm2Process()) return; // เฉพาะ process หลักเท่านั้นที่สร้างไฟล์ใหม่
     if (fileStream) fileStream.end();
-    
-    // ทุกครั้งที่เริ่มไฟล์ใหม่ จะสั่งแปลงไฟล์ .mjpeg ก่อนหน้าเป็น .mp4 แบบ background (ไม่รอผลลัพธ์)
     if (prevFilename) {
       const mjpegPath = path.join(global.folderVideos, prevFilename);
       const mp4Path = mjpegPath.replace(/\.mjpeg$/, '.mp4');
       const ffmpeg = spawn('ffmpeg', [
         '-y',
-        '-framerate', videoFrameRate, // เพิ่มบรรทัดนี้
+        '-framerate', videoFrameRate,
         '-i', mjpegPath,
         '-c:v', 'libx264',
         '-pix_fmt', 'yuv420p',
@@ -56,7 +60,6 @@ function startMjpegStreamAndRecord() {
       ffmpeg.on('exit', (code) => {
         if (code === 0) {
           console.log('Converted', prevFilename, 'to', mp4Path);
-          // ลบไฟล์ mjpeg หลังแปลงสำเร็จ
           fs.unlink(mjpegPath, (err) => {
             if (err) {
               console.error('Error deleting', mjpegPath, err);
@@ -74,7 +77,9 @@ function startMjpegStreamAndRecord() {
     fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
     fileStartTime = Date.now();
   }
-  startNewFile();
+  if (isMainPm2Process()) {
+    startNewFile();
+  }
 
   // cache overlay ตามวินาที
   let overlayCache = { second: null, overlay: null, timestamp: null };
@@ -84,73 +89,58 @@ function startMjpegStreamAndRecord() {
     while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
            (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
       const frame = buffer.slice(start, end + 2);
-        
-        try {
-          // overlay timestamp ด้วย sharp (cache ตามวินาที)
-          let now = new Date();
-          let sec = now.getSeconds();
-          let timestamp = now.toLocaleString('sv-SE', { hour12: false });
-          if (overlayCache.second !== sec) {
-            overlayCache.second = sec;
-            overlayCache.timestamp = timestamp;
-            overlayCache.overlay = await sharp({
-              create: {
-                width: 300,
-                height: 28,
-                channels: 4,
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
+      try {
+        let now = new Date();
+        let sec = now.getSeconds();
+        let timestamp = now.toLocaleString('sv-SE', { hour12: false });
+        if (overlayCache.second !== sec) {
+          overlayCache.second = sec;
+          overlayCache.timestamp = timestamp;
+          overlayCache.overlay = await sharp({
+            create: {
+              width: 300,
+              height: 28,
+              channels: 4,
+              background: { r: 0, g: 0, b: 0, alpha: 0 }
+            }
+          })
+            .png()
+            .composite([
+              {
+                input: Buffer.from(
+                  `<svg width="300" height="28"><text x="8" y="20" font-size="18" fill="white" font-family="Arial">${timestamp}</text></svg>`
+                ),
+                top: 0,
+                left: 0
               }
-            })
-              .png()
-              .composite([
-                {
-                  input: Buffer.from(
-                    `<svg width="300" height="28">
-                      <text x="8" y="20" font-size="18" fill="white" font-family="Arial">${timestamp}</text>
-                    </svg>`
-                  ),
-                  top: 0,
-                  left: 0
-                }
-              ])
-              .toBuffer();
-          }
-          if (overlayCache.overlay) {
-            let frameWithTs = await sharp(frame)
-              .composite([{ input: overlayCache.overlay, top: 0, left: 0 }])
-              .jpeg()
-              .toBuffer();
-            lastFrame = frameWithTs;
-            streamClients.forEach(res => {
-              res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frameWithTs.length}\r\n\r\n`);
-              res.write(frameWithTs);
-              res.write('\r\n');
-            });
-            if (fileStream) fileStream.write(frameWithTs);
-          } else {
-            // ถ้า overlay ยังไม่พร้อม ให้ส่ง frame เดิม (ไม่มี timestamp)
-            lastFrame = frame;
-            streamClients.forEach(res => {
-              res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-              res.write(frame);
-              res.write('\r\n');
-            });
-            if (fileStream) fileStream.write(frame);
-          }
-        } catch (err) {
-          console.error('sharp error:', err);
-          // ถ้า sharp error ให้ส่ง frame เดิม (ไม่มี timestamp) ไปแทน
-          lastFrame = frame;
-          streamClients.forEach(res => {
-            res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-            res.write(frame);
-            res.write('\r\n');
-          });
-          if (fileStream) fileStream.write(frame);
+            ])
+            .toBuffer();
         }
+        let frameWithTs = overlayCache.overlay
+          ? await sharp(frame).composite([{ input: overlayCache.overlay, top: 0, left: 0 }]).jpeg().toBuffer()
+          : frame;
+        lastFrame = frameWithTs;
+        streamClients.forEach(res => {
+          res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frameWithTs.length}\r\n\r\n`);
+          res.write(frameWithTs);
+          res.write('\r\n');
+        });
+        if (isMainPm2Process() && fileStream) fileStream.write(frameWithTs);
+      } catch (err) {
+        console.error('sharp error:', err);
+        lastFrame = frame;
+        streamClients.forEach(res => {
+          res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+          res.write(frame);
+          res.write('\r\n');
+        });
+        if (isMainPm2Process() && fileStream) fileStream.write(frame);
+      }
       buffer = buffer.slice(end + 2);
     }
-    if (Date.now() - fileStartTime > recordingDurationMs) {
+
+    // ตรวจสอบเวลาสิ้นสุดไฟล์ - ถ้าเกินเวลาที่กำหนดให้เริ่มไฟล์ใหม่ (เฉพาะ process หลัก)
+    if (isMainPm2Process() && Date.now() - fileStartTime > recordingDurationMs) {
       startNewFile();
       fs.readdir(global.folderVideos, (err, files) => {
         if (!err) {
@@ -169,6 +159,7 @@ function startMjpegStreamAndRecord() {
       });
     }
   });
+
   streamProcess.on('exit', () => {
     streamProcess = null;
     if (fileStream) fileStream.end();
