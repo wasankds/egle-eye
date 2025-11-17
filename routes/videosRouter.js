@@ -58,6 +58,7 @@ router.get(PATH_MAIN, async (req, res) => {
       const mp4Filename = path.parse(video.name).name + '.mp4';
       // video.mp4Exists = videosFiles_mp4.includes(mp4Filename);
       video.mp4Filename = videosFiles_mp4.includes(mp4Filename) ? mp4Filename : null; 
+      video.mp4Filesize = videosFiles_mp4.includes(mp4Filename) ? fs.statSync(path.join(global.folderVideosMp4, mp4Filename)).size : null;
     }
     // console.log("videosFiles_mjpeg ===> " , videosFiles_mjpeg)
 

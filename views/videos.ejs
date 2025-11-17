@@ -49,6 +49,7 @@
               <col style="width: 1%;">
               <col style="width: 1%;">
               <col style="width: 1%;">
+              <col style="width: 1%;">
               <col style="width: auto;">
               <col style="width: auto;">
               <col style="width: 1%;">
@@ -61,7 +62,7 @@
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-sync-alt"></i></th>
                 <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
                 <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
-                <th class="al-c clickable" title="ขนาดไฟล์"><i class="fas fa-file"></i></th>
+                <!-- <th class="al-c clickable" title="ขนาดไฟล์"><i class="fas fa-file"></i></th> -->
                 <th class="al-c clickable" title="ไฟล์ mp4"><i class="fas fa-file-video"></i></th>
                 <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
@@ -93,13 +94,19 @@
                   </button>
                 </td>
                 
-                <td class="pd-l-s" title=""><%= obj.name %></td>
-                <td class="al-r pd-r-s" title=""><%= (obj.size / (1024 * 1024)).toFixed(2) %> MB</td>
+                <td class="pd-l-s fs-s">
+                  <div class="d-flex justify-content-between"">
+                    <span><%= obj.name %></span>
+                    <span>[<%= (obj.size / (1024 * 1024)).toFixed(2) %> MB]</span>  
+                  </div>
+                </td>
 
-
-                <td class="al-c">
+                <td class="al-c fs-s">
                   <% if(obj.mp4Filename) { %>
-                    <span><%= obj.mp4Filename %></span>
+                    <div class="d-flex justify-content-between">
+                      <span><%= obj.mp4Filename %></span>
+                      <span>[<%= (obj.mp4Filesize / (1024 * 1024)).toFixed(2) %> MB]</span>
+                    </div>
                   <% } else { %>
                   -
                   <% } %>
