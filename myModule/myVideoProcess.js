@@ -110,17 +110,28 @@ function startMjpegStreamAndRecord() {
               ])
               .toBuffer();
           }
-          let frameWithTs = await sharp(frame)
-            .composite([{ input: overlayCache.overlay, top: 0, left: 0 }])
-            .jpeg()
-            .toBuffer();
-          lastFrame = frameWithTs;
-          streamClients.forEach(res => {
-            res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frameWithTs.length}\r\n\r\n`);
-            res.write(frameWithTs);
-            res.write('\r\n');
-          });
-          if (fileStream) fileStream.write(frameWithTs);
+          if (overlayCache.overlay) {
+            let frameWithTs = await sharp(frame)
+              .composite([{ input: overlayCache.overlay, top: 0, left: 0 }])
+              .jpeg()
+              .toBuffer();
+            lastFrame = frameWithTs;
+            streamClients.forEach(res => {
+              res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frameWithTs.length}\r\n\r\n`);
+              res.write(frameWithTs);
+              res.write('\r\n');
+            });
+            if (fileStream) fileStream.write(frameWithTs);
+          } else {
+            // ถ้า overlay ยังไม่พร้อม ให้ส่ง frame เดิม (ไม่มี timestamp)
+            lastFrame = frame;
+            streamClients.forEach(res => {
+              res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
+              res.write(frame);
+              res.write('\r\n');
+            });
+            if (fileStream) fileStream.write(frame);
+          }
         } catch (err) {
           console.error('sharp error:', err);
           // ถ้า sharp error ให้ส่ง frame เดิม (ไม่มี timestamp) ไปแทน
