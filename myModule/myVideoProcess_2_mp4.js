@@ -8,9 +8,9 @@ let streamProcess = null;
 let streamClients = [];
 let lastFrame = null;
 let recording = true;
-const videoWidth = '640';
-const videoHeight = '480';
-const videoFrameRate = '5';
+const videoWidth = process.env.VIDEO_WIDTH || '640';
+const videoHeight = process.env.VIDEO_HEIGHT || '480';
+const videoFrameRate = process.env.VIDEO_FRAMERATE || '10';
 const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
 

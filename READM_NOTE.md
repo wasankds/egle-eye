@@ -61,3 +61,9 @@ sudo killall libcamera-vid
 sudo killall -9 rpicam-vid
 sudo killall -9 libcamera-vid
 ```
+
+
+## แปลง mjpeg เป็น mp4
+```bash
+ffmpeg -y -framerate 5 -i 2025-11-17_11-19-19.mjpeg -c:v libx264 -pix_fmt yuv420p 2025-11-17_11-19-19.mp4
+```

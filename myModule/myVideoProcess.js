@@ -1,3 +1,8 @@
+
+/* 
+ffmpeg -y -framerate 5 -i 2025-11-17_11-19-19.mjpeg -c:v libx264 -pix_fmt yuv420p 2025-11-17_11-19-19.mp4
+*/
+
 import { spawn } from 'child_process';
 import path from 'node:path';
 import fs from 'fs';
