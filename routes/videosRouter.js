@@ -11,6 +11,7 @@ const PATH_MAIN = '/videos'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_DELETE = `${PATH_MAIN}/delete`
 const PATH_DOWNLOAD = `${PATH_MAIN}/download`
+const PATH_DOWNLOAD_MP4 = `${PATH_MAIN}/download-mp4`
 const PATH_CONVERT = `${PATH_MAIN}/convert`
 
 
@@ -21,15 +22,15 @@ router.get(PATH_MAIN, async (req, res) => {
 
   try {
 
-    //=== อ่านรายชื่อไฟล์วิดีโอจากโฟลเดอร์ videos
-    const videosFiles = [];
+    //=== อ่านรายชื่อไฟล์วิดีโอ .mjpeg จากโฟลเดอร์ videos
+    const videosFiles_mjpeg = [];
     if (fs.existsSync(global.folderVideos)) {
       const files = fs.readdirSync(global.folderVideos);
       for (const file of files) {
         const filePath = path.join(global.folderVideos, file);
         const stat = fs.statSync(filePath);
         if (stat.isFile()) {
-          videosFiles.push({  
+          videosFiles_mjpeg.push({  
             name: file,
             size: stat.size,
             modifiedTime: stat.mtime
@@ -37,7 +38,27 @@ router.get(PATH_MAIN, async (req, res) => {
         }
       }
     }
-    // console.log('videosFiles ===> ', videosFiles);    
+
+    //=== อ่านรายชื่อไฟล์วิดีโอ .mp4 จากโฟลเดอร์ videos gloval.folderVideosMp4
+    const videosFiles_mp4 = [];
+    if (fs.existsSync(global.folderVideosMp4)) {
+      const filesMp4 = fs.readdirSync(global.folderVideosMp4);
+      for (const fileMp4 of filesMp4) {
+        const filePathMp4 = path.join(global.folderVideosMp4, fileMp4);
+        const statMp4 = fs.statSync(filePathMp4);
+        if (statMp4.isFile()) {
+          videosFiles_mp4.push(fileMp4);
+        }
+      }
+    }
+
+    //=== videosFiles ลนลูปไปหาชื่อไฟล์ที่ตรงกันในโฟลเดอร์  gloval.folderVideosMp4 ถ้ามีให้เพิ่มคีย์ mp4Exists: true
+    for (let video of videosFiles_mjpeg) {
+      const mp4Filename = path.parse(video.name).name + '.mp4';
+      video.mp4Exists = videosFiles_mp4.includes(mp4Filename);
+      video.mp4Filename = mp4Filename;
+    }
+    // console.log("videosFiles_mjpeg ===> " , videosFiles_mjpeg[0])
 
     const html = await myGeneral.renderView('videos', res, {
       title: global.PAGE_VIDEOS ,
@@ -45,13 +66,14 @@ router.get(PATH_MAIN, async (req, res) => {
       msg: req.flash('msg'),
 
       user: await lowDB.getSessionData(req),
-      data : videosFiles,
+      data : videosFiles_mjpeg,
 
       PREFIX,
       PATH_MAIN,
       PATH_DELETE,
+      PATH_CONVERT,
       PATH_DOWNLOAD,
-      PATH_CONVERT
+      PATH_DOWNLOAD_MP4,
     })
     res.send(html)
   } catch (error) {
@@ -111,9 +133,10 @@ router.post(PATH_DELETE, async (req, res) => {
 })
 
 
-router.get(PATH_DOWNLOAD, async (req, res) => {
-  // console.log(`-----------------${req.originalUrl}----------------------`)
-  // console.log("req.query ===> ", req.query)
+router.get([PATH_DOWNLOAD, PATH_DOWNLOAD_MP4], async (req, res) => {
+  console.log(`-----------------${req.originalUrl}----------------------`)
+  console.log(`-----------------${req.path}----------------------`)
+  console.log("req.query ===> ", req.query)
   try {
     const filename = req.query.filename;
     if (!filename) {
@@ -124,7 +147,14 @@ router.get(PATH_DOWNLOAD, async (req, res) => {
     if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
       return res.status(400).type('text').send('ชื่อไฟล์ไม่ถูกต้อง');
     }
-    const filePath = path.join(global.folderVideos, filename);
+
+    // 
+    if(req.path === PATH_DOWNLOAD_MP4){
+      var filePath = path.join(global.folderVideosMp4, filename);
+    }else if(req.path === PATH_DOWNLOAD){
+      var filePath = path.join(global.folderVideos, filename);
+    }
+
     if (!fs.existsSync(filePath)) {
       return res.status(404).type('text').send(`ไม่พบไฟล์ "${filename}" ที่ต้องการดาวน์โหลด`);
     }
@@ -148,8 +178,8 @@ router.get(PATH_DOWNLOAD, async (req, res) => {
 
 //=============================================================
 router.post(PATH_CONVERT, async (req, res) => {
-  console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log("req.body ===> " , req.body)
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log("req.body ===> " , req.body)
 
   try {
     const filename = req.body.filename;

@@ -60,6 +60,8 @@
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-hashtag"></i></th>
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-sync-alt"></i></th>
                 <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
+                <th class="al-c clickable" title="ไฟล์ mp4"><i class="fas fa-file-video"></i></th>
+                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
                 <th class="al-c clickable" title="ขนาดไฟล์"><i class="fas fa-file"></i></th>
                 <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
               </tr>
@@ -85,6 +87,16 @@
                 
                 <td class="al-c" title=""><%= index+1 %></td>
                 <td class="pd-l-s" title=""><%= obj.name %></td>
+                <td class="pd-l-s" title=""><%= obj.mp4Exists ? 'มีไฟล์ MP4' : '-' %></td>
+                <td class="al-c">
+                  <% if(obj.mp4Exists) { %>
+                  <a class="btn btn-sm bg-download" href="<%= PATH_DOWNLOAD_MP4 %>?filename=<%= obj.mp4Filename %>">
+                    <i class="fas fa-download"></i>
+                  </a>
+                  <% } else { %>
+                  -
+                  <% } %>
+                </td>
                 <td class="al-r pd-r-s" title=""><%= (obj.size / (1024 * 1024)).toFixed(2) %> MB</td>
                 <td class="al-c">
                   <button type="button" class="btn btn-sm clickable bg-delete btn-delete pd-l-l pd-r-l pd-t-s pd-b-s"
