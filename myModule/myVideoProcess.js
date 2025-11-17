@@ -34,7 +34,8 @@ function startMjpegStreamAndRecord() {
   
   function startNewFile() {
     if (fileStream) fileStream.end();
-    // ก่อนจะเปลี่ยนไฟล์ใหม่ ให้แปลงไฟล์ก่อนหน้าจาก .mjpeg เป็น .mp4
+    
+    // ทุกครั้งที่เริ่มไฟล์ใหม่ จะสั่งแปลงไฟล์ .mjpeg ก่อนหน้าเป็น .mp4 แบบ background (ไม่รอผลลัพธ์)
     if (prevFilename) {
       const mjpegPath = path.join(global.folderVideos, prevFilename);
       const mp4Path = mjpegPath.replace(/\.mjpeg$/, '.mp4');
