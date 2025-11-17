@@ -56,14 +56,15 @@
 
             <thead id="tableHeader">
               <tr>
-                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-hashtag"></i></th>
-                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-sync-alt"></i></th>
-                <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
-                <th class="al-c clickable" title="ไฟล์ mp4"><i class="fas fa-file-video"></i></th>
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
-                <th class="al-c clickable" title="ขนาดไฟล์"><i class="fas fa-file"></i></th>
+                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-sync-alt"></i></th>
                 <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
+                <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
+                <th class="al-c clickable" title="ขนาดไฟล์"><i class="fas fa-file"></i></th>
+                <th class="al-c clickable" title="ไฟล์ mp4"><i class="fas fa-file-video"></i></th>
+                <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
+                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
               </tr>
             </thead>
 
@@ -72,7 +73,8 @@
 
               <tr class="<%= index%2 == 0 ? 'bg-line-swap' : 'bg-main-color' %>">
 
-                <!-- mg-s  มีผลต่อความสูงของแถว -->
+                <td class="al-c" title=""><%= index+1 %></td>
+
                 <td class="al-c">
                   <a class="btn btn-sm bg-download" href="<%= PATH_DOWNLOAD %>?filename=<%= obj.name %>">
                     <i class="fas fa-download"></i>
@@ -84,12 +86,26 @@
                     <i class="fas fa-sync-alt"></i>
                   </button>
                 </td>
-                
-                <td class="al-c" title=""><%= index+1 %></td>
-                <td class="pd-l-s" title=""><%= obj.name %></td>
-                <td class="pd-l-s" title=""><%= obj.mp4Exists ? 'มีไฟล์ MP4' : '-' %></td>
                 <td class="al-c">
-                  <% if(obj.mp4Exists) { %>
+                  <button type="button" class="btn btn-sm clickable bg-delete btn-delete pd-l-l pd-r-l pd-t-s pd-b-s"
+                          data-filename="<%= obj.name %>"  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </td>
+                
+                <td class="pd-l-s" title=""><%= obj.name %></td>
+                <td class="al-r pd-r-s" title=""><%= (obj.size / (1024 * 1024)).toFixed(2) %> MB</td>
+
+
+                <td class="al-c">
+                  <% if(obj.mp4Filename) { %>
+                    <span><%= obj.mp4Filename %></span>
+                  <% } else { %>
+                  -
+                  <% } %>
+                </td>
+                <td class="al-c">
+                  <% if(obj.mp4Filename) { %>
                   <a class="btn btn-sm bg-download" href="<%= PATH_DOWNLOAD_MP4 %>?filename=<%= obj.mp4Filename %>">
                     <i class="fas fa-download"></i>
                   </a>
@@ -97,13 +113,17 @@
                   -
                   <% } %>
                 </td>
-                <td class="al-r pd-r-s" title=""><%= (obj.size / (1024 * 1024)).toFixed(2) %> MB</td>
                 <td class="al-c">
-                  <button type="button" class="btn btn-sm clickable bg-delete btn-delete pd-l-l pd-r-l pd-t-s pd-b-s"
-                          data-filename="<%= obj.name %>"  >
+                  <% if(obj.mp4Filename) { %>
+                  <button type="button" class="btn btn-sm clickable bg-delete btn-delete-mp4 pd-l-l pd-r-l pd-t-s pd-b-s"
+                          data-filename="<%= obj.mp4Filename %>"  >
                     <i class="fas fa-trash-alt"></i>
                   </button>
+                  <% } else { %>
+                  -
+                  <% } %>
                 </td>
+
               </tr>
               <% }) %>
             </tbody>
@@ -121,7 +141,7 @@
     const PREFIX = '<%= PREFIX %>';
     const PATH_MAIN = `<%= PATH_MAIN %>`;
     const PATH_DELETE = `<%= PATH_DELETE %>`;
-    const PATH_DOWNLOAD = `<%= PATH_DOWNLOAD %>`;
+    const PATH_DELETE_MP4 = `<%= PATH_DELETE_MP4 %>`;
     const PATH_CONVERT = `<%= PATH_CONVERT %>`;
   </script>
 

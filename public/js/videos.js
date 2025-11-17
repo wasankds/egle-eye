@@ -3,9 +3,18 @@ console.log('----------------');
 //===========================================================
 // 
 document.querySelectorAll('.btn-delete').forEach( btn => {
-  btn.addEventListener('click', deleteJs)
+  btn.addEventListener('click', (event) => {
+    deleteJs(event, PATH_DELETE);
+  })
 })
-function deleteJs(e){
+//===========================================================
+// 
+document.querySelectorAll('.btn-delete-mp4').forEach( btn => {
+  btn.addEventListener('click', (event) => {
+    deleteJs(event, PATH_DELETE_MP4);
+  })
+})
+function deleteJs(e, pathAction){
   e.preventDefault();
 
   if (typeof Swal !== "undefined") {
@@ -26,12 +35,16 @@ function deleteJs(e){
         };
         btn.classList.add('disabled');
 
-        sendHttpRequest('post', PATH_DELETE, data)
+        sendHttpRequest('post', pathAction, data)
           .then(rtn => {
-            if (rtn.status === 'ok') {              
-              const td = btn.closest('td');
-              const tr = td.closest('tr');
-              tr.remove();
+            if (rtn.status === 'ok') {      
+              if(pathAction === PATH_DELETE){
+                const td = btn.closest('td');
+                const tr = td.closest('tr');
+                tr.remove();
+              }else if(pathAction === PATH_DELETE_MP4){               
+                btn.remove();  //=== ซ่อนปุ่มลบ mp4
+              }
               showToast(rtn.message, rtn.class);
             } else {
               showToast(rtn.message, rtn.class);

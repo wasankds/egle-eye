@@ -10,6 +10,7 @@ const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/videos'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_DELETE = `${PATH_MAIN}/delete`
+const PATH_DELETE_MP4 = `${PATH_MAIN}/delete-mp4`
 const PATH_DOWNLOAD = `${PATH_MAIN}/download`
 const PATH_DOWNLOAD_MP4 = `${PATH_MAIN}/download-mp4`
 const PATH_CONVERT = `${PATH_MAIN}/convert`
@@ -55,10 +56,10 @@ router.get(PATH_MAIN, async (req, res) => {
     //=== videosFiles ลนลูปไปหาชื่อไฟล์ที่ตรงกันในโฟลเดอร์  gloval.folderVideosMp4 ถ้ามีให้เพิ่มคีย์ mp4Exists: true
     for (let video of videosFiles_mjpeg) {
       const mp4Filename = path.parse(video.name).name + '.mp4';
-      video.mp4Exists = videosFiles_mp4.includes(mp4Filename);
-      video.mp4Filename = mp4Filename;
+      // video.mp4Exists = videosFiles_mp4.includes(mp4Filename);
+      video.mp4Filename = videosFiles_mp4.includes(mp4Filename) ? mp4Filename : null; 
     }
-    // console.log("videosFiles_mjpeg ===> " , videosFiles_mjpeg[0])
+    // console.log("videosFiles_mjpeg ===> " , videosFiles_mjpeg)
 
     const html = await myGeneral.renderView('videos', res, {
       title: global.PAGE_VIDEOS ,
@@ -71,6 +72,7 @@ router.get(PATH_MAIN, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_DELETE,
+      PATH_DELETE_MP4,
       PATH_CONVERT,
       PATH_DOWNLOAD,
       PATH_DOWNLOAD_MP4,
@@ -84,9 +86,9 @@ router.get(PATH_MAIN, async (req, res) => {
 
 
 
-router.post(PATH_DELETE, async (req, res) => {
-  // console.log(`-----------------${req.originalUrl}----------------------`)
-  // console.log("req.body ===> " , req.body)
+router.post([PATH_DELETE, PATH_DELETE_MP4], async (req, res) => {
+  console.log(`-----------------${req.originalUrl}----------------------`)
+  console.log("req.body ===> " , req.body)
 
   try {
     const filename = req.body.filename;
@@ -97,8 +99,12 @@ router.post(PATH_DELETE, async (req, res) => {
         message: `ไม่มีชื่อไฟล์ที่ต้องการลบ`,
       });
     }
-    const filePath = path.join(global.folderVideos, filename);
-    // console.log("filePath ===> " , filePath)
+
+    if(req.path === PATH_DELETE_MP4){
+      var filePath = path.join(global.folderVideosMp4, filename);
+    } else if(req.path === PATH_DELETE){
+      var filePath = path.join(global.folderVideos, filename);
+    }
 
     if (fs.existsSync(filePath)) {
       fs.unlink(filePath, (err) => {
