@@ -12,34 +12,41 @@ let streamProcess = null;
 let streamClients = [];
 let lastFrame = null;
 let recording = true;
-const videoWidth = '1280';
-const videoHeight = '720';
-const videoFrameRate = '10';
-const videoWidth_stream = '640';
-const videoHeight_stream = '480';
-const videoFrameRate_stream = '5';
+const videoWidth = '640';
+const videoHeight = '480';
+const videoFrameRate = '5';
 const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
-const ffmpegPath = 'ffmpeg'; // ต้องติดตั้ง ffmpeg ใน PATH
 
 
-// MJPEG stream relay (ใช้ process เดียวสำหรับ stream)
-function startMjpegStreamRelay() {
+
+// MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
+function startMjpegStreamAndRecord() {
   if (streamProcess) return;
   if (process.platform !== 'linux') return;
+  let fileStream = null;
+  let fileStartTime = Date.now();
+  let currentFilename = null;
   streamProcess = spawn('rpicam-vid', [
     '-t', '0',
-    // '--width', videoWidth.toString(),
-    // '--height', videoHeight.toString(),        
-    '--width', videoWidth_stream,
-    '--height', videoHeight_stream,
-    // '--rotate', '180',
+    '--width', videoWidth,
+    '--height', videoHeight,
     '--codec', 'mjpeg',
-    '--framerate', videoFrameRate_stream,
+    '--framerate', videoFrameRate,
     '-o', '-'
   ]);
   let buffer = Buffer.alloc(0);
+  function startNewFile() {
+    if (fileStream) fileStream.end();
+    currentFilename = `${myDateTime.now_name()}.mjpeg`;
+    fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
+    fileStartTime = Date.now();
+  }
+  startNewFile();
   streamProcess.stdout.on('data', (data) => {
+    // เขียนลงไฟล์
+    if (fileStream) fileStream.write(data);
+    // แยก frame ส่งให้ stream
     buffer = Buffer.concat([buffer, data]);
     let start, end;
     while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
@@ -53,51 +60,13 @@ function startMjpegStreamRelay() {
       });
       buffer = buffer.slice(end + 2);
     }
-  });
-  streamProcess.on('exit', () => {
-    streamProcess = null;
-    streamClients.forEach(res => res.end());
-    streamClients = [];
-  });
-}
-
-// บันทึก h264 แล้ว wrap เป็น mp4
-function startRecordH264() {
-  console.log('[startRecordH264] called');
-  if (!recording) { console.log('[startRecordH264] recording=false, return'); return; }
-  if (process.platform !== 'linux') { console.log('[startRecordH264] not linux, return'); return; }
-  const filename = `${myDateTime.now_name()}`;
-  const h264path = path.join(global.folderVideos, filename + '.h264');
-  const mp4path = path.join(global.folderVideos, filename + '.mp4');
-  const h264Stream = fs.createWriteStream(h264path);
-  console.log(`[startRecordH264] spawn rpicam-vid for h264: ${h264path}`);
-  const recordProcess = spawn('rpicam-vid', [
-    '-t', recordingDurationMs.toString(),
-    '--width', videoWidth,
-    '--height', videoHeight,
-    '--codec', 'h264',
-    '--framerate', videoFrameRate,
-    '-o', '-'
-  ]);
-  recordProcess.stdout.on('data', (data) => {
-    h264Stream.write(data);
-  });
-  recordProcess.stderr.on('data', (data) => {
-    console.error(`[rpicam-vid h264][stderr]: ${data}`);
-  });
-  recordProcess.on('exit', (code, signal) => {
-    console.log(`[rpicam-vid h264] exit code=${code} signal=${signal}`);
-    h264Stream.end();    
-    // wrap h264 to mp4 (ไม่ re-encode)
-    const ffmpeg = spawn(ffmpegPath, ['-y', '-framerate', '10', '-i', h264path, '-c', 'copy', mp4path]);
-    ffmpeg.on('exit', (ffcode, ffsignal) => {
-      console.log(`[ffmpeg] exit code=${ffcode} signal=${ffsignal}`);
-      // ลบไฟล์ h264 ต้นฉบับ
-      fs.unlink(h264path, () => {});
-      // จำกัดจำนวนไฟล์ mp4
+    // เช็คเวลาตัดไฟล์ใหม่
+    if (Date.now() - fileStartTime > recordingDurationMs) {
+      startNewFile();
+      // จำกัดจำนวนไฟล์ mjpeg
       fs.readdir(global.folderVideos, (err, files) => {
         if (!err) {
-          const videoFiles = files.filter(f => f.endsWith('.mp4'));
+          const videoFiles = files.filter(f => f.endsWith('.mjpeg'));
           if (videoFiles.length > files_maxCount) {
             videoFiles.sort();
             const oldestFile = videoFiles[0];
@@ -110,17 +79,20 @@ function startRecordH264() {
           }
         }
       });
-      // เริ่มไฟล์ใหม่ถ้ายังต้องการบันทึก
-      if (recording) setTimeout(startRecordH264, 1000);
-    });
+    }
+  });
+  streamProcess.on('exit', () => {
+    streamProcess = null;
+    if (fileStream) fileStream.end();
+    streamClients.forEach(res => res.end());
+    streamClients = [];
   });
 }
 
 // เริ่มอัตโนมัติเมื่อเปิดระบบ
 if (process.platform === 'linux') {
   setTimeout(() => {
-    startMjpegStreamRelay();
-    startRecordH264();
+    startMjpegStreamAndRecord();
   }, 3000);
 }
 
