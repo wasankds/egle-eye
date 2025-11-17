@@ -22,8 +22,12 @@ import fs from 'fs';
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 
 // MJPEG stream relay + record h264 + auto wrap to mp4
+
 let streamProcess = null;
 let streamClients = [];
+let fileStream = null;
+let fileStartTime = 0;
+let currentFilename = null;
 let recording = true;
 const videoWidth = '1280';
 const videoHeight = '720';
@@ -33,17 +37,36 @@ const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล�
 
 
 // H264 stream relay + record h264 file (process เดียว ประหยัด resource)
+
 function startH264StreamAndRecord() {
   if (streamProcess) return;
   if (process.platform !== 'linux') return;
-  // ตรวจสอบและสร้างโฟลเดอร์ videos ถ้ายังไม่มี
   if (!fs.existsSync(global.folderVideos)) {
     fs.mkdirSync(global.folderVideos, { recursive: true });
     console.log('Created videos folder:', global.folderVideos);
   }
-  let fileStream = null;
-  let fileStartTime = Date.now();
-  let currentFilename = null;
+  startNewProcessAndFile();
+}
+
+function startNewProcessAndFile() {
+  // ปิด process/stream/clients เดิมถ้ามี
+  if (streamProcess) {
+    try { streamProcess.kill('SIGTERM'); } catch {}
+    streamProcess = null;
+  }
+  if (fileStream) {
+    try { fileStream.end(); } catch {}
+    fileStream = null;
+  }
+  // ปิด client ทุกคน (ให้ reconnect ใหม่)
+  streamClients.forEach(res => { try { res.end(); } catch {} });
+  streamClients = [];
+
+  currentFilename = `${myDateTime.now_name()}.h264`;
+  fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
+  fileStartTime = Date.now();
+  console.log('Start new video file:', currentFilename);
+
   streamProcess = spawn('rpicam-vid', [
     '-t', '0',
     '--width', videoWidth,
@@ -52,24 +75,15 @@ function startH264StreamAndRecord() {
     '--framerate', videoFrameRate,
     '-o', '-'
   ]);
-  function startNewFile() {
-    if (fileStream) fileStream.end();
-    currentFilename = `${myDateTime.now_name()}.h264`;
-    fileStream = fs.createWriteStream(path.join(global.folderVideos, currentFilename));
-    fileStartTime = Date.now();
-    console.log('Start new video file:', currentFilename);
-  }
-  startNewFile();
+
   streamProcess.stdout.on('data', (data) => {
-    // เขียนลงไฟล์
     if (fileStream) fileStream.write(data);
-    // relay stream ไป client (raw h264)
     streamClients.forEach(res => {
       if (!res.writableEnded) res.write(data);
     });
     // เช็คเวลาตัดไฟล์ใหม่
     if (Date.now() - fileStartTime > recordingDurationMs) {
-      startNewFile();
+      startNewProcessAndFile();
       // จำกัดจำนวนไฟล์ h264
       fs.readdir(global.folderVideos, (err, files) => {
         if (!err) {
@@ -91,7 +105,7 @@ function startH264StreamAndRecord() {
   streamProcess.on('exit', () => {
     streamProcess = null;
     if (fileStream) fileStream.end();
-    streamClients.forEach(res => res.end());
+    streamClients.forEach(res => { try { res.end(); } catch {} });
     streamClients = [];
   });
 }
@@ -126,13 +140,18 @@ process.once('exit', cleanup);
 
 
 // สำหรับ stream H264 ไป client (เช่น VLC, ffplay)
+
 export function addH264Client(res) {
+  // ถ้าไม่มี process ให้เริ่มใหม่ (กรณี client แรก)
+  if (!streamProcess) startH264StreamAndRecord();
   streamClients.push(res);
   res.on('close', () => {
     streamClients = streamClients.filter(r => r !== res);
     if (streamClients.length === 0 && streamProcess) {
-      streamProcess.kill('SIGINT');
+      try { streamProcess.kill('SIGINT'); } catch {}
       streamProcess = null;
+      if (fileStream) { try { fileStream.end(); } catch {} }
+      fileStream = null;
     }
   });
 }
