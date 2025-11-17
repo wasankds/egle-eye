@@ -1,6 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'node:path';
 import fs from 'fs';
+import sharp from 'sharp';
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 
 // MJPEG stream relay + record h264 + auto wrap to mp4
@@ -69,21 +70,48 @@ function startMjpegStreamAndRecord() {
     fileStartTime = Date.now();
   }
   startNewFile();
-  streamProcess.stdout.on('data', (data) => {
-    // เขียนลงไฟล์
-    if (fileStream) fileStream.write(data);
-    // แยก frame ส่งให้ stream
+  streamProcess.stdout.on('data', async (data) => {
+    // แยก frame ส่งให้ stream (และเขียนไฟล์หลังใส่ timestamp)
     buffer = Buffer.concat([buffer, data]);
     let start, end;
     while ((start = buffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
            (end = buffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
       const frame = buffer.slice(start, end + 2);
-      lastFrame = frame;
+      // วาด timestamp ด้วย sharp
+      let timestamp = myDateTime.now();
+      let overlay = await sharp({
+        create: {
+          width: 400,
+          height: 40,
+          channels: 4,
+          background: { r: 0, g: 0, b: 0, alpha: 0.5 }
+        }
+      }).png()
+        .composite([
+          {
+            input: Buffer.from(
+              `<svg width="400" height="40">
+                <text x="10" y="28" font-size="28" fill="white" font-family="Arial">${timestamp}</text>
+              </svg>`
+            ),
+            top: 0,
+            left: 0
+          }
+        ])
+        .toBuffer();
+      let frameWithTs = await sharp(frame)
+        .composite([{ input: overlay, top: 0, left: 0 }])
+        .jpeg()
+        .toBuffer();
+      lastFrame = frameWithTs;
+      // ส่งให้ client
       streamClients.forEach(res => {
-        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frame.length}\r\n\r\n`);
-        res.write(frame);
+        res.write(`--frame\r\nContent-Type: image/jpeg\r\nContent-Length: ${frameWithTs.length}\r\n\r\n`);
+        res.write(frameWithTs);
         res.write('\r\n');
       });
+      // เขียนลงไฟล์
+      if (fileStream) fileStream.write(frameWithTs);
       buffer = buffer.slice(end + 2);
     }
     // เช็คเวลาตัดไฟล์ใหม่

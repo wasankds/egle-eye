@@ -6,34 +6,15 @@ const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
-// import { lastFrame, onFrame, startVideoStreamRelay } from '../myModule/myVideoProcess.js';
-// const { lastFrame, onFrame, startVideoStreamRelay } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
 const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
 const PATH_MAIN = '/camera'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_REQUEST = `${PATH_MAIN}/request`
 const PATH_STREAM = `${PATH_MAIN}/stream`
 
-/* 
-ถ้าติด process อื่นๆอยู่ ให้สั่งหยุดก่อนด้วยคำสั่งนี้
-ps aux | grep rpicam-vid
-sudo killall rpicam-vid
-*/
-// ด้านบนสุดของ cameraRouter.js
-
-let mjpegClients = [];
-let removeFrameListener = null;
-
-
 //=============================================
-// ถ้าไม่มี client connect เลย rpicam-vid จะไม่รัน
-// ถ้ามี client connect อย่างน้อย 1 คน rpicam-vid จะรันและส่ง stream ให้ทุก client
-// ถ้า client ทุกคน disconnect หมด process rpicam-vid จะถูก kill ทันที (หยุดทำงาน)
 // 
-// client connect ในที่นี้หมายถึง
-// มีการเปิดหน้าเว็บที่มี <img src="/camera/stream">
-// หรือมีโปรแกรม/แอปอื่น (เช่น VLC, ffplay, ฯลฯ) ที่เข้า URL /camera/stream
-// 
+// router.get(PATH_STREAM, mainAuth.isOA, (req, res) => {
 router.get(PATH_STREAM, (req, res) => {
   if(process.platform !== 'linux') return;
   res.writeHead(200, {
@@ -49,7 +30,7 @@ router.get(PATH_STREAM, (req, res) => {
 // 
 // router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 router.get(PATH_MAIN, async (req, res) => {
-  console.log(`---- ${req.originalUrl} ----`)
+  // console.log(`---- ${req.originalUrl} ----`)
 
   try {
     const html = await myGeneral.renderView('camera', res, {
