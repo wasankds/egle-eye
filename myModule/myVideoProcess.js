@@ -6,34 +6,42 @@ const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`);
 
 // MJPEG stream relay + record h264 + auto wrap to mp4
 let streamProcess = null;
-let streamClients = [];
-let lastFrame = null;
-let recording = true;
+  // cache overlay ตามวินาที
+  let overlayCache = { second: null, overlay: null, timestamp: null };
+  streamProcess.stdout.on('data', async (data) => {
+    buffer = Buffer.concat([buffer, data]);
 const videoWidth = '640';
 const videoHeight = '480';
 const videoFrameRate = '5';
 const files_maxCount = 100;
-const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
-
-// MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
-function startMjpegStreamAndRecord() {
-  if (streamProcess) return;
-  if (process.platform !== 'linux') return;
-  let fileStream = null;
-  let fileStartTime = Date.now();
-  let currentFilename = null;
-  streamProcess = spawn('rpicam-vid', [
-    '-t', '0',
-    '--width', videoWidth,
-    '--height', videoHeight,
-    '--codec', 'mjpeg',
-    '--framerate', videoFrameRate,
-    '-o', '-'
-  ]);
-  let buffer = Buffer.alloc(0);
-  let prevFilename = null;
-  
-  function startNewFile() {
+      // สร้าง overlay ใหม่เฉพาะเมื่อวินาทีเปลี่ยน
+      let now = new Date();
+      let sec = now.getSeconds();
+      let timestamp = now.toLocaleString('sv-SE', { hour12: false });
+      if (overlayCache.second !== sec) {
+        overlayCache.second = sec;
+        overlayCache.timestamp = timestamp;
+        overlayCache.overlay = await sharp({
+          create: {
+            width: 300,
+            height: 28,
+            channels: 4,
+            background: { r: 0, g: 0, b: 0, alpha: 0 }
+          }
+        })
+          .png()
+          .composite([
+            {
+              input: Buffer.from(
+                `<svg width="300" height="28">
+                  <text x="8" y="20" font-size="18" fill="white" font-family="Arial">${timestamp}</text>
+                </svg>`
+              ),
+              top: 0,
+              left: 0
+            }
+          ])
+          .toBuffer();
     if (fileStream) fileStream.end();
     
     // ทุกครั้งที่เริ่มไฟล์ใหม่ จะสั่งแปลงไฟล์ .mjpeg ก่อนหน้าเป็น .mp4 แบบ background (ไม่รอผลลัพธ์)
