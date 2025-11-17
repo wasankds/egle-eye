@@ -39,8 +39,14 @@ function startMjpegStreamAndRecord() {
     if (prevFilename) {
       const mjpegPath = path.join(global.folderVideos, prevFilename);
       const mp4Path = mjpegPath.replace(/\.mjpeg$/, '.mp4');
-      // ffmpeg -y -i input.mjpeg -c:v copy output.mp4
-      const ffmpeg = spawn('ffmpeg', ['-y', '-i', mjpegPath, '-c:v', 'copy', mp4Path]);
+      const ffmpeg = spawn('ffmpeg', [
+        '-y',
+        '-framerate', videoFrameRate, // เพิ่มบรรทัดนี้
+        '-i', mjpegPath,
+        '-c:v', 'libx264',
+        '-pix_fmt', 'yuv420p',
+        mp4Path
+      ]);
       ffmpeg.on('exit', (code) => {
         if (code === 0) {
           console.log('Converted', prevFilename, 'to', mp4Path);
