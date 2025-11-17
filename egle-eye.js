@@ -27,10 +27,9 @@ const routesFolder = global.IS_PRODUCTION ? 'routes-min' : 'routes'
 const { EncryptedJSONFile } = await import(`./${global.myModuleFolder}/Crypto.js`);
 const { LowDbSessionStore } = await import(`./${global.myModuleFolder}/LowDb.js`);
 await import(`./${global.myModuleFolder}/myGlobal.js`)
-await import(`./${global.myModuleFolder}/myVideoProcess.js`) // ใช้จริงให้เปิด 
-// const myDateTime = await import(`./${global.myModuleFolder}/myDateTime.js`)
-// await import(`./${global.myModuleFolder}/myScheduleBackupDatabase.js`)
-//===
+if(process.platform === 'linux') {
+  await import(`./${global.myModuleFolder}/myVideoProcess.js`) 
+}
 const app = express();
 const server = createServer(app)
 const io = new Server(server)
@@ -91,6 +90,7 @@ app.use((await import(`./${routesFolder}/passwordRouter.js`)).default)
 app.use((await import(`./${routesFolder}/userInfoRouter.js`)).default)
 app.use((await import(`./${routesFolder}/switchRouter.js`)).default) 
 app.use((await import(`./${routesFolder}/cameraRouter.js`)).default) 
+app.use((await import(`./${routesFolder}/videosRouter.js`)).default)
 //=== socket.io เชื่อมต่อกับ client
 io.on('connection', (socket) => {
   console.log('🔗 New client connected:', socket.id);

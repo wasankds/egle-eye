@@ -42,6 +42,7 @@ global.PAGE_PASSWORD_FORGOT = 'ลืมรหัสผ่าน'
 global.PAGE_PASSWORD_RESET = 'รีเซ็ตรหัสผ่าน'
 global.PAGE_SWITCH = 'สวิตช์'
 global.PAGE_CAMERA = 'กล้อง'
+global.PAGE_VIDEOS = 'วิดีโอ'
 global.USER_AUTHORITIES = ["O", "A", "U"]
 global.USER_AUTHORITIES_TABLE = [ 
   { auth: "O", name : 'Owner', nameThai : 'เจ้าของระบบ' }, 
@@ -100,6 +101,14 @@ global.NAV_LEFT = [
     path: '/camera',
     title: PAGE_CAMERA,
     icon: 'fas fa-video', // ไอค่อนรูปกล้อง
+    menuColor : 'menu-green',
+    userAuthorities: ['O','A'],
+    separator: false,
+  },
+  {
+    path: '/videos',
+    title: PAGE_VIDEOS,
+    icon: 'fas fa-video',
     menuColor : 'menu-green',
     userAuthorities: ['O','A','U'],
     separator: false,

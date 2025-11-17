@@ -1,0 +1,9 @@
+{
+  "ignore": [
+    "videos/*",
+    "videos-mp4/*",
+    "*.mjpeg",
+    "*.mp4",
+    "db.json"
+  ]
+}

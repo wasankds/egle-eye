@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/meta',{ time:time}) %>
+  <title><%= title %></title>
+
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/cdn/fontawesome/css/all.min.css">
+  <!-- SweetAlert2 -->
+  <script src="/cdn/sweetalert2.all.min.js"></script>
+
+  <% if(!IS_PRODUCTION) { %>
+  <link rel="stylesheet" href="/css/utils.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/fonts.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/toast.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/footer.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/tableFix1col.css?v=<%= time %>"> 
+  <link rel="stylesheet" href="/css/nav.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/same.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/videos.css?v=<%= time %>">
+  <% } else { %>
+  <link rel="stylesheet" href="/css-min/videos.min.css?v=<%= time %>">
+  <% }  %>
+</head>
+ 
+<body>
+
+  <%- include('partials/nav.ejs') %>
+  <%- include('partials/notify.ejs', {msg:msg}) %> 
+
+  <header class="header-title bg-forestgreen">
+    <p class="al-c fc-white">
+      <span><%= title %></span>
+    </p>
+  </header>
+
+  <main>
+
+      <!-- ตาราง -->
+      <section class="">
+      
+        <!-- ตาราง -->
+        <div id="tableCtn" class="table-ctn">
+
+          <table>
+
+            <colgroup>
+              <col style="width: 1%;">
+              <col style="width: 1%;">
+              <col style="width: 1%;">
+              <col style="width: auto;">
+              <col style="width: auto;">
+              <col style="width: 1%;">
+            </colgroup>
+
+            <thead id="tableHeader">
+              <tr>
+                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
+                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-hashtag"></i></th>
+                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-sync-alt"></i></th>
+                <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
+                <th class="al-c clickable" title="ขนาดไฟล์"><i class="fas fa-file"></i></th>
+                <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
+              </tr>
+            </thead>
+
+            <tbody id="tableContent">
+              <% data.forEach( (obj,index) => { %>        
+
+              <tr class="<%= index%2 == 0 ? 'bg-line-swap' : 'bg-main-color' %>">
+
+                <!-- mg-s  มีผลต่อความสูงของแถว -->
+                <td class="al-c">
+                  <a class="btn btn-sm bg-download" href="<%= PATH_DOWNLOAD %>?filename=<%= obj.name %>">
+                    <i class="fas fa-download"></i>
+                  </a>
+                </td>
+                <td class="al-c">
+                  <button type="button" class="btn btn-sm clickable bg-convert btn-convert pd-l-l pd-r-l pd-t-s pd-b-s"
+                          data-filename="<%= obj.name %>"  >
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                </td>
+                
+                <td class="al-c" title=""><%= index+1 %></td>
+                <td class="pd-l-s" title=""><%= obj.name %></td>
+                <td class="al-r pd-r-s" title=""><%= (obj.size / (1024 * 1024)).toFixed(2) %> MB</td>
+                <td class="al-c">
+                  <button type="button" class="btn btn-sm clickable bg-delete btn-delete pd-l-l pd-r-l pd-t-s pd-b-s"
+                          data-filename="<%= obj.name %>"  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>  
+
+      </section>
+
+  </main>  
+
+
+  <!--  -->
+  <%- include('partials/footer') %>
+  <script type="text/javascript">
+    const PREFIX = '<%= PREFIX %>';
+    const PATH_MAIN = `<%= PATH_MAIN %>`;
+    const PATH_DELETE = `<%= PATH_DELETE %>`;
+    const PATH_DOWNLOAD = `<%= PATH_DOWNLOAD %>`;
+    const PATH_CONVERT = `<%= PATH_CONVERT %>`;
+  </script>
+
+  <!--  -->
+  <% if(!IS_PRODUCTION) { %>
+  <script type="text/javascript" src="/js/script_all.js?v=<%= time %>"></script>
+  <script type="text/javascript" src="/js/nav.js"></script>
+  <script type="text/javascript" src="/js/notify.js?v=<%= time %>"></script>
+  <script type="text/javascript" src="/js/videos.js?v=<%= time %>"></script>
+  <% } else { %>
+  <script type="text/javascript" src="/js-min/videos.obf.js?v=<%= time %>"></script>
+  <% }  %>
+
+</body>
+</html>
+
+
+
+

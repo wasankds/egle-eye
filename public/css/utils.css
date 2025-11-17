@@ -329,6 +329,7 @@
 .bg-edit{ background-image:linear-gradient(yellow,darkgoldenrod); }
 .bg-edit-active{ background-image:linear-gradient(rgb(33, 195, 165),rgb(21, 125, 106)) }
 .bg-delete{ background-image:linear-gradient(red,darkred) }
+.bg-convert{ background-image: linear-gradient(HotPink, rgb(253, 75, 164)); }
 /* .bg-print{ background-image: linear-gradient(rgb(113, 151, 38), rgb(68, 85, 38)); color: white; } */
 .bg-print{ background-image: linear-gradient(lightSeaGreen, SeaGreen); color: white; }
 .bg-change{ background-image: linear-gradient(magenta, rgb(137, 0, 137))}

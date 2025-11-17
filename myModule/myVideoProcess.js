@@ -15,23 +15,6 @@ const files_maxCount = 100;
 const recordingDurationMs = 1 * 60 * 1000; // 1 นาทีต่อไฟล์
 
 
-// //==== ลบไฟล์ .mjpeg ทั้งหมดเมื่อเริ่มระบบ
-// fs.readdir(global.folderVideos, (err, files) => {
-//   if (!err) {
-//     const videoFiles = files.filter(f => f.endsWith('.mjpeg'));
-//     videoFiles.forEach(file => {
-//       console.log('Deleting old mjpeg file on startup:', file);
-//       fs.unlink(path.join(global.folderVideos, file), err => {  
-//         if (err) {
-//           console.error(`Error deleting file ${file}:`, err);
-//         }
-//       });
-//     });
-//   }
-// });
-
-
-
 // MJPEG stream relay + record mjpeg file (process เดียว ประหยัด resource)
 function startMjpegStreamAndRecord() {
   if (streamProcess) return;
