@@ -4,8 +4,21 @@ import fs from 'fs';
 import schedule from 'node-schedule';
 
 // กำหนด path
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const videosDir = path.resolve(__dirname, '../videos');
 const mp4Dir = path.resolve(__dirname, '../videos-mp4');
+console.log('videosDir:', videosDir);
+console.log('mp4Dir:', mp4Dir);
+
+if(!fs.existsSync(videosDir)) {
+  return console.error('Videos directory does not exist:', videosDir);
+}
+if(!fs.existsSync(mp4Dir)) {
+  return console.error('MP4 directory does not exist:', mp4Dir);
+}
+
 const FRAMERATE = 10; // ปรับตามที่บันทึกจริง
 
 if (!fs.existsSync(mp4Dir)) {
