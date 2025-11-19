@@ -9,5 +9,7 @@ fi
 # อย่า output binary ไป terminal!
 # ให้ Node.js อ่าน stdout ของ ffmpeg โดยตรง
 # ถ้าต้อง debug ให้ redirect ไป /dev/null
-rpicam-vid --width 640 --height 480 --codec h264 --framerate 10 --inline --timeout 0 -o - | \
-ffmpeg -re -i - -vf fps=5 -update 1 -q:v 5 -f image2pipe -vcodec mjpeg - > /dev/null
+# rpicam-vid --width 640 --height 480 --codec h264 --framerate 10 --inline --timeout 0 -o - | \
+# ffmpeg -re -i - -vf fps=5 -update 1 -q:v 5 -f image2pipe -vcodec mjpeg - > /dev/null
+
+mjpg_streamer -i "input_uvc.so -f 10 -r 640x480" -o "output_http.so -p 8081 -w /usr/local/www"

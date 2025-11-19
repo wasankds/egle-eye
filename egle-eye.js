@@ -1,5 +1,3 @@
-// import path from 'node:path';
-import http from 'http';
 import 'dotenv/config'
 import { exec,spawn } from 'child_process';
 import { Low } from 'lowdb'
@@ -113,33 +111,6 @@ io.on('connection', (socket) => {
     console.log('❌ Client disconnected:', socket.id);
   });    
 }); 
-
-
-
-//====================================
-// socket.io ส่งภาพจากกล้อง MJPEG ไปยัง client (spawn rpicam-vid -> ffmpeg)
-if (process.platform === 'linux') {
-    const req = http.request({
-    hostname: 'localhost',
-    port: 8081, // เปลี่ยนเป็น port ที่ stream ไว้
-    path: '/stream.mjpg', // หรือ path ที่ stream ไว้
-    method: 'GET'
-  }, (res) => {
-    let frameBuffer = Buffer.alloc(0);
-    res.on('data', (chunk) => {
-      frameBuffer = Buffer.concat([frameBuffer, chunk]);
-      // หา JPEG header/footer
-      let start, end;
-      while ((start = frameBuffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
-             (end = frameBuffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
-        const jpeg = frameBuffer.slice(start, end + 2);
-        io.emit('frame', jpeg.toString('base64'));
-        frameBuffer = frameBuffer.slice(end + 2);
-      }
-    });
-  });
-  req.end();
-}
 
 
 
