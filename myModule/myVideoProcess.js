@@ -17,8 +17,7 @@ const videoWidth = process.env.VIDEO_WIDTH || '640';
 const videoHeight = process.env.VIDEO_HEIGHT || '480';
 const videoFrameRate = process.env.VIDEO_FRAMERATE || '10';
 const files_maxCount = 500;
-const recordingDurationMs = 5 * 60 * 1000; // 5 นาทีต่อไฟล์
-
+const recordingDurationMs = 5*60*1000; // 5 นาทีต่อไฟล์
 
 
 // MJPEG stream relay (from h264) + record h264 file (process เดียว)
@@ -38,7 +37,7 @@ function startH264StreamAndRecord() {
   }
   startNewFile();
 
-  // rpicam-vid encode h264
+  // rpicam-vid encode h264 - live stream
   streamProcess = spawn('rpicam-vid', [
     '-t', '0',
     '--width', videoWidth,

@@ -50,32 +50,28 @@
     </section>
     
 
-    <!-- วิดีโอสตรีมมิ่ง -->
     <section class="flex-row">
-      <video id="video" controls autoplay width="640" height="480"></video>    
+      <div class="al-c">
+        <% if(!IS_STREAM) { %>
+          <img class="bdr3" 
+               style="max-width:640px;height:auto;" 
+               src="/images/no-camera.jpg">
+        <% }else{ %>
+          <img src="<%= PATH_STREAM %>" 
+               style="width:640px;max-width:100%;height:auto;">
+        <% } %>
+      </div>
     </section>  
 
   </main>  
 
 
   <!--  -->
-  <%- include('partials/footer') %> 
+  <%- include('partials/footer') %>
   <script type="text/javascript">
     const PREFIX = '<%= PREFIX %>';
     const PATH_MAIN = `<%= PATH_MAIN %>`;
     const PATH_REQUEST = `<%= PATH_REQUEST %>`;
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script>
-      if (Hls.isSupported()) {
-        var video = document.getElementById('video');
-        var hls = new Hls();
-        hls.loadSource('http://192.168.1.135:8890/stream/index.m3u8');
-        hls.attachMedia(video);
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = 'http://192.168.1.135:8890/stream/index.m3u8';
-      }
   </script>
 
   <!--  -->

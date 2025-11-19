@@ -16,14 +16,14 @@ const PATH_STREAM = `${PATH_MAIN}/stream`
 // 
 // router.get(PATH_STREAM, mainAuth.isOA, (req, res) => {
 router.get(PATH_STREAM, (req, res) => {
-  if(process.platform !== 'linux') return;
-  res.writeHead(200, {
-    'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
-    'Cache-Control': 'no-cache',
-    'Connection': 'close',
-    'Pragma': 'no-cache'
-  });
-  addMjpegClient(res);
+  // if(process.platform !== 'linux') return;
+  // res.writeHead(200, {
+  //   'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
+  //   'Cache-Control': 'no-cache',
+  //   'Connection': 'close',
+  //   'Pragma': 'no-cache'
+  // });
+  // addMjpegClient(res);
 });
 
 //=============================================
