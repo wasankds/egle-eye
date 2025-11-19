@@ -69,6 +69,7 @@
     const socket = io();
     const img = document.getElementById('stream');
     socket.on('frame', (data) => {
+      console.log("Received frame", data.length);
       img.src = 'data:image/jpeg;base64,' + data;
     });
   </script> 
