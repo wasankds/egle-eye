@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebRTC Camera Stream</title>
+  <style>
+    body { background: #181818; color: #fff; font-family: sans-serif; }
+    .container { max-width: 700px; margin: 40px auto; background: #232323; padding: 32px; border-radius: 14px; box-shadow: 0 2px 16px #0008; }
+    iframe { width: 100%; max-width: 660px; height: 480px; border: none; border-radius: 8px; background: #000; }
+    h2 { margin-bottom: 18px; }
+    .note { color: #aaa; margin-top: 18px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>WebRTC Camera Stream (MediaMTX)</h2>
+    <iframe src="http://<%= process.env.PI_IP || 'localhost' %>:8889/stream/" allowfullscreen></iframe>
+    <div class="note">
+      <p>ถ้าไม่ขึ้นภาพ ลองเปิด <a href="http://<%= process.env.PI_IP || 'localhost' %>:8889/stream/" target="_blank">WebRTC Player</a> ในแท็บใหม่</p>
+      <p>WebRTC เหมาะกับดูสด latency ต่ำ (แต่บาง browser/network อาจต้อง refresh หรือเปิดในแท็บใหม่)</p>
+    </div>
+  </div>
+  
+  <!--  -->
+  <%- include('partials/footer') %> 
+  <script type="text/javascript">
+    const PREFIX = '<%= PREFIX %>';
+    const PATH_MAIN = `<%= PATH_MAIN %>`;
+    const PATH_REQUEST = `<%= PATH_REQUEST %>`;
+  </script>
+
+  <!--  -->
+  <% if(!IS_PRODUCTION) { %>
+  <script type="text/javascript" src="/js/script_all.js?v=<%= time %>"></script>
+  <script type="text/javascript" src="/js/nav.js"></script>
+  <script type="text/javascript" src="/js/notify.js?v=<%= time %>"></script>
+  <script type="text/javascript" src="/js/camera.js?v=<%= time %>"></script>
+  <% } else { %>
+  <script type="text/javascript" src="/js-min/camera.obf.js?v=<%= time %>"></script>
+  <% }  %>
+
+</body>
+</html>
+
+
+
+
