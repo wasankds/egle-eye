@@ -118,46 +118,26 @@ io.on('connection', (socket) => {
 //====================================
 // socket.io ส่งภาพจากกล้อง MJPEG ไปยัง client (spawn rpicam-vid -> ffmpeg)
 if (process.platform === 'linux') {
-  const rpicam = spawn('rpicam-vid', [
-    '--width', '640',
-    '--height', '480',
-    '--codec', 'h264',
-    '--framerate', '10',
-    '--inline',
-    '--timeout', '0',
-    '-o', '-'
-  ]);
-  const ffmpeg = spawn('ffmpeg', [
-    '-re',
-    '-i', '-',
-    '-vf', 'fps=5',
-    '-update', '1',
-    '-q:v', '5',
-    '-f', 'image2pipe',
-    '-vcodec', 'mjpeg',
-    '-'
-  ]);
-  rpicam.stdout.pipe(ffmpeg.stdin);
-  let frameBuffer = Buffer.alloc(0);
-  ffmpeg.stdout.on('data', (chunk) => {
-    frameBuffer = Buffer.concat([frameBuffer, chunk]);
-    // หา JPEG header/footer
-    let start, end;
-    while ((start = frameBuffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
-           (end = frameBuffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
-      const jpeg = frameBuffer.slice(start, end + 2);
-      io.emit('frame', jpeg.toString('base64'));
-      frameBuffer = frameBuffer.slice(end + 2);
-    }
+    const req = http.request({
+    hostname: 'localhost',
+    port: 8081, // เปลี่ยนเป็น port ที่ stream ไว้
+    path: '/stream.mjpg', // หรือ path ที่ stream ไว้
+    method: 'GET'
+  }, (res) => {
+    let frameBuffer = Buffer.alloc(0);
+    res.on('data', (chunk) => {
+      frameBuffer = Buffer.concat([frameBuffer, chunk]);
+      // หา JPEG header/footer
+      let start, end;
+      while ((start = frameBuffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
+             (end = frameBuffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
+        const jpeg = frameBuffer.slice(start, end + 2);
+        io.emit('frame', jpeg.toString('base64'));
+        frameBuffer = frameBuffer.slice(end + 2);
+      }
+    });
   });
-  ffmpeg.stderr.on('data', (data) => {
-    // log ffmpeg error/debug
-    // console.error('ffmpeg:', data.toString());
-  });
-  rpicam.stderr.on('data', (data) => {
-    // log rpicam-vid error/debug
-    // console.error('rpicam-vid:', data.toString());
-  });
+  req.end();
 }
 
 
