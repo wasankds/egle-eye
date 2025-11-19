@@ -238,8 +238,9 @@ router.post(PATH_CONVERT, async (req, res) => {
 
 
 router.get(`${PATH_VIEW}/:filename`, (req, res) => {
-  console.log(`---- ${req.originalUrl} ----`);
-  console.log("req.params ===> ", req.params);
+  // console.log(`---- ${req.originalUrl} ----`);
+  // console.log("req.params ===> ", req.params);
+
   // ตรวจสอบสิทธิ์ที่นี่ (เช่น req.session, JWT, ฯลฯ)
   // if (!req.session.user) return res.status(403).send('Forbidden');
 

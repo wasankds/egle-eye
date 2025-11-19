@@ -101,6 +101,7 @@ document.querySelectorAll('.btn-play').forEach(btn => {
   btn.addEventListener('click', function(e) {
     e.preventDefault();
     const filename = btn.getAttribute('data-filename');
+
     // สร้าง modal หรือ embed video player
     let modal = document.getElementById('video-modal');
     if (!modal) {
