@@ -40,25 +40,24 @@ router.get(PATH_MAIN, async (req, res) => {
       }
     }
 
-    //=== อ่านรายชื่อไฟล์วิดีโอ .mp4 จากโฟลเดอร์ videos gloval.folderVideosMp4
-    const videosFiles_mp4 = [];
-    if (fs.existsSync(global.folderVideosMp4)) {
-      const filesMp4 = fs.readdirSync(global.folderVideosMp4);
-      for (const fileMp4 of filesMp4) {
-        const filePathMp4 = path.join(global.folderVideosMp4, fileMp4);
-        const statMp4 = fs.statSync(filePathMp4);
-        if (statMp4.isFile()) {
-          videosFiles_mp4.push(fileMp4);
-        }
-      }
-    }
-
-    //=== videosFiles ลนลูปไปหาชื่อไฟล์ที่ตรงกันในโฟลเดอร์  gloval.folderVideosMp4 ถ้ามีให้เพิ่มคีย์ mp4Exists: true
-    for (let video of videosFiles_mjpeg) {
-      const mp4Filename = path.parse(video.name).name + '.mp4';
-      video.mp4Filename = videosFiles_mp4.includes(mp4Filename) ? mp4Filename : null; 
-      video.mp4Filesize = videosFiles_mp4.includes(mp4Filename) ? fs.statSync(path.join(global.folderVideosMp4, mp4Filename)).size : null;
-    }
+    // //=== อ่านรายชื่อไฟล์วิดีโอ .mp4 จากโฟลเดอร์ videos gloval.folderVideosMp4
+    // const videosFiles_mp4 = [];
+    // if (fs.existsSync(global.folderVideosMp4)) {
+    //   const filesMp4 = fs.readdirSync(global.folderVideosMp4);
+    //   for (const fileMp4 of filesMp4) {
+    //     const filePathMp4 = path.join(global.folderVideosMp4, fileMp4);
+    //     const statMp4 = fs.statSync(filePathMp4);
+    //     if (statMp4.isFile()) {
+    //       videosFiles_mp4.push(fileMp4);
+    //     }
+    //   }
+    // }
+    // //=== videosFiles ลนลูปไปหาชื่อไฟล์ที่ตรงกันในโฟลเดอร์  gloval.folderVideosMp4 ถ้ามีให้เพิ่มคีย์ mp4Exists: true
+    // for (let video of videosFiles_mjpeg) {
+    //   const mp4Filename = path.parse(video.name).name + '.mp4';
+    //   video.mp4Filename = videosFiles_mp4.includes(mp4Filename) ? mp4Filename : null; 
+    //   video.mp4Filesize = videosFiles_mp4.includes(mp4Filename) ? fs.statSync(path.join(global.folderVideosMp4, mp4Filename)).size : null;
+    // }
     // console.log("videosFiles_mjpeg ===> " , videosFiles_mjpeg)
 
     const html = await myGeneral.renderView('videos', res, {

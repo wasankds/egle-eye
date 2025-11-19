@@ -59,13 +59,8 @@
               <tr>
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-hashtag"></i></th>
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
-                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-sync-alt"></i></th>
                 <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
                 <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
-                <!-- <th class="al-c clickable" title="ขนาดไฟล์"><i class="fas fa-file"></i></th> -->
-                <th class="al-c clickable" title="ไฟล์ mp4"><i class="fas fa-file-video"></i></th>
-                <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
-                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
               </tr>
             </thead>
 
@@ -81,12 +76,8 @@
                     <i class="fas fa-download"></i>
                   </a>
                 </td>
-                <td class="al-c">
-                  <button type="button" class="btn btn-sm clickable bg-convert btn-convert pd-l-l pd-r-l pd-t-s pd-b-s"
-                          data-filename="<%= obj.name %>"  >
-                    <i class="fas fa-sync-alt"></i>
-                  </button>
-                </td>
+                
+                <!--  -->
                 <td class="al-c">
                   <button type="button" class="btn btn-sm clickable bg-delete btn-delete pd-l-l pd-r-l pd-t-s pd-b-s"
                           data-filename="<%= obj.name %>"  >
@@ -101,35 +92,6 @@
                   </div>
                 </td>
 
-                <td class="al-c fs-s">
-                  <% if(obj.mp4Filename) { %>
-                    <div class="d-flex justify-content-between">
-                      <span><%= obj.mp4Filename %></span>
-                      <span>[<%= (obj.mp4Filesize / (1024 * 1024)).toFixed(2) %> MB]</span>
-                    </div>
-                  <% } else { %>
-                  -
-                  <% } %>
-                </td>
-                <td class="al-c">
-                  <% if(obj.mp4Filename) { %>
-                  <a class="btn btn-sm bg-download" href="<%= PATH_DOWNLOAD_MP4 %>?filename=<%= obj.mp4Filename %>">
-                    <i class="fas fa-download"></i>
-                  </a>
-                  <% } else { %>
-                  -
-                  <% } %>
-                </td>
-                <td class="al-c">
-                  <% if(obj.mp4Filename) { %>
-                  <button type="button" class="btn btn-sm clickable bg-delete btn-delete-mp4 pd-l-l pd-r-l pd-t-s pd-b-s"
-                          data-filename="<%= obj.mp4Filename %>"  >
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                  <% } else { %>
-                  -
-                  <% } %>
-                </td>
 
               </tr>
               <% }) %>
