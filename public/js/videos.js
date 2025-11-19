@@ -7,13 +7,6 @@ document.querySelectorAll('.btn-delete').forEach( btn => {
     deleteJs(event, PATH_DELETE);
   })
 })
-//===========================================================
-// 
-document.querySelectorAll('.btn-delete-mp4').forEach( btn => {
-  btn.addEventListener('click', (event) => {
-    deleteJs(event, PATH_DELETE_MP4);
-  })
-})
 function deleteJs(e, pathAction){
   e.preventDefault();
 
@@ -38,13 +31,9 @@ function deleteJs(e, pathAction){
         sendHttpRequest('post', pathAction, data)
           .then(rtn => {
             if (rtn.status === 'ok') {      
-              if(pathAction === PATH_DELETE){
-                const td = btn.closest('td');
-                const tr = td.closest('tr');
-                tr.remove();
-              }else if(pathAction === PATH_DELETE_MP4){               
-                btn.remove();  //=== ซ่อนปุ่มลบ mp4
-              }
+              const td = btn.closest('td');
+              const tr = td.closest('tr');
+              tr.remove();
               showToast(rtn.message, rtn.class);
             } else {
               showToast(rtn.message, rtn.class);
@@ -104,5 +93,51 @@ function convertJs(e){
   
 
 }
+
+//===========================================================
+// เล่นวิดีโอ .mp4 บนเว็บเมื่อคลิกปุ่ม play
+
+document.querySelectorAll('.btn-play').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const filename = btn.getAttribute('data-filename');
+    // สร้าง modal หรือ embed video player
+    let modal = document.getElementById('video-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'video-modal';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100vw';
+      modal.style.height = '100vh';
+      modal.style.background = 'rgba(0,0,0,0.7)';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.zIndex = '9999';
+      modal.innerHTML = `
+        <div style="position:relative;max-width:90vw;max-height:90vh;">
+          <button id="close-video-modal" style="position:absolute;top:-40px;right:0;font-size:2rem;background:none;border:none;color:white;cursor:pointer;">&times;</button>
+          <video id="video-player" controls autoplay style="max-width:90vw;max-height:80vh;background:#000;"></video>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      document.getElementById('close-video-modal').onclick = function() {
+        modal.remove();
+      };
+    } else {
+      modal.style.display = 'flex';
+    }
+    // set src
+    const video = document.getElementById('video-player');
+    video.src = `${PATH_VIEW}/${filename}`;
+    video.load();
+    video.play();
+  });
+});
+
+
+
 
 

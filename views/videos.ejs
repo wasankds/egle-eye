@@ -50,6 +50,7 @@
               <col style="width: 1%;">
               <col style="width: 1%;">
               <col style="width: auto;">
+              <col style="width: 1%;">
             </colgroup>
 
             <thead id="tableHeader">
@@ -58,6 +59,7 @@
                 <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
                 <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
                 <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
+                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-play"></i></th>                
               </tr>
             </thead>
 
@@ -89,6 +91,13 @@
                   </div>
                 </td>
 
+                <td class="">
+                  <button type="button" class="btn btn-sm clickable bg-green btn-play pd-l-l pd-r-l pd-t-s pd-b-s"
+                          data-filename="<%= obj.name %>"  >
+                    <i class="fas fa-play"></i>
+                  </button>
+                </td>
+
 
               </tr>
               <% }) %>
@@ -107,8 +116,8 @@
     const PREFIX = '<%= PREFIX %>';
     const PATH_MAIN = `<%= PATH_MAIN %>`;
     const PATH_DELETE = `<%= PATH_DELETE %>`;
-    const PATH_DELETE_MP4 = `<%= PATH_DELETE_MP4 %>`;
     const PATH_CONVERT = `<%= PATH_CONVERT %>`;
+    const PATH_VIEW = `<%= PATH_VIEW %>`;
   </script>
 
   <!--  -->

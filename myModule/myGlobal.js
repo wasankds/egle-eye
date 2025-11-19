@@ -83,7 +83,11 @@ global.folderPartials = pathToFolder('views','partials')
 global.folderForms = pathToFolder('views','forms')
 global.folderData = pathToFolder('data')
 //=== ใช้เป็น abs path ไปยังพาทของโฟลเดอร์ videos เช่น wasankds@pi3:~/videos $ 
-global.folderVideos = pathToFolder('..','videos')
+if(process.platform === 'linux'){
+  global.folderVideos = pathToFolder('..','videos')
+} else {
+  global.folderVideos = pathToFolder('videos')
+}
 global.folderVideosMp4 = pathToFolder('videos-mp4')
 global.folderBackup = pathToFolder('backup')
 global.fileDb = pathToFolder('data', 'db.json')

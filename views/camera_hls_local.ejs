@@ -54,7 +54,10 @@
 
     <!-- วิดีโอสตรีมมิ่ง -->
     <section class="flex-row al-c">
-      <video id="video" controls autoplay width="720" height="480"></video>   
+      <video id="video" controls autoplay 
+             style="max-width: 100%; height: auto;"
+             width="<%= global.VIDEO_WIDTH %>" 
+             height="<%= global.VIDEO_HEIGHT %>"></video>   
     </section>  
 
   </main>  

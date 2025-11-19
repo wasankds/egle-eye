@@ -10,11 +10,9 @@ const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/videos'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_DELETE = `${PATH_MAIN}/delete`
-const PATH_DELETE_MP4 = `${PATH_MAIN}/delete-mp4`
 const PATH_DOWNLOAD = `${PATH_MAIN}/download`
-const PATH_DOWNLOAD_MP4 = `${PATH_MAIN}/download-mp4`
 const PATH_CONVERT = `${PATH_MAIN}/convert`
-
+const PATH_VIEW = `${PATH_MAIN}/view`
 
 //=============================================
 // 
@@ -71,10 +69,9 @@ router.get(PATH_MAIN, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_DELETE,
-      PATH_DELETE_MP4,
       PATH_CONVERT,
       PATH_DOWNLOAD,
-      PATH_DOWNLOAD_MP4,
+      PATH_VIEW,
     })
     res.send(html)
   } catch (error) {
@@ -85,9 +82,9 @@ router.get(PATH_MAIN, async (req, res) => {
 
 
 
-router.post([PATH_DELETE, PATH_DELETE_MP4], async (req, res) => {
-  console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log("req.body ===> " , req.body)
+router.post(PATH_DELETE, async (req, res) => {
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log("req.body ===> " , req.body)
 
   try {
     const filename = req.body.filename;
@@ -99,12 +96,8 @@ router.post([PATH_DELETE, PATH_DELETE_MP4], async (req, res) => {
       });
     }
 
-    if(req.path === PATH_DELETE_MP4){
-      var filePath = path.join(global.folderVideosMp4, filename);
-    } else if(req.path === PATH_DELETE){
-      var filePath = path.join(global.folderVideos, filename);
-    }
-
+    var filePath = path.join(global.folderVideos, filename);
+    
     if (fs.existsSync(filePath)) {
       fs.unlink(filePath, (err) => {
         if (err) {
@@ -138,10 +131,11 @@ router.post([PATH_DELETE, PATH_DELETE_MP4], async (req, res) => {
 })
 
 
-router.get([PATH_DOWNLOAD, PATH_DOWNLOAD_MP4], async (req, res) => {
-  console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log(`-----------------${req.path}----------------------`)
-  console.log("req.query ===> ", req.query)
+
+router.get(PATH_DOWNLOAD, async (req, res) => {
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log(`-----------------${req.path}----------------------`)
+  // console.log("req.query ===> ", req.query)
   try {
     const filename = req.query.filename;
     if (!filename) {
@@ -153,12 +147,7 @@ router.get([PATH_DOWNLOAD, PATH_DOWNLOAD_MP4], async (req, res) => {
       return res.status(400).type('text').send('ชื่อไฟล์ไม่ถูกต้อง');
     }
 
-    // 
-    if(req.path === PATH_DOWNLOAD_MP4){
-      var filePath = path.join(global.folderVideosMp4, filename);
-    }else if(req.path === PATH_DOWNLOAD){
-      var filePath = path.join(global.folderVideos, filename);
-    }
+    var filePath = path.join(global.folderVideos, filename);
 
     if (!fs.existsSync(filePath)) {
       return res.status(404).type('text').send(`ไม่พบไฟล์ "${filename}" ที่ต้องการดาวน์โหลด`);
@@ -244,6 +233,49 @@ router.post(PATH_CONVERT, async (req, res) => {
     });
   }
 })
+
+
+
+
+router.get(`${PATH_VIEW}/:filename`, (req, res) => {
+  console.log(`---- ${req.originalUrl} ----`);
+  console.log("req.params ===> ", req.params);
+  // ตรวจสอบสิทธิ์ที่นี่ (เช่น req.session, JWT, ฯลฯ)
+  // if (!req.session.user) return res.status(403).send('Forbidden');
+
+  const filename = req.params.filename;
+  const videoPath = path.join(global.folderVideos, filename); // ปรับ path ให้ตรงกับที่เก็บไฟล์จริง
+
+  // ตรวจสอบว่าไฟล์มีอยู่จริง
+  if (!fs.existsSync(videoPath)) return res.status(404).send('Not found');
+
+  // ส่งไฟล์แบบ stream (รองรับ seek)
+  const stat = fs.statSync(videoPath);
+  const fileSize = stat.size;
+  const range = req.headers.range;
+  if (range) {
+    const parts = range.replace(/bytes=/, "").split("-");
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunksize = (end - start) + 1;
+    const file = fs.createReadStream(videoPath, { start, end });
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'video/mp4',
+    };
+    res.writeHead(206, head);
+    file.pipe(res);
+  } else {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'video/mp4',
+    };
+    res.writeHead(200, head);
+    fs.createReadStream(videoPath).pipe(res);
+  }
+});
 
 export default router
 
