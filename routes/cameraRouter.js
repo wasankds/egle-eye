@@ -33,7 +33,8 @@ router.get(PATH_MAIN, async (req, res) => {
   // console.log(`---- ${req.originalUrl} ----`)
 
   try {
-    const html = await myGeneral.renderView('camera_hls_local', res, {
+    const html = await myGeneral.renderView('camera_socket', res, {
+    // const html = await myGeneral.renderView('camera_hls_local', res, {
       // const html = await myGeneral.renderView('camera_hls', res, {
       // const html = await myGeneral.renderView('camera_webRTC', res, {
       title: global.PAGE_CAMERA ,

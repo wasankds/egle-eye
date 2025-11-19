@@ -1,6 +1,6 @@
 // import path from 'node:path';
 import 'dotenv/config'
-import { exec } from 'child_process';
+import { exec,spawn } from 'child_process';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import fs from 'fs';
@@ -112,6 +112,27 @@ io.on('connection', (socket) => {
     console.log('❌ Client disconnected:', socket.id);
   });    
 }); 
+
+
+//====================================
+// socket.io ส่งภาพจากกล้อง MJPEG ไปยัง client
+const ffmpeg = spawn('ffmpeg', [
+  '-i', '-', '-vf', 'fps=5', '-update', '1', '-q:v', '5',
+  '-f', 'image2pipe', '-vcodec', 'mjpeg', '-'
+]);
+let frameBuffer = Buffer.alloc(0);
+ffmpeg.stdout.on('data', (chunk) => {
+  frameBuffer = Buffer.concat([frameBuffer, chunk]);
+  // หา JPEG header/footer
+  let start, end;
+  while ((start = frameBuffer.indexOf(Buffer.from([0xFF, 0xD8]))) !== -1 &&
+         (end = frameBuffer.indexOf(Buffer.from([0xFF, 0xD9]), start)) !== -1) {
+    const jpeg = frameBuffer.slice(start, end + 2);
+    io.emit('frame', jpeg.toString('base64'));
+    frameBuffer = frameBuffer.slice(end + 2);
+  }
+});
+
 
 
 server.listen(PORT, () => {

@@ -51,9 +51,7 @@
       </div>
     </section>
     
-    <section class="flex-row">
-      <img src="<%= PATH_STREAM %>" style="width:100%;max-width:640px;">
-    </section >
+    <img id="stream" width="640" height="480" />
 
 
   </main>  
@@ -66,6 +64,15 @@
     const PATH_MAIN = `<%= PATH_MAIN %>`;
     const PATH_REQUEST = `<%= PATH_REQUEST %>`;
   </script>
+
+  <script>
+    const socket = io();
+    const img = document.getElementById('stream');
+    socket.on('frame', (data) => {
+      img.src = 'data:image/jpeg;base64,' + data;
+    });
+  </script> 
+
 
   <!--  -->
   <% if(!IS_PRODUCTION) { %>
