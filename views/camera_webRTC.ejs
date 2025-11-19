@@ -10,17 +10,40 @@
     h2 { margin-bottom: 18px; }
     .note { color: #aaa; margin-top: 18px; }
   </style>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/cdn/fontawesome/css/all.min.css">
+
+  <!-- socket.io -->
+  <script src="/cdn/socket.io.min.js"></script>
+  <!-- hls -->
+
+  <% if(!global.IS_PRODUCTION) { %>
+  <link rel="stylesheet" href="/css/utils.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/fonts.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/toast.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/footer.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/nav.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/same.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/camera.css?v=<%= time %>">
+  <% } else { %>
+  <link rel="stylesheet" href="/css-min/camera.min.css?v=<%= time %>">
+  <% }  %>
 </head>
 <body>
+
+  <!-- ดูได้ในแท็บ -->
+  <!-- http://192.168.1.135:8889/stream/ -->
+
   <div class="container">
     <h2>WebRTC Camera Stream (MediaMTX)</h2>
     <iframe src="http://<%= process.env.PI_IP || 'localhost' %>:8889/stream/" allowfullscreen></iframe>
-    <div class="note">
+    <!-- <div class="note">
       <p>ถ้าไม่ขึ้นภาพ ลองเปิด <a href="http://<%= process.env.PI_IP || 'localhost' %>:8889/stream/" target="_blank">WebRTC Player</a> ในแท็บใหม่</p>
       <p>WebRTC เหมาะกับดูสด latency ต่ำ (แต่บาง browser/network อาจต้อง refresh หรือเปิดในแท็บใหม่)</p>
-    </div>
+    </div> -->
   </div>
-  
+
   <!--  -->
   <%- include('partials/footer') %> 
   <script type="text/javascript">
