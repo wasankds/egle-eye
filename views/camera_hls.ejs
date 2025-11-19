@@ -51,10 +51,11 @@
       </div>
     </section>
     
-    <section class="flex-row">
-      <img src="<%= PATH_STREAM %>" style="width:100%;max-width:640px;">
-    </section >
 
+    <!-- วิดีโอสตรีมมิ่ง -->
+    <section class="flex-row">
+      <video id="video" controls autoplay width="640" height="480"></video>    
+    </section>  
 
   </main>  
 
@@ -68,17 +69,17 @@
   </script>
 
   
-  <script>    
-    // if (Hls.isSupported()) {
-    //   console.log("HLS is supported");
-    //   var video = document.getElementById('video');
-    //   var hls = new Hls();
-    //   hls.loadSource('http://192.168.1.135:8890/stream/index.m3u8');
-    //   hls.attachMedia(video);
-    // } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    //   console.log("HLS is supported natively");
-    //   video.src = 'http://192.168.1.135:8890/stream/index.m3u8';
-    // }
+  <script>
+      if (Hls.isSupported()) {
+        console.log("HLS is supported");
+        var video = document.getElementById('video');
+        var hls = new Hls();
+        hls.loadSource('http://192.168.1.135:8890/stream/index.m3u8');
+        hls.attachMedia(video);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        console.log("HLS is supported natively");
+        video.src = 'http://192.168.1.135:8890/stream/index.m3u8';
+      }
   </script>
 
   <!--  -->
