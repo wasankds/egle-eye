@@ -119,7 +119,8 @@ document.querySelectorAll('.btn-play').forEach(btn => {
       modal.style.zIndex = '9999';
       modal.innerHTML = `
         <div style="position:relative;max-width:90vw;max-height:90vh;">
-          <button id="close-video-modal" style="position:absolute;top:-40px;right:0;font-size:2rem;background:none;border:none;color:white;cursor:pointer;">&times;</button>
+          <button id="close-video-modal" 
+                  style="position:absolute;top:-40px;right:0;font-size:2rem;background:none;border:none;color:white;cursor:pointer;">&times;</button>
           <video id="video-player" controls autoplay style="max-width:90vw;max-height:80vh;background:#000;"></video>
         </div>
       `;
