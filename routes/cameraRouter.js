@@ -34,7 +34,6 @@ router.get(PATH_MAIN, async (req, res) => {
 
   try {
     const html = await myGeneral.renderView('camera_hls', res, {
-    // const html = await myGeneral.renderView('camera', res, {
       title: global.PAGE_CAMERA ,
       time : myDateTime.getDate(),
       msg: req.flash('msg'),

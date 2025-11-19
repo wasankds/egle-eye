@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 let ffmpegProcess = null;
 let streamClients = [];
-
+// เรียกใช้เมื่อมี client ใหม่ (ดึง RTSP → MJPEG)
 export function addMjpegClient(res) {
   if (process.platform !== 'linux') return;
   if (!ffmpegProcess) {
@@ -31,3 +31,4 @@ export function addMjpegClient(res) {
     }
   });
 }
+
