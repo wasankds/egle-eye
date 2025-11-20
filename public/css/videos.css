@@ -7,3 +7,47 @@ main{
 }
 
 
+/*** toolbar  ***/
+.toolbar-ctn{
+  width: 100%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0;  
+}
+.toolbar-ctn .toolbar-1, 
+.toolbar-ctn .toolbar-2,
+.toolbar-ctn .toolbar-3{
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 0;
+}
+.toolbar-ctn .toolbar-1{ grid-area: 1/1/2/2;justify-self:start; } 
+.toolbar-ctn .toolbar-2{ grid-area: 2/1/3/3;justify-self:center; margin-top: 7px;}
+.toolbar-ctn .toolbar-3{ grid-area: 1/2/2/3;justify-self:end;}
+
+
+/*******************************************/
+/**************** จอขนาดกลาง ****************/
+/*******************************************/
+@media screen and (min-width: 768px) {
+
+  /*** toolbar  ***/
+  .toolbar-ctn{
+    max-width: 100%;
+    grid-template-columns: auto auto auto ;
+  }
+  .toolbar-ctn .toolbar-1{ grid-area: 1/1/2/2;justify-self:start;  } 
+  .toolbar-ctn .toolbar-2{ grid-area: 1/2/1/3;justify-self:center; margin-top: 0;}
+  .toolbar-ctn .toolbar-3{ grid-area: 1/3/2/4;justify-self:end; }
+}
+
+
+/*******************************************/
+/**************** จอขนาดใหญ่ ****************/
+/*******************************************/
+@media screen and (min-width: 1000px) {
+
+}
+

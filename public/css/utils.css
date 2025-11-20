@@ -329,8 +329,8 @@
 .bg-edit{ background-image:linear-gradient(yellow,darkgoldenrod); }
 .bg-edit-active{ background-image:linear-gradient(rgb(33, 195, 165),rgb(21, 125, 106)) }
 .bg-delete{ background-image:linear-gradient(red,darkred) }
+.bg-play{ background-image: linear-gradient(rgb(0, 160, 117), rgb(85, 117, 29)); color: white; }
 .bg-convert{ background-image: linear-gradient(HotPink, rgb(253, 75, 164)); }
-/* .bg-print{ background-image: linear-gradient(rgb(113, 151, 38), rgb(68, 85, 38)); color: white; } */
 .bg-print{ background-image: linear-gradient(lightSeaGreen, SeaGreen); color: white; }
 .bg-change{ background-image: linear-gradient(magenta, rgb(137, 0, 137))}
 .bg-search{ background-image: linear-gradient(rgb(75, 203, 197), rgb(42, 99, 96)); }
@@ -354,7 +354,6 @@
 .bg-undo{ background-image: linear-gradient(darkcyan, #004443); color: white; }
 .bg-dn{ background-image: linear-gradient(violet, rgb(151, 53, 193)); color: white; }
 .bg-up{ background-image:linear-gradient(rgb(42, 188, 232), rgb(38, 95, 121)); color: white; }
-.bg-play{ background-image:linear-gradient(rgb(42, 188, 232), rgb(38, 95, 121)); color: white; }
 .bg-upload{ background-image:linear-gradient(rgb(42, 188, 232), rgb(38, 95, 121)); color: white; }
 .bg-calendar{ background-image:linear-gradient(rgb(83, 221, 138), rgb(60, 163, 101)); color: white; }
 .bg-dashed{

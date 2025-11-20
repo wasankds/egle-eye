@@ -1,6 +1,5 @@
-console.log('----------------');
-
 //===========================================================
+// ลบวิดีโอ .mp4 บนเว็บเมื่อคลิกปุ่ม delete
 // 
 document.querySelectorAll('.btn-delete').forEach( btn => {
   btn.addEventListener('click', (event) => {
@@ -29,7 +28,7 @@ function deleteJs(e, pathAction){
         btn.classList.add('disabled');
 
         sendHttpRequest('post', pathAction, data)
-          .then(rtn => {
+          .then(rtn => {PATH_DOWNLOAD
             if (rtn.status === 'ok') {      
               const td = btn.closest('td');
               const tr = td.closest('tr');
@@ -52,47 +51,6 @@ function deleteJs(e, pathAction){
 
 
 
-
-//===========================================================
-// 
-document.querySelectorAll('.btn-convert').forEach( btn => {
-  btn.addEventListener('click', convertJs)
-})
-function convertJs(e){
-  e.preventDefault();
-
-  if (typeof Swal !== "undefined") {
-    Swal.fire({
-      title: "ยืนยันการแปลงไฟล์",
-      text: "กรุณากด 'ยืนยัน' เพื่อดำเนินการแปลงไฟล์",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "ยืนยัน",
-      cancelButtonText: "ยกเลิก"
-    }).then((result) => {
-      //=== ยิง fetch ดาวน์โหลดไฟล์
-      if (result.isConfirmed) {
-        const btn = e.target.closest('button');
-        const data = {};
-        data.filename = btn.getAttribute('data-filename');
-        btn.classList.add('disabled');
-
-        sendHttpRequest('post', PATH_CONVERT, data)
-          .then( rtn => {
-            console.log("rtn ===> " , rtn)
-          }).catch(err => {
-            console.log(err);
-            showToast(err.message, rtn.class);
-          }).finally(() => {
-            btn.classList.remove('disabled');
-          });
-      }
-    });
-    return;
-  }
-  
-
-}
 
 //===========================================================
 // เล่นวิดีโอ .mp4 บนเว็บเมื่อคลิกปุ่ม play
@@ -141,5 +99,50 @@ document.querySelectorAll('.btn-play').forEach(btn => {
 
 
 
+
+
+
+
+
+// //===========================================================
+// // 
+// document.querySelectorAll('.btn-convert').forEach( btn => {
+//   btn.addEventListener('click', convertJs)
+// })
+// function convertJs(e){
+//   e.preventDefault();
+
+//   if (typeof Swal !== "undefined") {
+//     Swal.fire({
+//       title: "ยืนยันการแปลงไฟล์",
+//       text: "กรุณากด 'ยืนยัน' เพื่อดำเนินการแปลงไฟล์",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonText: "ยืนยัน",
+//       cancelButtonText: "ยกเลิก"
+//     }).then((result) => {
+//       //=== ยิง fetch ดาวน์โหลดไฟล์
+//       if (result.isConfirmed) {
+//         const btn = e.target.closest('button');
+//         const data = {};
+//         data.filename = btn.getAttribute('data-filename');
+//         btn.classList.add('disabled');
+
+//         sendHttpRequest('post', PATH_CONVERT, data)
+//           .then( rtn => {
+//             console.log("rtn ===> " , rtn)
+//           }).catch(err => {
+//             console.log(err);
+//             showToast(err.message, rtn.class);
+//           }).finally(() => {
+//             btn.classList.remove('disabled');
+//           });
+//       }
+//     });
+//     return;
+//   }
+  
+
+// }
 
 

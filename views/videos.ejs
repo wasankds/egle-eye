@@ -4,7 +4,6 @@
   <%- include('partials/meta',{ time:time}) %>
   <title><%= title %></title>
 
-
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/cdn/fontawesome/css/all.min.css">
   <!-- SweetAlert2 -->
@@ -15,6 +14,7 @@
   <link rel="stylesheet" href="/css/fonts.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/toast.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/footer.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/input.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/tableFix1col.css?v=<%= time %>"> 
   <link rel="stylesheet" href="/css/nav.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/same.css?v=<%= time %>">
@@ -37,75 +37,93 @@
 
   <main>
 
+    <!-- #1 : Toolbar-->
+    <section class="toolbar-ctn">
+
+      <!-- select date -->
+      <form class="toolbar-1" method="get" action="<%= PATH_MAIN %>" >
+        <label class="al-r pd-r-s">วันที่</label>
+        <select class="al-c" name="date" id="date" onchange="this.form.submit()">
+          <option value="">-- ทั้งหมด --</option>
+          <% uniqueDates.forEach( d => { %>
+            <option value="<%= d %>" <%= date === d ? 'selected' : '' %> ><%= d %></option>
+          <% }) %>
+        </select>
+      </form>
+
+      <div class="toolbar-2"></div>
+      <div class="toolbar-3"></div>
+    </section> 
+
+    <!-- ตาราง -->
+    <section class="mg-t-l">
+    
       <!-- ตาราง -->
-      <section class="">
-      
-        <!-- ตาราง -->
-        <div id="tableCtn" class="table-ctn">
+      <div id="tableCtn" class="table-ctn">
 
-          <table>
+        <table>
 
-            <colgroup>
-              <col style="width: 1%;">
-              <col style="width: 1%;">
-              <col style="width: 1%;">
-              <col style="width: auto;">
-              <col style="width: 1%;">
-            </colgroup>
+          <colgroup>
+            <col style="width: 1%;">
+            <col style="width: 1%;">
+            <col style="width: 1%;">
+            <col style="width: auto;">
+            <col style="width: 1%;">
+          </colgroup>
 
-            <thead id="tableHeader">
-              <tr>
-                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-hashtag"></i></th>
-                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
-                <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
-                <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
-                <th class="al-c pd-l-s pd-r-s"><i class="fas fa-play"></i></th>                
-              </tr>
-            </thead>
+          <thead id="tableHeader">
+            <tr>
+              <th class="al-c pd-l-s pd-r-s"><i class="fas fa-hashtag"></i></th>
+              <th class="al-c pd-l-s pd-r-s"><i class="fas fa-download"></i></th>
+              <th class="al-c pd-l-s pd-r-s" title="Delete"><i class="fas fa-trash-alt"></i></th>
+              <th class="al-c clickable" title="ไฟล์"><i class="fas fa-file-alt"></i></th>
+              <th class="al-c pd-l-s pd-r-s"><i class="fas fa-play"></i></th>                
+            </tr>
+          </thead>
 
-            <tbody id="tableContent">
-              <% data.forEach( (obj,index) => { %>        
+          <tbody id="tableContent">
+            <% data.forEach( (obj,index) => { %>        
 
-              <tr class="<%= index%2 == 0 ? 'bg-line-swap' : 'bg-main-color' %>">
+            <tr class="<%= index%2 == 0 ? 'bg-line-swap' : 'bg-main-color' %>">
 
-                <td class="al-c" title=""><%= index+1 %></td>
+              <td class="al-c" title=""><%= index+1 %></td>
 
-                <td class="al-c">
-                  <a class="btn btn-sm bg-download" href="<%= PATH_DOWNLOAD %>?filename=<%= obj.name %>">
-                    <i class="fas fa-download"></i>
-                  </a>
-                </td>
-                
-                <!--  -->
-                <td class="al-c">
-                  <button type="button" class="btn btn-sm clickable bg-delete btn-delete pd-l-l pd-r-l pd-t-s pd-b-s"
-                          data-filename="<%= obj.name %>"  >
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </td>
-                
-                <td class="pd-l-s fs-s">
-                  <div class="d-flex justify-content-between"">
-                    <span><%= obj.name %></span>
-                    <span>[<%= (obj.size / (1024 * 1024)).toFixed(2) %> MB]</span>  
-                  </div>
-                </td>
+              <td class="al-c">
+                <a class="btn btn-sm bg-download" href="<%= PATH_DOWNLOAD %>?filename=<%= obj.name %>">
+                  <i class="fas fa-download"></i>
+                </a>
+              </td>
+              
+              <!--  -->
+              <td class="al-c">
+                <button type="button" class="btn btn-sm clickable bg-delete btn-delete pd-l-l pd-r-l pd-t-s pd-b-s"
+                        data-filename="<%= obj.name %>"  >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+              
+              <td class="pd-l-s pd-r-s fs-s">
+                <div class="d-flex justify-content-between"">
+                  <span><%= obj.name %></span>
+                  <span>[<%= obj.size %>]</span>  
+                </div>
+              </td>
 
-                <td class="">
-                  <button type="button" class="btn btn-sm clickable bg-green btn-play pd-l-l pd-r-l pd-t-s pd-b-s"
-                          data-filename="<%= obj.name %>"  >
-                    <i class="fas fa-play"></i>
-                  </button>
-                </td>
+              <td class="">
+                <button type="button" class="btn btn-sm clickable bg-play btn-play pd-l-l pd-r-l pd-t-s pd-b-s"
+                        data-filename="<%= obj.name %>"  >
+                  <i class="fas fa-play"></i>
+                </button>
+              </td>
 
 
-              </tr>
-              <% }) %>
-            </tbody>
-          </table>
-        </div>  
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>  
 
-      </section>
+    </section>
 
   </main>  
 
@@ -116,8 +134,8 @@
     const PREFIX = '<%= PREFIX %>';
     const PATH_MAIN = `<%= PATH_MAIN %>`;
     const PATH_DELETE = `<%= PATH_DELETE %>`;
-    const PATH_CONVERT = `<%= PATH_CONVERT %>`;
     const PATH_VIEW = `<%= PATH_VIEW %>`;
+    // const PATH_CONVERT = `<= PATH_CONVERT >`;
   </script>
 
   <!--  -->

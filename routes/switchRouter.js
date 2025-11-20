@@ -15,11 +15,10 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
   // console.log(`---- ${req.originalUrl} ----`)
 
   //=== อ่านค่าจาก LED1_STATE และ RELAY1_STATE แล้วส่งไปที่หน้า switch
-  const led1State = typeof global.LED1_STATE === 'number' ? global.LED1_STATE : 0;
+  // const led1State = typeof global.LED1_STATE === 'number' ? global.LED1_STATE : 0;
   const relay1State = typeof global.RELAY1_STATE === 'number' ? global.RELAY1_STATE : 1;
-  // const servo1Pin = typeof global.SERVO1_PIN === 'number' ? global.SERVO1_PIN : 18;
-  // const servo2Pin = typeof global.SERVO2_PIN === 'number' ? global.SERVO2_PIN : 13;
-  console.log(`LED1_STATE = ${led1State} , RELAY1_STATE = ${relay1State}`)
+  const relay2State = typeof global.RELAY2_STATE === 'number' ? global.RELAY2_STATE : 1;
+  
 
   try {
     const html = await myGeneral.renderView('switch', res, {
@@ -32,8 +31,9 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_SWITCH_WEB,
-      led1State,
+      // led1State,
       relay1State,
+      relay2State,
     })
     res.send(html)
   } catch (error) {
@@ -46,8 +46,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 // เมื่อกดสวิตช์บนเว็บ
 //
 router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
-  // console.log(`-----------------${req.originalUrl}----------------------`)
-  // console.log("req.body ===> " , req.body)
+  console.log(`-----------------${req.originalUrl}----------------------`)
+  console.log("req.body ===> " , req.body)
   // req.body ===>  { switchState: 'off', id: 's01' }
   
   const { id, switchState } = req.body;

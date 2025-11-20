@@ -1,6 +1,6 @@
+// import { spawn } from 'child_process';
 import express from 'express'
 const router = express.Router()
-import { spawn } from 'child_process';
 import fs from 'fs'
 import path from 'path'
 import mainAuth from "../authorize/mainAuth.js" 
@@ -8,70 +8,66 @@ const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const PATH_MAIN = '/videos'
-const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_DELETE = `${PATH_MAIN}/delete`
 const PATH_DOWNLOAD = `${PATH_MAIN}/download`
-const PATH_CONVERT = `${PATH_MAIN}/convert`
 const PATH_VIEW = `${PATH_MAIN}/view`
+const PREFIX = PATH_MAIN.replace(/\//g,"_")
 
 //=============================================
 // 
-// router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
-router.get(PATH_MAIN, async (req, res) => {
+// router.get(PATH_MAIN, async (req, res) => {
+router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
+  // console.log(`---- ${req.originalUrl} ----`)
+  // console.log("req.query ===> ", req.query)
+
+  const date = req.query.date ? req.query.date : null
 
   try {
 
     //=== อ่านรายชื่อไฟล์วิดีโอ .mjpeg จากโฟลเดอร์ videos
-    const videosFiles_mjpeg = [];
+    let videosFiles_mjpeg_all = [];
     if (fs.existsSync(global.folderVideos)) {
       const files = fs.readdirSync(global.folderVideos);
       for (const file of files) {
         const filePath = path.join(global.folderVideos, file);
         const stat = fs.statSync(filePath);
         if (stat.isFile()) {
-          videosFiles_mjpeg.push({  
-            name: file,
-            size: stat.size,
-            modifiedTime: stat.mtime
+          videosFiles_mjpeg_all.push({  
+            name: file, // video_2025-11-19_17-45-20.mp4
+            time : file.slice(6, 25).replace('_', ' '),
+            size: (stat.size / (1024 * 1024)).toFixed(2) + ' MB',
           });
         }
       }
     }
+    //=== จับวันที่ไม่ซ้ำ
+    const uniqueDates = [...new Set(videosFiles_mjpeg_all.map(video => video.time.slice(0, 10)))];
 
-    // //=== อ่านรายชื่อไฟล์วิดีโอ .mp4 จากโฟลเดอร์ videos gloval.folderVideosMp4
-    // const videosFiles_mp4 = [];
-    // if (fs.existsSync(global.folderVideosMp4)) {
-    //   const filesMp4 = fs.readdirSync(global.folderVideosMp4);
-    //   for (const fileMp4 of filesMp4) {
-    //     const filePathMp4 = path.join(global.folderVideosMp4, fileMp4);
-    //     const statMp4 = fs.statSync(filePathMp4);
-    //     if (statMp4.isFile()) {
-    //       videosFiles_mp4.push(fileMp4);
-    //     }
-    //   }
-    // }
-    // //=== videosFiles ลนลูปไปหาชื่อไฟล์ที่ตรงกันในโฟลเดอร์  gloval.folderVideosMp4 ถ้ามีให้เพิ่มคีย์ mp4Exists: true
-    // for (let video of videosFiles_mjpeg) {
-    //   const mp4Filename = path.parse(video.name).name + '.mp4';
-    //   video.mp4Filename = videosFiles_mp4.includes(mp4Filename) ? mp4Filename : null; 
-    //   video.mp4Filesize = videosFiles_mp4.includes(mp4Filename) ? fs.statSync(path.join(global.folderVideosMp4, mp4Filename)).size : null;
-    // }
-    // console.log("videosFiles_mjpeg ===> " , videosFiles_mjpeg)
+    //=== กรองตามวันที่ถ้ามี date
+    const videosFiles_mjpeg = videosFiles_mjpeg_all.filter(video => {
+      if (date) {
+        return video.time.startsWith(date);
+      }
+      return true;
+    });
+    //=== เรียงลำดับชื่อไฟล์จากใหม่ไปเก่า
+    videosFiles_mjpeg.sort((a, b) => b.name.localeCompare(a.name));
 
     const html = await myGeneral.renderView('videos', res, {
       title: global.PAGE_VIDEOS ,
-      time : myDateTime.getDate(),
-      msg: req.flash('msg'),
+      time : myDateTime.getDate() ,
+      msg: req.flash('msg') ,
 
-      user: await lowDB.getSessionData(req),
-      data : videosFiles_mjpeg,
+      user: await lowDB.getSessionData(req) ,
+      data : videosFiles_mjpeg ,
+      date ,
+      uniqueDates ,
 
-      PREFIX,
-      PATH_MAIN,
-      PATH_DELETE,
-      PATH_CONVERT,
-      PATH_DOWNLOAD,
-      PATH_VIEW,
+      PREFIX ,
+      PATH_MAIN ,
+      PATH_DELETE ,
+      PATH_DOWNLOAD ,
+      PATH_VIEW ,
     })
     res.send(html)
   } catch (error) {
@@ -171,82 +167,15 @@ router.get(PATH_DOWNLOAD, async (req, res) => {
 
 
 //=============================================================
-router.post(PATH_CONVERT, async (req, res) => {
-  // console.log(`-----------------${req.originalUrl}----------------------`)
-  // console.log("req.body ===> " , req.body)
-
-  try {
-    const filename = req.body.filename;
-    if(!filename){
-      return res.send({
-        status: 'error',
-        class: 'red',
-        message: `ไม่มีชื่อไฟล์ที่ต้องการแปลง`,
-      });
-    }
-    const filePath = path.join(global.folderVideos, filename);
-
-    if (!fs.existsSync(filePath)) {
-      return res.send({
-        status: 'error',
-        class: 'red',
-        message: `ไม่พบไฟล์ "${filename}" ที่ต้องการแปลง`,
-      });
-    }
-
-    //=== แปลงไฟล์ (ตัวอย่างใช้ ffmpeg แปลงเป็น mp4)
-    const outputFilename = path.parse(filename).name + '.mp4';
-    const outputPath = path.join(global.folderVideosMp4, outputFilename); 
-
-    const FRAMERATE = process.env.VIDEO_FRAMERATE
-    const ffmpeg = spawn('ffmpeg', [
-        '-y',
-        '-framerate', String(FRAMERATE),
-        '-i', filePath,
-        '-c:v', 'libx264',
-        '-pix_fmt', 'yuv420p',
-        outputPath
-    ]);
-    ffmpeg.on('exit', code => {
-      if (code === 0) {
-        console.log('Converted', filename, 'to', outputFilename);
-        return res.send({
-          status: 'ok',
-          class: 'green',
-          message: `แปลงไฟล์ "${filename}" เป็น "${outputFilename}" เรียบร้อยแล้ว`,
-        });
-      } else {
-        console.error('Failed to convert', filename);
-        return res.send({
-          status: 'error',
-          class: 'red',
-          message: `แปลงไฟล์ "${filename}" ไม่สำเร็จ`,
-        });
-      } 
-    });    
-  } catch (error) {
-    console.log("Error ===> " , error.message)
-    return res.send({
-      status: 'error',
-      class: 'red',
-      message: error.message,
-    });
-  }
-})
-
-
-
-//=============================================================
 router.get(`${PATH_VIEW}/:filename`, (req, res) => {
   // console.log(`---- ${req.originalUrl} ----`);
   // console.log("req.params ===> ", req.params);
 
   // ตรวจสอบสิทธิ์ที่นี่ (เช่น req.session, JWT, ฯลฯ)
-  // if (!req.session.user) return res.status(403).send('Forbidden');
+  if (!req.session.isAuth) return res.status(403).send('Forbidden');
 
   const filename = req.params.filename;
   const videoPath = path.join(global.folderVideos, filename); // ปรับ path ให้ตรงกับที่เก็บไฟล์จริง
-
   // ตรวจสอบว่าไฟล์มีอยู่จริง
   if (!fs.existsSync(videoPath)) return res.status(404).send('Not found');
 
@@ -280,6 +209,73 @@ router.get(`${PATH_VIEW}/:filename`, (req, res) => {
 
 export default router
 
+
+
+
+
+// //=============================================================
+// router.post(PATH_CONVERT, async (req, res) => {
+//   // console.log(`-----------------${req.originalUrl}----------------------`)
+//   // console.log("req.body ===> " , req.body)
+
+//   try {
+//     const filename = req.body.filename;
+//     if(!filename){
+//       return res.send({
+//         status: 'error',
+//         class: 'red',
+//         message: `ไม่มีชื่อไฟล์ที่ต้องการแปลง`,
+//       });
+//     }
+//     const filePath = path.join(global.folderVideos, filename);
+
+//     if (!fs.existsSync(filePath)) {
+//       return res.send({
+//         status: 'error',
+//         class: 'red',
+//         message: `ไม่พบไฟล์ "${filename}" ที่ต้องการแปลง`,
+//       });
+//     }
+
+//     //=== แปลงไฟล์ (ตัวอย่างใช้ ffmpeg แปลงเป็น mp4)
+//     const outputFilename = path.parse(filename).name + '.mp4';
+//     const outputPath = path.join(global.folderVideosMp4, outputFilename); 
+
+//     const FRAMERATE = process.env.VIDEO_FRAMERATE
+//     const ffmpeg = spawn('ffmpeg', [
+//         '-y',
+//         '-framerate', String(FRAMERATE),
+//         '-i', filePath,
+//         '-c:v', 'libx264',
+//         '-pix_fmt', 'yuv420p',
+//         outputPath
+//     ]);
+//     ffmpeg.on('exit', code => {
+//       if (code === 0) {
+//         console.log('Converted', filename, 'to', outputFilename);
+//         return res.send({
+//           status: 'ok',
+//           class: 'green',
+//           message: `แปลงไฟล์ "${filename}" เป็น "${outputFilename}" เรียบร้อยแล้ว`,
+//         });
+//       } else {
+//         console.error('Failed to convert', filename);
+//         return res.send({
+//           status: 'error',
+//           class: 'red',
+//           message: `แปลงไฟล์ "${filename}" ไม่สำเร็จ`,
+//         });
+//       } 
+//     });    
+//   } catch (error) {
+//     console.log("Error ===> " , error.message)
+//     return res.send({
+//       status: 'error',
+//       class: 'red',
+//       message: error.message,
+//     });
+//   }
+// })
 
 
 

@@ -49,8 +49,20 @@
           <span class="switch-status" id="s01-status"><%= relay1State === 0 ? 'ON' : 'OFF' %></span>
         </div>
       </div>
-    </section>  
+    </section>
 
+    <!--relay2State : Active Low - 0 คือเปิด   -->
+    <section class="flex-row">
+      <div class="col-sm-f">
+        <div class="switch-container">
+          <label class="switch">
+            <input type="checkbox" id="s02" <%= relay2State === 0 ? 'checked' : '' %>>
+            <span class="slider"></span>
+          </label>
+          <span class="switch-status" id="s02-status"><%= relay2State === 0 ? 'ON' : 'OFF' %></span>
+        </div>
+      </div>
+    </section>
 
   </main>  
 
