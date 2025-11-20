@@ -1,7 +1,7 @@
   // Map ปุ่ม id กับทิศทาง
   const camBtnMap = {
-     // 'btn-cam-up': 'up',
-     // 'btn-cam-down': 'down',
+     'btn-cam-up': 'up',
+     'btn-cam-down': 'down',
     'btn-cam-left': 'left',
     'btn-cam-right': 'right',
     'btn-cam-home': 'home'

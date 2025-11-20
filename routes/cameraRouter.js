@@ -90,6 +90,14 @@ router.post(PATH_REQUEST,  async (req, res) => {
       await myStepper.stepMotor(200, 1, 1);
       return  res.send({ status: 'ok right', direction: direction });
     }
+    //=== 
+    else if(direction == 'up'){
+      await myStepper.rotate1();
+      return  res.send({ status: 'ok up', direction: direction });
+    }else if(direction == 'down'){
+      await myStepper.rotate2();
+      return  res.send({ status: 'ok down', direction: direction });
+    }
     //=== กลาง
     else if(direction == 'home'){
       await myStepper.resetRotation();
