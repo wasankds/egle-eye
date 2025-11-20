@@ -70,7 +70,6 @@
     const PATH_MAIN = `<%= PATH_MAIN %>`;
     const PATH_REQUEST = `<%= PATH_REQUEST %>`;
   </script>
-
   
   <script>
     if (Hls.isSupported()) {
@@ -78,11 +77,11 @@
       var video = document.getElementById('video');
       var hls = new Hls();
       // ใช้ path relative เพื่อรองรับโดเมน/Cloudflare Tunnel
-      hls.loadSource('<%= global.DOMAIN_ALLOW %>/stream/index.m3u8');
+      hls.loadSource('<%= global.DOMAIN_URL %>/stream/index.m3u8');
       hls.attachMedia(video);
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       console.log("--------- HLS is supported natively---------");
-      video.src = '<%= global.DOMAIN_ALLOW %>/stream/index.m3u8';
+      video.src = '<%= global.DOMAIN_URL %>/stream/index.m3u8';
     }
   </script>
 
