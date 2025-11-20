@@ -22,26 +22,22 @@ export function resetRotation() {
   return { status: 'ok' };
 }
 
-//=== เปิด 2 ตัวต้านทานบนขา IN1 และ IN4 ปิด ขา IN2 และ IN3
+//=== เปิด 2 ตัวต้านทานบนขา IN1 และ IN2 ปิด ขา IN3 และ IN4
 export function rotate1() {
   if(!global.gpio) {
-    return {
-      status: 'no gpio',
-    }
+    return { status: 'no gpio', }
   }
   global.stepperPins[0].write(1); // IN1
-  global.stepperPins[1].write(0); // IN2
+  global.stepperPins[1].write(1); // IN2
   global.stepperPins[2].write(0); // IN3
-  global.stepperPins[3].write(1); // IN4
+  global.stepperPins[3].write(0); // IN4
   return { status: 'ok' };
 }
 
 //=== เปิด 2 ตัวต้านทานบนขา IN2 และ IN3 ปิด ขา IN1 และ IN4
 export function rotate2() {
   if(!global.gpio) {
-    return {
-      status: 'no gpio',
-    }
+    return { status: 'no gpio', }
   }
   global.stepperPins[0].write(0); // IN1
   global.stepperPins[1].write(1); // IN2
