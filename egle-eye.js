@@ -157,18 +157,38 @@ if (process.platform === 'linux') {
     // global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
     // global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
 
-    // //=== สร้าง object stepper motor
-    // global.stepper1 = global.gpio.stepperMotor({
-    //   stepsPerRevolution: 200, // จำนวนสเต็ปต่อรอบ (ขึ้นอยู่กับมอเตอร์)
-    //   gpio1: global.STEPPER1_PIN1,
-    //   gpio2: global.STEPPER1_PIN2,
-    //   gpio3: global.STEPPER1_PIN3,
-    //   gpio4: global.STEPPER1_PIN4,
-    // });
-    // //=== ทดสอบหมุนมอเตอร์stepper
-    // setTimeout( async() => {
-    //   await global.stepper1.stepLeft(1);
-    // } , 1000);
+    // สมมติ global.gpio.gpio(pin) สร้าง object สำหรับแต่ละขา
+    const pins = [
+      global.gpio.gpio(global.STEPPER1_PIN1),
+      global.gpio.gpio(global.STEPPER1_PIN2),
+      global.gpio.gpio(global.STEPPER1_PIN3),
+      global.gpio.gpio(global.STEPPER1_PIN4)
+    ];
+    // ลำดับสัญญาณ full step (4 step)
+    const seq = [
+      [1,0,0,1],
+      [1,0,0,0],
+      [1,1,0,0],
+      [0,1,0,0],
+      [0,1,1,0],
+      [0,0,1,0],
+      [0,0,1,1],
+      [0,0,0,1]
+    ];
+    async function stepMotor(steps, dir = 1, delay = 5) {
+      for (let i = 0; i < steps; i++) {
+        const idx = dir > 0 ? i % seq.length : (seq.length - (i % seq.length)) % seq.length;
+        for (let j = 0; j < 4; j++) {
+          await pins[j].write(seq[idx][j]);
+        }
+        await new Promise(r => setTimeout(r, delay));
+      }
+      // ปิดทุกขา
+      for (let j = 0; j < 4; j++) await pins[j].write(0);
+    }
+    // หมุนขวา 100 step
+    setTimeout( async () => { await stepMotor(100, 1, 5);  }, 1000);
+    setTimeout( async () => { await stepMotor(100, -1, 5);  }, 3000);
 
     //=== ตรวจสอบค่าปุ่ม 1 - รอบแรก
     global.btn1.read().then( val => {
