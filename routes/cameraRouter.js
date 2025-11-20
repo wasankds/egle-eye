@@ -67,8 +67,8 @@ let HOR = 90
 //
 // router.post(PATH_REQUEST, mainAuth.isOA, async (req, res) => {
 router.post(PATH_REQUEST,  async (req, res) => {
-  console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log("req.body ===> " , req.body)
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log("req.body ===> " , req.body)
   // req.body ===>  { action: 'move', direction: 'right' }
 
   const { direction } = req.body;
@@ -90,6 +90,7 @@ router.post(PATH_REQUEST,  async (req, res) => {
       await myStepper.stepMotor(200, 1, 1);
       return  res.send({ status: 'ok', direction: direction });
     }
+
     //=== 
     else if(direction == 'up'){
       await myStepper.rotate1();
@@ -98,6 +99,7 @@ router.post(PATH_REQUEST,  async (req, res) => {
       await myStepper.rotate2();
       return  res.send({ status: 'ok', direction: direction });
     }
+
     //=== กลาง
     else if(direction == 'home'){
       await myStepper.resetRotation();

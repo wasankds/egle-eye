@@ -28,7 +28,7 @@ function deleteJs(e, pathAction){
         btn.classList.add('disabled');
 
         sendHttpRequest('post', pathAction, data)
-          .then(rtn => {PATH_DOWNLOAD
+          .then(rtn => {
             if (rtn.status === 'ok') {      
               const td = btn.closest('td');
               const tr = td.closest('tr');
