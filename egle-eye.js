@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { exec,spawn } from 'child_process';
+import { exec } from 'child_process';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import fs from 'fs';
@@ -130,12 +130,13 @@ if (process.platform === 'linux') {
     console.log('<--- ✅ pigpio-client connected --->');
     console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE, global.RELAY1_STATE == 0 ? '[ON]' : '[OFF]' );
     console.log('global.RELAY2_STATE ===> ' , global.RELAY2_STATE, global.RELAY2_STATE == 0 ? '[ON]' : '[OFF]' );
-    console.log('global.SERVO1_PIN ===> ' , global.SERVO1_PIN );
-    console.log('global.SERVO2_PIN ===> ' , global.SERVO2_PIN);
+    // console.log('global.SERVO1_PIN ===> ' , global.SERVO1_PIN );
+    // console.log('global.SERVO2_PIN ===> ' , global.SERVO2_PIN);
     // //=== LED1 ***
     // global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
     // global.led1.modeSet('output');
     // global.led1.write(global.LED1_STATE); // ทดสอบเปิด LED
+
     //=== RELAY1 ***
     global.relay1 = global.gpio.gpio(Number(global.RELAY1_PIN));
     global.relay1.modeSet('output');
@@ -152,16 +153,23 @@ if (process.platform === 'linux') {
     global.btn2 = global.gpio.gpio(global.BTN2_PIN);
     global.btn2.modeSet('input');
     global.btn2.pullUpDown(2); // PUD_UP
-    //=== สร้าง object servo1, servo2
-    global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
-    global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
-    // // เรียก servo แบบนี้
-    // setAngle(global.servo1, 100, 600, 2400);
-    // setTimeout(() => setAngle(global.servo1, 80, 600, 2400), 1000);
-    // setTimeout(() => setAngle(global.servo1, 90, 600, 2400), 2000);
-    // setAngle(global.servo2, 100, 600, 2400);
-    // setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
-    // setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
+    // //=== สร้าง object servo1, servo2
+    // global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
+    // global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
+
+    //=== สร้าง object stepper motor
+    global.stepper1 = global.gpio.stepperMotor({
+      stepsPerRevolution: 200, // จำนวนสเต็ปต่อรอบ (ขึ้นอยู่กับมอเตอร์)
+      gpio1: global.STEPPER1_PIN1,
+      gpio2: global.STEPPER1_PIN2,
+      gpio3: global.STEPPER1_PIN3,
+      gpio4: global.STEPPER1_PIN4,
+    });
+    //=== ทดสอบหมุนมอเตอร์stepper
+    setTimeout( async() => {
+      await global.stepper1.stepLeft(1);
+    } , 1000);
+
     //=== ตรวจสอบค่าปุ่ม 1 - รอบแรก
     global.btn1.read().then( val => {
       console.log(`btn1 initial value: ${val}`); // 1 คือ ปุ่มไม่ถูกกด (active low)

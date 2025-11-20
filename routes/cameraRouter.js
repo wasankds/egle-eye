@@ -1,3 +1,4 @@
+// const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
 import express from 'express'
 const router = express.Router()
 // ไม่ต้อง spawn process เอง ใช้ relay จาก myVideoProcess.js
@@ -5,26 +6,26 @@ import mainAuth from "../authorize/mainAuth.js"
 const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
-const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
-const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
+const myStepper = await import(`../${global.myModuleFolder}/myStepper.js`)
+// const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
 const PATH_MAIN = '/camera'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_REQUEST = `${PATH_MAIN}/request`
-const PATH_STREAM = `${PATH_MAIN}/stream`
+// const PATH_STREAM = `${PATH_MAIN}/stream`
 
-//=============================================
-// 
+// //=============================================
+// // 
 // router.get(PATH_STREAM, mainAuth.isOA, (req, res) => {
-router.get(PATH_STREAM, (req, res) => {
-  if(process.platform !== 'linux') return;
-  res.writeHead(200, {
-    'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
-    'Cache-Control': 'no-cache',
-    'Connection': 'close',
-    'Pragma': 'no-cache'
-  });
-  addMjpegClient(res);
-});
+// // router.get(PATH_STREAM, (req, res) => {
+//   if(process.platform !== 'linux') return;
+//   res.writeHead(200, {
+//     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
+//     'Cache-Control': 'no-cache',
+//     'Connection': 'close',
+//     'Pragma': 'no-cache'
+//   });
+//   addMjpegClient(res);
+// });
 
 //=============================================
 //
@@ -46,7 +47,7 @@ router.get(PATH_MAIN, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_REQUEST,
-      PATH_STREAM ,
+      // PATH_STREAM ,
       IS_STREAM  :  process.platform === 'linux'
     })
     res.send(html)
@@ -81,40 +82,34 @@ router.post(PATH_REQUEST,  async (req, res) => {
       });
     }
 
-    //=== ใช้ - servo2
-    if(direction == 'left'){ // ใช้ - servo2      
-      let sub = 6
-      HOR += sub
-      if(HOR > 120) HOR = 120
-      myServo.setAngle(global.servo2, HOR, 600, 2400, 200)
+    //=== ใช้ - stepper motor
+    if(direction == 'left'){
+      await myStepper.stepLeft(1);
       return  res.send({ status: 'ok left', direction: direction });
-    }else if(direction == 'right'){ // ใช้ - servo2
-      let sub = 6
-      HOR -= sub
-      if(HOR < 60) HOR = 60
-      myServo.setAngle(global.servo2, HOR, 700, 2400, 200)
+    }else if(direction == 'right'){
+      await myStepper.stepRight(1);
       return  res.send({ status: 'ok right', direction: direction });
     }
 
-    //=== ใช้ - servo1
-    else if(direction == 'up'){ // ใช้ - servo1
-      let sub = 7
-      VER -= sub
-      if(VER < 60) VER = 60
-      myServo.setAngle(global.servo1, VER, 600, 2400)
-      return  res.send({ status: 'ok down', direction: direction });
-    }else if(direction == 'down'){ // ใช้ - servo1
-      let sub = 7
-      VER += sub
-      if(VER > 120) VER = 120
-      myServo.setAngle(global.servo1, VER, 600, 2400)
-      return  res.send({ status: 'ok up', direction: direction });  
-    }
+    // //=== ใช้ - servo1
+    // else if(direction == 'up'){ // ใช้ - servo1
+    //   let sub = 7
+    //   VER -= sub
+    //   if(VER < 60) VER = 60
+    //   // myServo.setAngle(global.servo1, VER, 600, 2400)
+    //   return  res.send({ status: 'ok down', direction: direction });
+    // }else if(direction == 'down'){ // ใช้ - servo1
+    //   let sub = 7
+    //   VER += sub
+    //   if(VER > 120) VER = 120
+    //   // myServo.setAngle(global.servo1, VER, 600, 2400)
+    //   return  res.send({ status: 'ok up', direction: direction });  
+    // }
 
     //=== กลาง
     else if(direction == 'center'){
-      myServo.setAngle(global.servo1, 90, 600, 2400)
-      myServo.setAngle(global.servo2, 90, 600, 2400)
+      // myServo.setAngle(global.servo1, 90, 600, 2400)
+      // myServo.setAngle(global.servo2, 90, 600, 2400)
       return  res.send({ status: 'ok center', direction: direction });
     }else{
       return  res.send({

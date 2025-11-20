@@ -16,16 +16,21 @@ global.BCRYPT_NUMBER = 12
 // GPIO Pin & Devices
 // global.LED1_PIN = 17;   // พิน 11 - ยกเลิกใช้
 // global.LED1_STATE = 0;   // เริ่มต้น LED ปิด (0=ปิด, 1=เปิด) - ยกเลิกใช้
-global.BTN1_PIN = 27;   // พิน 13
-global.BTN2_PIN = 17;   // พิน 15 - ***
+global.BTN1_PIN = 12;   // พิน 32
+global.BTN2_PIN = 16;   // พิน 36
 // Relay 1 & 2
 global.RELAY1_PIN = 20;  // พิน 38
 global.RELAY1_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) - Active Low
 global.RELAY2_PIN = 21; // พิน 40 - ***
 global.RELAY2_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) - Active Low
-// 
-global.SERVO1_PIN = 18 // พิน 12
-global.SERVO2_PIN = 13 // พิน 33 
+// // 
+// global.SERVO1_PIN = 18 // พิน 12
+// global.SERVO2_PIN = 13 // พิน 33 
+//== Stepper Motor
+global.STEPPER1_PIN1 = 17   // พิน 11
+global.STEPPER1_PIN2 = 18   // พิน 12
+global.STEPPER1_PIN3 = 27   // พิน 13
+global.STEPPER1_PIN4 = 22   // พิน 15
 // Database
 global.dbName = process.env.DB_NAME
 // global.dbColl_settings = 'settings'              // ไม่ได้ใช้แล้ว

@@ -1,10 +1,10 @@
+// const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
 import express from 'express'
 const router = express.Router()
 import mainAuth from "../authorize/mainAuth.js" 
 const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
-// const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
 const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-web`
@@ -12,7 +12,7 @@ const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-web`
 //=============================================
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
-  console.log(`---- ${req.originalUrl} ----`)
+  // console.log(`---- ${req.originalUrl} ----`)
 
   //=== อ่านค่าจาก LED1_STATE และ RELAY1_STATE แล้วส่งไปที่หน้า switch
   // const led1State = typeof global.LED1_STATE === 'number' ? global.LED1_STATE : 0;
@@ -43,8 +43,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 // เมื่อกดสวิตช์บนเว็บ
 //
 router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
-  console.log(`-----------------${req.originalUrl}----------------------`)
-  console.log("req.body ===> " , req.body)
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log("req.body ===> " , req.body)
   // req.body ===>  { switchState: 'off', id: 's01' }
   
   const { id, switchState } = req.body;
