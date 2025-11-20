@@ -175,7 +175,7 @@ if (process.platform === 'linux') {
       [0,0,1,1],
       [0,0,0,1]
     ];
-    async function stepMotor(steps, dir = 1, delay = 5) {
+    async function stepMotor(steps, dir=1, delay = 5) {
       for (let i = 0; i < steps; i++) {
         const idx = dir > 0 ? i % seq.length : (seq.length - (i % seq.length)) % seq.length;
         for (let j = 0; j < 4; j++) {
@@ -187,8 +187,8 @@ if (process.platform === 'linux') {
       for (let j = 0; j < 4; j++) await pins[j].write(0);
     }
     // หมุนขวา 100 step
-    setTimeout( async () => { await stepMotor(100, 1, 5);  }, 1000);
-    setTimeout( async () => { await stepMotor(100, -1, 5);  }, 3000);
+    setTimeout( async () => { await stepMotor(1000, 1, 5);  }, 6000);
+    setTimeout( async () => { await stepMotor(1000, -1, 5);  }, 6000);
 
     //=== ตรวจสอบค่าปุ่ม 1 - รอบแรก
     global.btn1.read().then( val => {
