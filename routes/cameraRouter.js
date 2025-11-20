@@ -84,28 +84,12 @@ router.post(PATH_REQUEST,  async (req, res) => {
 
     //=== ใช้ - stepper motor
     if(direction == 'left'){
-      await myStepper.stepLeft(1);
+      await myStepper.stepMotor(200, -1, 1);  // steps, direction, delay(ms)
       return  res.send({ status: 'ok left', direction: direction });
     }else if(direction == 'right'){
-      await myStepper.stepRight(1);
+      await myStepper.stepMotor(200, 1, 1);
       return  res.send({ status: 'ok right', direction: direction });
     }
-
-    // //=== ใช้ - servo1
-    // else if(direction == 'up'){ // ใช้ - servo1
-    //   let sub = 7
-    //   VER -= sub
-    //   if(VER < 60) VER = 60
-    //   // myServo.setAngle(global.servo1, VER, 600, 2400)
-    //   return  res.send({ status: 'ok down', direction: direction });
-    // }else if(direction == 'down'){ // ใช้ - servo1
-    //   let sub = 7
-    //   VER += sub
-    //   if(VER > 120) VER = 120
-    //   // myServo.setAngle(global.servo1, VER, 600, 2400)
-    //   return  res.send({ status: 'ok up', direction: direction });  
-    // }
-
     //=== กลาง
     else if(direction == 'center'){
       // myServo.setAngle(global.servo1, 90, 600, 2400)
