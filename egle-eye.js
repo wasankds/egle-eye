@@ -75,16 +75,15 @@ app.use(session({
   store: new LowDbSessionStore(db)
 
 }))
+app.use('/stream', createProxyMiddleware({
+  target: 'http://localhost:8890',
+  changeOrigin: true
+}));
 app.set('view engine', 'ejs')
 app.use(flash())
 app.use(express.json({limit:'50mb'}))
 app.use(express.urlencoded({extended:true,limit:'50mb'}))
 app.use(express.static(global.folderPublic))
-// 
-app.use('/stream', createProxyMiddleware({
-  target: 'http://localhost:8890', 
-  changeOrigin: true 
-}));
 // app.use('/videos', express.static(global.folderVideos));
 app.use((await import(`./${routesFolder}/startAppRouter.js`)).default) 
 app.use((await import(`./${routesFolder}/homeRouter.js`)).default) 
