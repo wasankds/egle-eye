@@ -32,19 +32,13 @@ if(process.platform === 'linux') {
   await import(`./${global.myModuleFolder}/myVideoProcess.js`) 
 }
 const app = express();
-// Proxy HLS ที่ root สำหรับกรณี client หรือ playlist อ้าง /video1_stream.m3u8
-app.use('/video1_stream.m3u8', createProxyMiddleware({
-  target: 'http://localhost:8890',
-  changeOrigin: true,
-  pathRewrite: { '^/video1_stream.m3u8': '/stream/video1_stream.m3u8' }
-}));
-// ===== Proxy HLS ก่อน static และ router อื่นๆ =====
+//=== Proxy HLS ก่อน static และ router อื่นๆ =====
 app.use('/stream', (req, res, next) => {
-    console.log('Proxy HLS:', req.url);
-    next();
+  console.log('Proxy /stream:', req.url);
+  next();
   }, createProxyMiddleware({
-    target: 'http://localhost:8890',
-    changeOrigin: true
+  target: 'http://localhost:8890',
+  changeOrigin: true
   }));
 
 app.use('/video1_stream.m3u8', createProxyMiddleware({
