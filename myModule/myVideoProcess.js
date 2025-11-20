@@ -7,12 +7,12 @@ export function addMjpegClient(res) {
   if (process.platform !== 'linux') return;
   if (!ffmpegProcess) {
     ffmpegProcess = spawn('ffmpeg', [
-      '-rtsp_transport', 'tcp',
-      '-i', 'rtsp://localhost:8554/stream',
-      '-f', 'mjpeg',
-      '-q:v', '5',
-      '-r', '10',
-      'pipe:1'
+      '-rtsp_transport', 'tcp', // ใช้ TCP แทน UDP
+      '-i', 'rtsp://localhost:8554/stream', // URL ของกล้อง RTSP
+      '-f', 'mjpeg', // รูปแบบเอาต์พุต
+      '-q:v', '5', // คุณภาพของภาพ 1-31 (น้อย=ดี)
+      '-r', '10',  // เฟรมต่อวินาที
+      'pipe:1'     // ส่งออกทาง stdout
     ]);
     ffmpegProcess.stdout.on('data', (data) => {
       streamClients.forEach(r => r.write(data));

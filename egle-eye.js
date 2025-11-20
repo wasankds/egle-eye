@@ -18,7 +18,8 @@ global.dbUrl = process.env.DB_URL
 global.IS_PRODUCTION = process.env.IS_PRODUCTION == 1 ? true : false
 global.PROJECT_DIR = process.cwd()
 const PORT = process.env.PORT_DEPLOY == 0 ? process.env.PORT_DEV : process.env.PORT_SERVER
-global.DOMAIN_ALLOW = process.env.PORT_DEPLOY == 0 ? `${process.env.LOCALHOST_ALLOW}:${PORT}` : `${process.env.DOMAIN_ALLOW}`
+// global.DOMAIN_ALLOW = process.env.PORT_DEPLOY == 0 ? `${process.env.LOCALHOST_ALLOW}:${PORT}` : `${process.env.DOMAIN_ALLOW}`
+global.DOMAIN_ALLOW = process.env.PORT_DEPLOY == 0 ? `${process.env.LOCALHOST_ALLOW}` : `${process.env.DOMAIN_ALLOW}`
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
 global.myModuleFolder = global.IS_PRODUCTION ? 'myModule-min' : 'myModule'

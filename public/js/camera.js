@@ -1,17 +1,17 @@
   // Map ปุ่ม id กับทิศทาง
   const camBtnMap = {
-    'btn-cam-up': 'up',
-    'btn-cam-down': 'down',
+    // 'btn-cam-up': 'up',
+    // 'btn-cam-down': 'down',
     'btn-cam-left': 'left',
     'btn-cam-right': 'right',
-    'btn-cam-home': 'home'
+    // 'btn-cam-home': 'home'
   };
 
   Object.keys(camBtnMap).forEach(id => {
     const btn = document.getElementById(id);
     if (btn) {
       btn.addEventListener('click', function() {
-        fetch(PATH_REQUEST, {
+        fetch( PATH_REQUEST, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

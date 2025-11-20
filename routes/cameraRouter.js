@@ -15,8 +15,8 @@ const PATH_REQUEST = `${PATH_MAIN}/request`
 
 // //=============================================
 // // 
-// router.get(PATH_STREAM, mainAuth.isOA, (req, res) => {
-// // router.get(PATH_STREAM, (req, res) => {
+// // router.get(PATH_STREAM, mainAuth.isOA, (req, res) => {
+// router.get(PATH_STREAM, (req, res) => {
 //   if(process.platform !== 'linux') return;
 //   res.writeHead(200, {
 //     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
