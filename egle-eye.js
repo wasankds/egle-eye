@@ -33,10 +33,13 @@ if(process.platform === 'linux') {
 }
 const app = express();
 // ===== Proxy HLS ก่อน static และ router อื่นๆ =====
-app.use('/stream', createProxyMiddleware({
-  target: 'http://localhost:8890',
-  changeOrigin: true
-}));
+app.use('/stream', (req, res, next) => {
+    console.log('Proxy HLS:', req.url);
+    next();
+  }, createProxyMiddleware({
+    target: 'http://localhost:8890',
+    changeOrigin: true
+  }));
 const server = createServer(app)
 const io = new Server(server)
 // // redis adapter - start
