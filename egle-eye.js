@@ -165,31 +165,7 @@ if (process.platform === 'linux') {
       global.gpio.gpio(global.STEPPER1_PIN3),
       global.gpio.gpio(global.STEPPER1_PIN4)
     ];
-    // // ลำดับสัญญาณ full step (4 step)
-    // const seq = [
-    //   [1,0,0,1],
-    //   [1,0,0,0],
-    //   [1,1,0,0],
-    //   [0,1,0,0],
-    //   [0,1,1,0],
-    //   [0,0,1,0],
-    //   [0,0,1,1],
-    //   [0,0,0,1]
-    // ];
-    // async function stepMotor(steps, dir=1, delay = 5) {
-    //   for (let i = 0; i < steps; i++) {
-    //     const idx = dir > 0 ? i % seq.length : (seq.length - (i % seq.length)) % seq.length;
-    //     for (let j = 0; j < 4; j++) {
-    //       await global.stepperPins[j].write(seq[idx][j]);
-    //     }
-    //     await new Promise(r => setTimeout(r, delay));
-    //   }
-    //   // ปิดทุกขา
-    //   for (let j = 0; j < 4; j++) await global.stepperPins[j].write(0);
-    // }
-    // // หมุนขวา 100 step
-    // setTimeout( async () => { await stepMotor(1000, 1, 5);  }, 6000);
-    // setTimeout( async () => { await stepMotor(1000, -1, 5);  }, 6000);
+    
 
     //=== ตรวจสอบค่าปุ่ม 1 - รอบแรก
     global.btn1.read().then( val => {
