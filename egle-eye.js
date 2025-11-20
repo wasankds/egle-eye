@@ -81,7 +81,7 @@ app.use(express.json({limit:'50mb'}))
 app.use(express.urlencoded({extended:true,limit:'50mb'}))
 app.use(express.static(global.folderPublic))
 // 
-app.use('/stream', createProxyMiddleware({  
+app.use('/stream', createProxyMiddleware({
   target: 'http://localhost:8890', 
   changeOrigin: true 
 }));

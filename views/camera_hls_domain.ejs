@@ -77,7 +77,8 @@
       var video = document.getElementById('video');
       var hls = new Hls();
       // ใช้ path relative เพื่อรองรับโดเมน/Cloudflare Tunnel
-      hls.loadSource('<%= global.DOMAIN_URL %>/stream/index.m3u8');
+      // hls.loadSource('<%= global.DOMAIN_URL %>/stream/index.m3u8');
+      hls.loadSource('<%= global.DOMAIN_URL %>/stream/video1_stream.m3u8');
       // hls.loadSource('https://kaopod.com/stream/index.m3u8');
       hls.attachMedia(video);
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
