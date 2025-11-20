@@ -85,23 +85,23 @@ router.post(PATH_REQUEST,  async (req, res) => {
     //=== ใช้ - stepper motor
     if(direction == 'left'){
       await myStepper.stepMotor(200, -1, 1);  // steps, direction, delay(ms)
-      return  res.send({ status: 'ok left', direction: direction });
+      return  res.send({ status: 'ok', direction: direction });
     }else if(direction == 'right'){
       await myStepper.stepMotor(200, 1, 1);
-      return  res.send({ status: 'ok right', direction: direction });
+      return  res.send({ status: 'ok', direction: direction });
     }
     //=== 
     else if(direction == 'up'){
       await myStepper.rotate1();
-      return  res.send({ status: 'ok up', direction: direction });
+      return  res.send({ status: 'ok', direction: direction });
     }else if(direction == 'down'){
       await myStepper.rotate2();
-      return  res.send({ status: 'ok down', direction: direction });
+      return  res.send({ status: 'ok', direction: direction });
     }
     //=== กลาง
     else if(direction == 'home'){
       await myStepper.resetRotation();
-      return  res.send({ status: 'ok home', direction: direction });
+      return  res.send({ status: 'ok', direction: direction });
     }else{
       return  res.send({
         status: 'error direction',
