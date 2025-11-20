@@ -92,8 +92,7 @@ router.post(PATH_REQUEST,  async (req, res) => {
     }
     //=== กลาง
     else if(direction == 'center'){
-      // myServo.setAngle(global.servo1, 90, 600, 2400)
-      // myServo.setAngle(global.servo2, 90, 600, 2400)
+      await myStepper.resetRotation();
       return  res.send({ status: 'ok center', direction: direction });
     }else{
       return  res.send({
