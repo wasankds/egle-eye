@@ -32,6 +32,11 @@ if(process.platform === 'linux') {
   await import(`./${global.myModuleFolder}/myVideoProcess.js`) 
 }
 const app = express();
+// ===== Proxy HLS ก่อน static และ router อื่นๆ =====
+app.use('/stream', createProxyMiddleware({
+  target: 'http://localhost:8890',
+  changeOrigin: true
+}));
 const server = createServer(app)
 const io = new Server(server)
 // // redis adapter - start
@@ -73,12 +78,7 @@ app.use(session({
   resave: false, // ต้องเป็น false เพื่อป้องกันการบันทึก session ซ้ำๆ
   saveUninitialized: true, // ต้องเป็น true เพื่อให้สามารถใช้ flash ได้
   store: new LowDbSessionStore(db)
-
 }))
-app.use('/stream', createProxyMiddleware({
-  target: 'http://localhost:8890',
-  changeOrigin: true
-}));
 app.set('view engine', 'ejs')
 app.use(flash())
 app.use(express.json({limit:'50mb'}))
@@ -100,11 +100,10 @@ app.use((await import(`./${routesFolder}/videosRouter.js`)).default)
 //=== socket.io เชื่อมต่อกับ client
 io.on('connection', (socket) => {
   // console.log('🔗 New client connected:', socket.id);
-
-  //=== Boardcast สถานะเริ่มต้น - เมื่อมี client เชื่อมต่อ
-  // - ปุ่ม 1 & 2
-  socket.emit('button_pressed', { 
-    buttonId: 's01' , 
+  // app.use('/videos', express.static(global.folderVideos));
+  // })
+  socket.emit('button_pressed', {
+    buttonId: 's01' ,
     relayState: global.RELAY1_STATE
   })
   socket.emit('button_pressed', {
