@@ -53,9 +53,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const el = document.getElementById(id);
       const statusEl = document.getElementById(id + '-status');
       if (el && statusEl) {
-        el.checked = data.relayState === 1;
-        statusEl.textContent = data.relayState === 1 ? 'ON' : 'OFF';
-        statusEl.style.color = data.relayState === 1 ? '#4CAF50' : '#2196F3';
+        // Active Low
+        el.checked = data.relayState === 0 ? true : false; 
+        statusEl.textContent = data.relayState === 0 ? 'ON' : 'OFF';
+        statusEl.style.color = data.relayState === 0 ? '#4CAF50' : '#2196F3';
       }
     }
   });
