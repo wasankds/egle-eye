@@ -61,11 +61,6 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
     //=== ควบคุม GPIO
     if (global.gpio) {     
 
-      // //== 1.) เปิด/ปิด LED1
-      // await global.led1.modeSet('output');
-      // await global.led1.write(switchState === 'on' ? 1 : 0);
-      // global.LED1_STATE = switchState === 'on' ? 1 : 0;
-
       if(id === 's01'){
         //== 2.) เปิด/ปิด RELAY1
         await global.relay1.modeSet('output');

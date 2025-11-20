@@ -17,9 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }).then(response => response.json())
           .then(data => {
             console.log(data);
+            // {status: 'ok', switchId: 's01', relayState: 0}
+
             if (data.status === 'ok') {
-              statusEl.textContent = data.relayState.toUpperCase();
-              statusEl.style.color = this.checked ? '#4CAF50' : '#2196F3';
+              // relayState - Active Low 0=ON, 1=OFF
+              statusEl.textContent = data.relayState == 0 ? 'ON' : 'OFF';
+              statusEl.style.color = data.relayState == 0 ? '#4CAF50' : '#2196F3';
             } else {
               console.log('Error updating switch state:', data.message);
             }
@@ -43,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(data);
     // { "buttonId": "btn1", "relayState": 0 }
     // map buttonId เป็น id element
-    
+
     const map = { btn1: 's01', btn2: 's02' };
     const id = map[data.buttonId];
     if (id) {
