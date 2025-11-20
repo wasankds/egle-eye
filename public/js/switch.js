@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
           })
         }).then(response => response.json())
           .then(data => {
-            console.log(data);
+            // console.log(data);
             // {status: 'ok', switchId: 's01', relayState: 0}
 
             if (data.status === 'ok') {
@@ -43,9 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   const socket = io();
   socket.on('button_pressed', function(data) {
-    console.log(data);
-    // { "buttonId": "btn1", "relayState": 0 }
-    // map buttonId เป็น id element
+    // console.log(data);
+    // {buttonId: 's01', relayState: 0}
 
     const map = { btn1: 's01', btn2: 's02' };
     const id = map[data.buttonId];

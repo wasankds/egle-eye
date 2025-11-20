@@ -96,12 +96,13 @@ io.on('connection', (socket) => {
   // console.log('🔗 New client connected:', socket.id);
 
   //=== Boardcast สถานะเริ่มต้น - เมื่อมี client เชื่อมต่อ
+  // - ปุ่ม 1 & 2
   socket.emit('button_pressed', { 
-    buttonId: 'btn1' , 
+    buttonId: 's01' , 
     relayState: global.RELAY1_STATE
   })
   socket.emit('button_pressed', {
-    buttonId: 'btn2' ,
+    buttonId: 's02' ,
     relayState: global.RELAY2_STATE
   })
 
@@ -127,9 +128,9 @@ if (process.platform === 'linux') {
   // เมื่อเชื่อมต่อสำเร็จ
   global.gpio.once('connected', () => {
     console.log('<--- ✅ pigpio-client connected --->');
-    console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE);
-    console.log('global.RELAY2_STATE ===> ' , global.RELAY2_STATE);
-    console.log('global.SERVO1_PIN ===> ' , global.SERVO1_PIN);
+    console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE, global.RELAY1_STATE == 0 ? '[ON]' : '[OFF]' );
+    console.log('global.RELAY2_STATE ===> ' , global.RELAY2_STATE, global.RELAY2_STATE == 0 ? '[ON]' : '[OFF]' );
+    console.log('global.SERVO1_PIN ===> ' , global.SERVO1_PIN );
     console.log('global.SERVO2_PIN ===> ' , global.SERVO2_PIN);
     // //=== LED1 ***
     // global.led1 = global.gpio.gpio(Number(global.LED1_PIN));
@@ -154,14 +155,13 @@ if (process.platform === 'linux') {
     //=== สร้าง object servo1, servo2
     global.servo1 = global.gpio.gpio(global.SERVO1_PIN);
     global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
-    // // เรียกแบบนี้
+    // // เรียก servo แบบนี้
     // setAngle(global.servo1, 100, 600, 2400);
     // setTimeout(() => setAngle(global.servo1, 80, 600, 2400), 1000);
     // setTimeout(() => setAngle(global.servo1, 90, 600, 2400), 2000);
     // setAngle(global.servo2, 100, 600, 2400);
     // setTimeout(() => setAngle(global.servo2, 80, 600, 2400), 4000);
     // setTimeout(() => setAngle(global.servo2, 90, 600, 2400), 5000);
-
     //=== ตรวจสอบค่าปุ่ม 1 - รอบแรก
     global.btn1.read().then( val => {
       console.log(`btn1 initial value: ${val}`); // 1 คือ ปุ่มไม่ถูกกด (active low)
@@ -207,7 +207,7 @@ if (process.platform === 'linux') {
         // }); 
         //=== boardcast ผ่าน socket.io
         global.io.emit('button_pressed', { 
-          buttonId: 'btn1', 
+          buttonId: 's01', 
           relayState: global.RELAY1_STATE // ledState: global.LED1_STATE,
         });
 
@@ -229,7 +229,7 @@ if (process.platform === 'linux') {
         global.RELAY2_STATE = newRelayState;
         //=== boardcast ผ่าน socket.io
         global.io.emit('button_pressed', { 
-          buttonId: 'btn2', 
+          buttonId: 's02', 
           relayState: global.RELAY2_STATE
         });
       }
@@ -255,12 +255,12 @@ if (process.platform === 'linux') {
     cleanupCalled = true;
     try {
 
-      //=== Boardcast สถานะเริ่มต้น - ปุ่ม1
-      global.io.emit('button_pressed', { buttonId: 'btn1', relayState: 1})
-      //=== Boardcast สถานะเริ่มต้น - ปุ่ม2
-      global.io.emit('button_pressed', { buttonId: 'btn2', relayState: 1})
-      exec(`pigs w ${global.RELAY1_PIN} 1`);  // ปิด Relay - Active High to turn off
-      exec(`pigs w ${global.RELAY2_PIN} 1`);  // ปิด Relay - Active High to turn off
+      //=== Boardcast สถานะเริ่มต้น - ปุ่ม1 & ปุ่ม2
+      global.io.emit('button_pressed', { buttonId: 's01', relayState: 1})
+      global.io.emit('button_pressed', { buttonId: 's02', relayState: 1})
+      // ปิด Relay 1&2 - Active High to turn off
+      exec(`pigs w ${global.RELAY1_PIN} 1`); 
+      exec(`pigs w ${global.RELAY2_PIN} 1`);
 
       // ถ้าต้องการให้รอคำสั่งปิด LED เสร็จก่อนค่อยปิด RELAY
       // exec(`pigs w ${global.LED1_PIN} 0`, (err) => {
