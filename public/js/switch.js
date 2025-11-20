@@ -1,69 +1,36 @@
-
-
 document.addEventListener('DOMContentLoaded', function() {
 
-
-  //=== จัดการสวิตช์ S01
-  const s01el = document.getElementById('s01');
-  const s01status = document.getElementById('s01-status');
-  if (s01el && s01status) {
-    s01el.addEventListener('change', function() {
-
-      //=== ยิง fetch ไปที่เซิร์ฟเวอร์ เพื่อบันทึกสถานะสวิตช์
-      const relayState = this.checked ? 'on' : 'off';
-      fetch(PATH_SWITCH_WEB, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          relayState: relayState ,
-          id: 's01'
-        })
-      }).then( response => {
-        return response.json()
-      }).then( data => { 
-        console.log(data);
-        if (data.status === 'ok') {
-          s01status.textContent = data.relayState.toUpperCase();
-          s01status.style.color = this.checked ? '#4CAF50' : '#2196F3';
-        } else {
-          console.log('Error updating switch state:', data.message);
-        }
-      }).catch(error => {
-        console.log('Network error:', error.message);
+  //=== จัดการสวิตช์ S01/S02 แบบรวม
+  ['s01', 's02'].forEach(id => {
+    const el = document.getElementById(id);
+    const statusEl = document.getElementById(id + '-status');
+    if (el && statusEl) {
+      el.addEventListener('change', function() {
+        const switchState = this.checked ? 'on' : 'off';
+        fetch(PATH_SWITCH_WEB, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            switchState: switchState,
+            id: id
+          })
+        }).then(response => response.json())
+          .then(data => {
+            console.log(data);
+            if (data.status === 'ok') {
+              statusEl.textContent = data.relayState.toUpperCase();
+              statusEl.style.color = this.checked ? '#4CAF50' : '#2196F3';
+            } else {
+              console.log('Error updating switch state:', data.message);
+            }
+          }).catch(error => {
+            console.log('Network error:', error.message);
+          });
       });
-    });
-  }
-
-  //=== จัดการสวิตช์ S02
-  const s02el = document.getElementById('s02');
-  const s02status = document.getElementById('s02-status');
-  if (s02el && s02status) {
-    s02el.addEventListener('change', function() {
-      //=== ยิง fetch ไปที่เซิร์ฟเวอร์ เพื่อบันทึกสถานะสวิตช์
-      const relayState = this.checked ? 'on' : 'off';
-      fetch(PATH_SWITCH_WEB, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          relayState: relayState ,
-          id: 's02'
-        })
-      }).then( response => {
-        return response.json()
-      }).then( data => {
-        console.log(data);
-        if (data.status === 'ok') {
-          s02status.textContent = data.relayState.toUpperCase();
-          s02status.style.color = this.checked ? '#4CAF50' : '#2196F3';
-        } else {
-          console.log('Error updating switch state:', data.message);
-        }
-      }).catch(error => {
-        console.log('Network error:', error.message);
-      });
-    });
-  }
+    }
+  });
 });
+
 
 
 //=============================================
@@ -71,31 +38,22 @@ document.addEventListener('DOMContentLoaded', function() {
 // - เมื่อมีการกดสวิตช์ที่บอร์ด ปรับสถานะบนเว็บให้ตรงกัน
 //
 document.addEventListener('DOMContentLoaded', function() {
-
   const socket = io();
   socket.on('button_pressed', function(data) {
     console.log(data);
     // { "buttonId": "btn1", "relayState": 0 }
-
-    //=== ใช้สถานะ btn1
-    const { buttonId, relayState } = data;
-    if (buttonId === 'btn1') {
-      const s01el = document.getElementById('s01');
-      const s01status = document.getElementById('s01-status');
-      if (s01el && s01status) {
-        s01el.checked = relayState === 1;
-        s01status.textContent = relayState === 1 ? 'ON' : 'OFF';
-        s01status.style.color = relayState === 1 ? '#4CAF50' : '#2196F3';
-      } 
-    }else if(buttonId === 'btn2'){
-      const s02el = document.getElementById('s02');
-      const s02status = document.getElementById('s02-status');
-      if (s02el && s02status) {
-        s02el.checked = relayState === 1;
-        s02status.textContent = relayState === 1 ? 'ON' : 'OFF';
-        s02status.style.color = relayState === 1 ? '#4CAF50' : '#2196F3';
+    // map buttonId เป็น id element
+    
+    const map = { btn1: 's01', btn2: 's02' };
+    const id = map[data.buttonId];
+    if (id) {
+      const el = document.getElementById(id);
+      const statusEl = document.getElementById(id + '-status');
+      if (el && statusEl) {
+        el.checked = data.relayState === 1;
+        statusEl.textContent = data.relayState === 1 ? 'ON' : 'OFF';
+        statusEl.style.color = data.relayState === 1 ? '#4CAF50' : '#2196F3';
       }
     }
   });
-
 });
