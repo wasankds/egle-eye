@@ -7,6 +7,7 @@ import express from 'express';
 import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
+import { createProxyMiddleware } from 'http-proxy-middleware';
 // // redis adapter - start
 // import { createAdapter } from '@socket.io/redis-adapter';
 // import { createClient } from 'redis';
