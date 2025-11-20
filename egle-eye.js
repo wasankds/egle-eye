@@ -137,6 +137,7 @@ if (process.platform === 'linux') {
     // global.led1.modeSet('output');
     // global.led1.write(global.LED1_STATE); // ทดสอบเปิด LED
 
+
     //=== RELAY1 ***
     global.relay1 = global.gpio.gpio(Number(global.RELAY1_PIN));
     global.relay1.modeSet('output');
@@ -158,7 +159,7 @@ if (process.platform === 'linux') {
     // global.servo2 = global.gpio.gpio(global.SERVO2_PIN);
 
     // สมมติ global.gpio.gpio(pin) สร้าง object สำหรับแต่ละขา
-    const pins = [
+    global.stepperPins = [
       global.gpio.gpio(global.STEPPER1_PIN1),
       global.gpio.gpio(global.STEPPER1_PIN2),
       global.gpio.gpio(global.STEPPER1_PIN3),
@@ -179,12 +180,12 @@ if (process.platform === 'linux') {
       for (let i = 0; i < steps; i++) {
         const idx = dir > 0 ? i % seq.length : (seq.length - (i % seq.length)) % seq.length;
         for (let j = 0; j < 4; j++) {
-          await pins[j].write(seq[idx][j]);
+          await global.stepperPins[j].write(seq[idx][j]);
         }
         await new Promise(r => setTimeout(r, delay));
       }
       // ปิดทุกขา
-      for (let j = 0; j < 4; j++) await pins[j].write(0);
+      for (let j = 0; j < 4; j++) await global.stepperPins[j].write(0);
     }
     // หมุนขวา 100 step
     setTimeout( async () => { await stepMotor(1000, 1, 5);  }, 6000);

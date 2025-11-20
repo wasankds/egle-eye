@@ -1,10 +1,10 @@
 
-const pins = [
-  global.gpio.gpio(global.STEPPER1_PIN1),
-  global.gpio.gpio(global.STEPPER1_PIN2),
-  global.gpio.gpio(global.STEPPER1_PIN3),
-  global.gpio.gpio(global.STEPPER1_PIN4)
-];
+// const pins = [
+//   global.gpio.gpio(global.STEPPER1_PIN1),
+//   global.gpio.gpio(global.STEPPER1_PIN2),
+//   global.gpio.gpio(global.STEPPER1_PIN3),
+//   global.gpio.gpio(global.STEPPER1_PIN4)
+// ];
 
 const seq = [
   [1,0,0,1],
