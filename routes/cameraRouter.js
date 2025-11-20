@@ -1,17 +1,17 @@
+// const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
 // const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
+// ไม่ต้อง spawn process เอง ใช้ relay จาก myVideoProcess.js
+// const PATH_STREAM = `${PATH_MAIN}/stream`
 import express from 'express'
 const router = express.Router()
-// ไม่ต้อง spawn process เอง ใช้ relay จาก myVideoProcess.js
 import mainAuth from "../authorize/mainAuth.js" 
 const myGeneral = await import(`../${global.myModuleFolder}/myGeneral.js`)
 const myDateTime = await import(`../${global.myModuleFolder}/myDateTime.js`)
 const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 const myStepper = await import(`../${global.myModuleFolder}/myStepper.js`)
-// const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
 const PATH_MAIN = '/camera'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_REQUEST = `${PATH_MAIN}/request`
-// const PATH_STREAM = `${PATH_MAIN}/stream`
 
 // //=============================================
 // // 
@@ -49,8 +49,8 @@ router.get(PATH_MAIN, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_REQUEST,
+      // IS_STREAM  :  process.platform === 'linux'
       // PATH_STREAM ,
-      IS_STREAM  :  process.platform === 'linux'
     })
     res.send(html)
   } catch (error) {
