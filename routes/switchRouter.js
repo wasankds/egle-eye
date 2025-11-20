@@ -7,31 +7,28 @@ const lowDB = await import(`../${global.myModuleFolder}/LowDb.js`)
 // const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
 const PATH_MAIN = '/switch'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
-const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-request`
+const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-web`
 
 //=============================================
 // 
 router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
-  // console.log(`---- ${req.originalUrl} ----`)
+  console.log(`---- ${req.originalUrl} ----`)
 
   //=== อ่านค่าจาก LED1_STATE และ RELAY1_STATE แล้วส่งไปที่หน้า switch
   // const led1State = typeof global.LED1_STATE === 'number' ? global.LED1_STATE : 0;
   const relay1State = typeof global.RELAY1_STATE === 'number' ? global.RELAY1_STATE : 1;
   const relay2State = typeof global.RELAY2_STATE === 'number' ? global.RELAY2_STATE : 1;
-  
 
   try {
     const html = await myGeneral.renderView('switch', res, {
       title: global.PAGE_SWITCH ,
       time : myDateTime.getDate(),
       msg: req.flash('msg'),
-
       user: await lowDB.getSessionData(req),
 
       PREFIX,
       PATH_MAIN,
       PATH_SWITCH_WEB,
-      // led1State,
       relay1State,
       relay2State,
     })
@@ -62,48 +59,42 @@ router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
     }
 
     //=== ควบคุม GPIO
-    if (global.gpio) {
-      
-      //== 1.) เปิด/ปิด LED1
-      await global.led1.modeSet('output');
-      await global.led1.write(switchState === 'on' ? 1 : 0);
-      global.LED1_STATE = switchState === 'on' ? 1 : 0;
+    if (global.gpio) {     
 
-      //== 2.) เปิด/ปิด RELAY1
-      await global.relay1.modeSet('output');
-      await global.relay1.write(switchState === 'on' ? 0 : 1); // Active Low
-      global.RELAY1_STATE = switchState === 'on' ? 0 : 1;      // Active Low
+      // //== 1.) เปิด/ปิด LED1
+      // await global.led1.modeSet('output');
+      // await global.led1.write(switchState === 'on' ? 1 : 0);
+      // global.LED1_STATE = switchState === 'on' ? 1 : 0;
 
-      // //== 3.) ทดสอบหมุนมอเตอร์เซอร์โว
-      // await myServo.setAngle(global.servo1, 100, 600, 2400);
-      // setTimeout(() => myServo.setAngle(global.servo1, 80, 600, 2400), 1000);
-      // setTimeout(() => myServo.setAngle(global.servo1, 90, 600, 2400), 2000);
-
-      // await myServo.setAngle(global.servo2, 100, 600, 2400);
-      // setTimeout(() => myServo.setAngle(global.servo2, 80, 600, 2400), 4000);
-      // setTimeout(() => myServo.setAngle(global.servo2, 90, 600, 2400), 5000);
-
-      //=== 3.) Boardcast ผ่าน WebSocket ด้วย
-      if(global.io){
-        global.io.emit('button_pressed', {
-          buttonId: 'btn1', 
-          ledState: global.LED1_STATE,
-          relayState: global.RELAY1_STATE
-        });
+      if(id === 's01'){
+        //== 2.) เปิด/ปิด RELAY1
+        await global.relay1.modeSet('output');
+        await global.relay1.write(switchState === 'on' ? 0 : 1); // Active Low
+        global.RELAY1_STATE = switchState === 'on' ? 0 : 1;      // Active Low
+      }else if(id === 's02'){
+        //== 2.) เปิด/ปิด RELAY2
+        await global.relay2.modeSet('output');
+        await global.relay2.write(switchState === 'on' ? 0 : 1); // Active Low
+        global.RELAY2_STATE = switchState === 'on' ? 0 : 1;      // Active Low
       }
+
+      global.io.emit('button_pressed', {
+        buttonId: id, 
+        relayState: id === 's01' ? global.RELAY1_STATE : global.RELAY2_STATE,
+      });
 
       //=== 4.) ส่งผลลัพธ์กลับไป
       res.send({
         status: 'ok',
         switchId: id,
-        switchState: switchState,
+        relayState: id === 's01' ? global.RELAY1_STATE : global.RELAY2_STATE,
       });
     }else{
       //=== ไม่มี GPIO
       res.send({
         status: 'no gpio',
         switchId: id,
-        switchState: switchState,
+        relayState: id === 's01' ? global.RELAY1_STATE : global.RELAY2_STATE,
       });
     }
   } catch (error) {
@@ -120,3 +111,12 @@ export default router
 
 
 
+
+
+// //== 3.) ทดสอบหมุนมอเตอร์เซอร์โว
+// await myServo.setAngle(global.servo1, 100, 600, 2400);
+// setTimeout(() => myServo.setAngle(global.servo1, 80, 600, 2400), 1000);
+// setTimeout(() => myServo.setAngle(global.servo1, 90, 600, 2400), 2000);
+// await myServo.setAngle(global.servo2, 100, 600, 2400);
+// setTimeout(() => myServo.setAngle(global.servo2, 80, 600, 2400), 4000);
+// setTimeout(() => myServo.setAngle(global.servo2, 90, 600, 2400), 5000);
