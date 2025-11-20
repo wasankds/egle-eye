@@ -41,11 +41,12 @@ app.use('/stream', (req, res, next) => {
     changeOrigin: true
   }));
 
-app.use(createProxyMiddleware({
+app.use('/video1_stream.m3u8', createProxyMiddleware({
   target: 'http://localhost:8890',
   changeOrigin: true,
-  pathFilter: ['/video1_stream.m3u8', '/stream/video1_stream.m3u8']
+  pathRewrite: { '^/video1_stream.m3u8': '/stream/video1_stream.m3u8' }
 }));
+
 const server = createServer(app)
 const io = new Server(server)
 // // redis adapter - start
