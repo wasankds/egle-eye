@@ -18,10 +18,9 @@ global.BCRYPT_NUMBER = 12
 // global.LED1_STATE = 0;   // เริ่มต้น LED ปิด (0=ปิด, 1=เปิด) - ยกเลิกใช้
 global.BTN1_PIN = 27;   // พิน 13
 global.BTN2_PIN = 17;   // พิน 15 - ***
-// Relay 1
+// Relay 1 & 2
 global.RELAY1_PIN = 20;  // พิน 38
 global.RELAY1_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) - Active Low
-// Relay 2
 global.RELAY2_PIN = 21; // พิน 40 - ***
 global.RELAY2_STATE = 1; // เริ่มต้นรีเลย์ปิด (1=ปิด, 0=เปิด) - Active Low
 // 

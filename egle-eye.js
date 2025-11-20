@@ -98,8 +98,11 @@ io.on('connection', (socket) => {
   //=== Boardcast สถานะเริ่มต้น - เมื่อมี client เชื่อมต่อ
   socket.emit('button_pressed', { 
     buttonId: 'btn1' , 
-    ledState: global.LED1_STATE,
     relayState: global.RELAY1_STATE
+  })
+  socket.emit('button_pressed', {
+    buttonId: 'btn2' ,
+    relayState: global.RELAY2_STATE
   })
 
   // // เมื่อ client ขอข้อมูล
@@ -112,9 +115,6 @@ io.on('connection', (socket) => {
     // console.log('❌ Client disconnected:', socket.id);
   });    
 }); 
-
-
-
 server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
@@ -127,7 +127,6 @@ if (process.platform === 'linux') {
   // เมื่อเชื่อมต่อสำเร็จ
   global.gpio.once('connected', () => {
     console.log('<--- ✅ pigpio-client connected --->');
-    // console.log('global.LED1_STATE ===> ' , global.LED1_STATE);
     console.log('global.RELAY1_STATE ===> ' , global.RELAY1_STATE);
     console.log('global.RELAY2_STATE ===> ' , global.RELAY2_STATE);
     console.log('global.SERVO1_PIN ===> ' , global.SERVO1_PIN);
@@ -139,11 +138,11 @@ if (process.platform === 'linux') {
     //=== RELAY1 ***
     global.relay1 = global.gpio.gpio(Number(global.RELAY1_PIN));
     global.relay1.modeSet('output');
-    global.relay1.write(global.RELAY1_STATE); // ทดสอบเปิด RELAY
+    global.relay1.write(global.RELAY1_STATE); // เปิด RELAY
     //=== RELAY2 ***
     global.relay2 = global.gpio.gpio(Number(global.RELAY2_PIN));
     global.relay2.modeSet('output');
-    global.relay2.write(global.RELAY2_STATE); // ทดสอบเปิด RELAY
+    global.relay2.write(global.RELAY2_STATE); // เปิด RELAY
     //=== BTN1 ***
     global.btn1 = global.gpio.gpio(global.BTN1_PIN);
     global.btn1.modeSet('input');
