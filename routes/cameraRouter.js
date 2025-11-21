@@ -31,7 +31,7 @@ const PATH_REQUEST = `${PATH_MAIN}/request`
 //
 // router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 router.get(PATH_MAIN, async (req, res) => {
-  // console.log(`---- ${req.originalUrl} ----`)
+  console.log(`---- ${req.originalUrl} ----`)
 
   try {
 
