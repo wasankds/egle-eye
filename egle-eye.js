@@ -14,6 +14,7 @@ import { Server } from 'socket.io'
 // import { createClient } from 'redis';
 // // redis adapter - end
 import flash from 'connect-flash'
+import e from 'connect-flash';
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
@@ -127,9 +128,11 @@ const extractDir = path.join(global.folderVideosExtract);
 setInterval(() => {
   fs.readdir(extractDir, (err, files) => {
     if (err) return;
+    
     // หาไฟล์ jpg ล่าสุด
     const jpgs = files.filter(f => f.endsWith('.jpg'));
     if (jpgs.length === 0) return;
+
     const latest = jpgs.map(f => ({
       file: f,
       mtime: fs.statSync(path.join(extractDir, f)).mtime
@@ -137,6 +140,7 @@ setInterval(() => {
 
     const imgPath = path.join(extractDir, latest);
     fs.readFile(imgPath, (err, data) => {
+      if(err) return;
       if (!err && data) {
         const base64Image = data.toString('base64');
         if(base64Image.length > 10000) { // ตรวจสอบขนาดภาพ
@@ -149,7 +153,7 @@ setInterval(() => {
       }
     });
   });
-}, 200); // 5ภาพต่อวินาที - ทุก 200ms
+}, 100); // 5ภาพต่อวินาที - ทุก 200ms
 
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
