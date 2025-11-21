@@ -134,6 +134,7 @@ setInterval(() => {
       file: f,
       mtime: fs.statSync(path.join(extractDir, f)).mtime
     })).sort((a, b) => b.mtime - a.mtime)[0].file;
+    console.log('Latest extracted image:', latest);
     const imgPath = path.join(extractDir, latest);
     fs.readFile(imgPath, (err, data) => {
       if (!err && data) {
