@@ -8,7 +8,7 @@ import path from 'path';
 import express from 'express';
 import session from 'express-session'
 import { Server } from 'socket.io'
-// redis adapter - start
+// redis adapter - start - ต้องติตั้ง redis-server ก่อนใช้งาน
 import { createServer } from 'node:http';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createClient } from 'redis';
