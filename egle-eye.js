@@ -7,7 +7,7 @@ import express from 'express';
 import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
-import { createProxyMiddleware } from 'http-proxy-middleware';
+// import { createProxyMiddleware } from 'http-proxy-middleware';
 // // redis adapter - start
 // import { createAdapter } from '@socket.io/redis-adapter';
 // import { createClient } from 'redis';
@@ -122,7 +122,7 @@ server.listen(PORT, () => {
 
 // ส่งภาพ latest.jpg ไปยัง client ทุก 1 วินาที
 setInterval(() => {
-  const imgPath = path.join(global.PROJECT_DIR, 'videos-extract', 'latest.jpg');
+  const imgPath = path.join(global.folderVideosExtract, 'latest.jpg');
   fs.readFile(imgPath, (err, data) => {
     if (!err && data) {
       // ส่งเป็น base64 string
