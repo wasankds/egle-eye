@@ -217,7 +217,7 @@ if (process.platform === 'linux') {
     });
     //=== subscribe notify - เมื่อมีการกดปุ่ม
     global.btn1.notify((level, tick) => {
-      console.log(`btn1 notify: level=${level}, tick=${tick}`);
+      // console.log(`btn1 notify: level=${level}, tick=${tick}`);
       // btn1 notify: level=1, tick=1777072481
       // push switch - กดติด ปล่อยดับ
       // level === 0 คือ ปุ่มถูกกด (active low) 
@@ -225,7 +225,6 @@ if (process.platform === 'linux') {
       if (level === 0) {
         //== เปิด/ปิด RELAY1
         const newRelayState = global.RELAY1_STATE === 1 ? 0 : 1;
-        console.log('Toggling RELAY1 to ', newRelayState == 0 ? '[ON]' : '[OFF]');
         global.relay1.write(newRelayState);
         global.RELAY1_STATE = newRelayState;
         // //=== เขียนลง LowDb - ยังไม่ใช้ ***
@@ -266,11 +265,10 @@ if (process.platform === 'linux') {
     });
     //=== subscribe notify - เมื่อมีการกดปุ่ม
     global.btn2.notify((level, tick) => {
-      console.log(`btn2 notify: level=${level}, tick=${tick}`);
+      // console.log(`btn2 notify: level=${level}, tick=${tick}`);
       if (level === 0) {
         //== เปิด/ปิด RELAY2
         const newRelayState = global.RELAY2_STATE === 1 ? 0 : 1;
-        console.log('Toggling RELAY2 to ', newRelayState == 0 ? '[ON]' : '[OFF]');
         global.relay2.write(newRelayState);
         global.RELAY2_STATE = newRelayState;
         //=== boardcast ผ่าน socket.io

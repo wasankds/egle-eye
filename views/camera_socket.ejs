@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/css/toast.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/footer.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/nav.css?v=<%= time %>">
+  <link rel="stylesheet" href="/css/flexNew.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/same.css?v=<%= time %>">
   <link rel="stylesheet" href="/css/camera.css?v=<%= time %>">
   <% } else { %>
@@ -39,16 +40,43 @@
 
   <main>
 
+    <section style="max-width: 100%;width:<%= global.VIDEO_EMIT_WIDTH %>px;margin: auto;">
 
-    <!-- ปุ่มหมุนกล้อง 4 ทิศทาง -->
-    <section class="al-c" style="margin: 16px 0;">
-      <div style="display: inline-block;">
-        <!-- <button id="btn-cam-up" class="btn btn-circle btn-cam"><i class="fas fa-arrow-up"></i></button><br> -->
-        <button id="btn-cam-left" class="btn btn-circle btn-cam"><i class="fas fa-arrow-left"></i></button>
-        <!-- <button id="btn-cam-home" class="btn btn-circle btn-cam"><i class="fas fa-dot-circle"></i></button> -->
-        <button id="btn-cam-right" class="btn btn-circle btn-cam"><i class="fas fa-arrow-right"></i></button><br>
-        <!-- <button id="btn-cam-down" class="btn btn-circle btn-cam"><i class="fas fa-arrow-down"></i></button> -->
-      </div>
+      <section class="flex-row">
+
+        <!--  -->
+        <div class="col-sm-3">
+          <div class="switch-container">
+            <label class="switch">
+              <input type="checkbox" id="s01" <%= relay1State === 0 ? 'checked' : '' %>>
+              <span class="slider"></span>
+            </label>
+            <span class="switch-status" id="s01-status"><%= relay1State === 0 ? 'ON' : 'OFF' %></span>
+          </div>
+        </div>
+          
+        <!--  -->
+        <div class="col-sm-3">
+          <div class="switch-container">
+            <label class="switch">
+              <input type="checkbox" id="s02" <%= relay2State === 0 ? 'checked' : '' %>>
+              <span class="slider"></span>
+            </label>
+            <span class="switch-status" id="s02-status"><%= relay2State === 0 ? 'ON' : 'OFF' %></span>
+          </div>
+        </div>
+
+        <!--  -->
+        <div class="col-sm-4 al-r">
+          <!-- <button id="btn-cam-up" class="btn btn-circle btn-cam"><i class="fas fa-arrow-up"></i></button><br> -->
+          <button id="btn-cam-left" class="btn btn-circle btn-cam"><i class="fas fa-arrow-left"></i></button>
+          <!-- <button id="btn-cam-home" class="btn btn-circle btn-cam"><i class="fas fa-dot-circle"></i></button> -->
+          <button id="btn-cam-right" class="btn btn-circle btn-cam"><i class="fas fa-arrow-right"></i></button><br>
+          <!-- <button id="btn-cam-down" class="btn btn-circle btn-cam"><i class="fas fa-arrow-down"></i></button> -->
+        </div>
+
+      </section>
+
     </section>
     
     <div class="al-c">
