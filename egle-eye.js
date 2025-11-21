@@ -129,33 +129,32 @@ const MAX_JPG = 50; // กำหนดจำนวนสูงสุด
 setInterval(() => {
   fs.readdir(extractDir, (err, files) => {
     if (err) return;
-    
-    // หาไฟล์ jpg ล่าสุด
-    const jpgs = files.filter(f => f.endsWith('.jpg'))
+
+    // หาไฟล์ jpg ทั้งหมด พร้อมเวลาแก้ไข
+    const jpgObjs = files.filter(f => f.endsWith('.jpg'))
       .map(f => ({
         file: f,
         mtime: fs.statSync(path.join(extractDir, f)).mtime
-      }))
-      .sort((a, b) => a.mtime - b.mtime);
+      }));
 
-    if (jpgs.length > MAX_JPG) {
-      const toDelete = jpgs.slice(0, jpgs.length - MAX_JPG);
+    if (jpgObjs.length === 0) return;
+
+    // ลบไฟล์ jpg ที่เกิน MAX_JPG (ลบเก่าสุด)
+    if (jpgObjs.length > MAX_JPG) {
+      const toDelete = jpgObjs.sort((a, b) => a.mtime - b.mtime).slice(0, jpgObjs.length - MAX_JPG);
       toDelete.forEach(f => fs.unlink(path.join(extractDir, f.file), () => {}));
     }
 
-    const latest = jpgs.map(f => ({
-      file: f,
-      mtime: fs.statSync(path.join(extractDir, f)).mtime
-    })).sort((a, b) => b.mtime - a.mtime)[0].file;
-
-    const imgPath = path.join(extractDir, latest);
+    // หาไฟล์ jpg ล่าสุด
+    const latestObj = jpgObjs.sort((a, b) => b.mtime - a.mtime)[0];
+    const imgPath = path.join(extractDir, latestObj.file);
     fs.readFile(imgPath, (err, data) => {
       if(err) return;
       if (!err && data) {
         const base64Image = data.toString('base64');
         if(base64Image.length > 10000) { // ตรวจสอบขนาดภาพ
           io.emit('camera_image', {
-              filename : latest,
+              filename : latestObj.file,
               base64Image : base64Image
             }
           );
