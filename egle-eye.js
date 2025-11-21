@@ -1,3 +1,4 @@
+// import { createProxyMiddleware } from 'http-proxy-middleware';
 import 'dotenv/config'
 import { exec } from 'child_process';
 import { Low } from 'lowdb'
@@ -8,11 +9,10 @@ import express from 'express';
 import session from 'express-session'
 import { createServer } from 'node:http';
 import { Server } from 'socket.io'
-// import { createProxyMiddleware } from 'http-proxy-middleware';
-// // redis adapter - start
-// import { createAdapter } from '@socket.io/redis-adapter';
-// import { createClient } from 'redis';
-// // redis adapter - end
+// redis adapter - start
+import { createAdapter } from '@socket.io/redis-adapter';
+import { createClient } from 'redis';
+// redis adapter - end
 import flash from 'connect-flash'
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
