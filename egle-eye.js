@@ -124,18 +124,18 @@ server.listen(PORT, () => {
 
 // อ่านภาพ jpg ล่าสุดจากโฟลเดอร์ videos-extract แล้วส่งไปยัง client ผ่าน socket.io ทุก 500ms
 const extractDir = path.join(global.folderVideosExtract);
+let lastSentFilename = null;
 setInterval(() => {
   fs.readdir(extractDir, (err, files) => {
     if (err) return;
-    // หาไฟล์ jpg ล่าสุด
     const jpgs = files.filter(f => f.endsWith('.jpg'));
     if (jpgs.length === 0) return;
     const latest = jpgs.map(f => ({
       file: f,
       mtime: fs.statSync(path.join(extractDir, f)).mtime
     })).sort((a, b) => b.mtime - a.mtime)[0].file;
-    // console.log('Latest extracted image:', latest);
-
+    if (latest === lastSentFilename) return; // ถ้าไฟล์เดิม ข้าม
+    lastSentFilename = latest;
     const imgPath = path.join(extractDir, latest);
     fs.readFile(imgPath, (err, data) => {
       if (!err && data) {
@@ -143,12 +143,11 @@ setInterval(() => {
         io.emit('camera_image', {
             filename : latest,
             base64Image : base64Image
-          }
-        );
+        });
       }
     });
   });
-}, 200); // 5ภาพต่อวินาที - ทุก 200ms
+}, 200);
 
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
