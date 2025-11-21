@@ -110,14 +110,14 @@ global.fileDb = pathToFolder('data', 'db.json')
 global.file404 = pathToFolder('public','static', '404.html')
 
 global.NAV_LEFT = [
-  {
-    path: '/switch', 
-    title: PAGE_SWITCH,
-    icon: 'fas fa-toggle-on', // ไอค่อนรูปสวิตช์
-    menuColor : 'menu-blue',
-    userAuthorities: ['O','A','U'],
-    separator: false,    
-  },
+  // {
+  //   path: '/switch', 
+  //   title: PAGE_SWITCH,
+  //   icon: 'fas fa-toggle-on', // ไอค่อนรูปสวิตช์
+  //   menuColor : 'menu-blue',
+  //   userAuthorities: ['O','A','U'],
+  //   separator: false,    
+  // },
   {
     path: '/camera',
     title: PAGE_CAMERA,

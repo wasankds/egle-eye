@@ -1,36 +1,108 @@
-  // Map ปุ่ม id กับทิศทาง
-  const camBtnMap = {
-    // 'btn-cam-up': 'up',
-    // 'btn-cam-down': 'down',
-    'btn-cam-left': 'left',
-    'btn-cam-right': 'right',
-    // 'btn-cam-home': 'home'
-  };
 
-  
-  Object.keys(camBtnMap).forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.addEventListener('click', function() {
-        fetch( PATH_REQUEST, {
+//==============================================
+// สถานะสวิตช์ S01/S02 เมื่อโหดหน้าเว็บขึ้นมา
+// 
+document.addEventListener('DOMContentLoaded', function() {
+
+  //=== จัดการสวิตช์ S01/S02 แบบรวม
+  ['s01', 's02'].forEach(id => {
+    const el = document.getElementById(id);
+    const statusEl = document.getElementById(id + '-status');
+    if (el && statusEl) {
+      el.addEventListener('change', function() {
+        const switchState = this.checked ? 'on' : 'off';
+        fetch(PATH_SWITCH_WEB, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            direction: camBtnMap[id]
+            switchState: switchState,
+            id: id
           })
-        })
-        .then(res => res.json())
-        .then(data => {
-          // Optional: show toast/notify
-          if(data.status !== 'ok') {
-            console.log('Error moving camera:', data.message);
-          }
-        })
-        .catch(err => {
-          console.log('Network error:', err.message);
-        });
+        }).then(response => response.json())
+          .then(data => {
+            // console.log(data);
+            // {status: 'ok', switchId: 's01', relayState: 0}
+
+            if (data.status === 'ok') {
+              // relayState - Active Low 0=ON, 1=OFF
+              statusEl.textContent = data.relayState == 0 ? 'ON' : 'OFF';
+              statusEl.style.color = data.relayState == 0 ? '#4CAF50' : '#2196F3';
+            } else {
+              console.log('Error updating switch state:', data.message);
+            }
+          }).catch(error => {
+            console.log('Network error:', error.message);
+          });
       });
     }
   });
+});
+
+
+
+//=============================================
+// รับข้อความจาก server ผ่านทาง socket.io
+// - เมื่อมีการกดสวิตช์ที่บอร์ด ปรับสถานะบนเว็บให้ตรงกัน
+//
+document.addEventListener('DOMContentLoaded', function() {
+  const socket = io();
+  socket.on('button_pressed', function(data) {
+    // {buttonId: 's01', relayState: 0}
+    // {buttonId: 's02', relayState: 1}
+
+    const id = data.buttonId;
+    if (id) {
+      const el = document.getElementById(id);
+      const statusEl = document.getElementById(id + '-status');
+      if (el && statusEl) {
+        // Active Low
+        el.checked = data.relayState === 0 ? true : false; 
+        statusEl.textContent = data.relayState === 0 ? 'ON' : 'OFF';
+        statusEl.style.color = data.relayState === 0 ? '#4CAF50' : '#2196F3';
+      }
+    }
+  });
+});
+
+
+
+  
+
+// Map ปุ่ม id กับทิศทาง
+const camBtnMap = {
+  // 'btn-cam-up': 'up',
+  // 'btn-cam-down': 'down',
+  'btn-cam-left': 'left',
+  'btn-cam-right': 'right',
+  // 'btn-cam-home': 'home'
+};
+
+
+Object.keys(camBtnMap).forEach(id => {
+  const btn = document.getElementById(id);
+  if (btn) {
+    btn.addEventListener('click', function() {
+      fetch( PATH_REQUEST, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          direction: camBtnMap[id]
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        // Optional: show toast/notify
+        if(data.status !== 'ok') {
+          console.log('Error moving camera:', data.message);
+        }
+      })
+      .catch(err => {
+        console.log('Network error:', err.message);
+      });
+    });
+  }
+});
+
+

@@ -8,7 +8,7 @@ const myStepper = await import(`../${global.myModuleFolder}/myStepper.js`)
 const PATH_MAIN = '/camera'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_REQUEST = `${PATH_MAIN}/request`
-const PATH_SWITCH_WEB = `/switch/switch-web`
+const PATH_SWITCH_WEB = `${PATH_MAIN}/switch-web`
 //=============================================
 //
 // router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
@@ -85,6 +85,69 @@ router.post(PATH_REQUEST, mainAuth.isOA, async (req, res) => {
       return  res.send({
         status: 'error direction',
         direction: direction,
+      });
+    }
+  } catch (error) {
+    console.log("Error ===> " , error.message)
+    res.status(500).send({
+      status: 'error',
+      message: error.message,
+    });
+  }
+})
+
+
+//=============================================
+// เมื่อกดสวิตช์บนเว็บ
+//
+router.post(PATH_SWITCH_WEB, mainAuth.isOA, async (req, res) => {
+  // console.log(`-----------------${req.originalUrl}----------------------`)
+  // console.log("req.body ===> " , req.body)
+  // req.body ===>  { switchState: 'off', id: 's01' }
+  
+  const { id, switchState } = req.body;
+
+  try {
+    //=== ตรวจสอบค่าที่ส่งมา
+    if(!id || !switchState){
+      return res.status(400).send({
+        status: 'error',
+        message: 'Missing id or switchState in request body',
+      });
+    }
+
+    //=== ควบคุม GPIO
+    if (global.gpio) {     
+
+      if(id === 's01'){
+        //== 2.) เปิด/ปิด RELAY1
+        await global.relay1.modeSet('output');
+        await global.relay1.write(switchState === 'on' ? 0 : 1); // Active Low
+        global.RELAY1_STATE = switchState === 'on' ? 0 : 1;      // Active Low
+      }else if(id === 's02'){
+        //== 2.) เปิด/ปิด RELAY2
+        await global.relay2.modeSet('output');
+        await global.relay2.write(switchState === 'on' ? 0 : 1); // Active Low
+        global.RELAY2_STATE = switchState === 'on' ? 0 : 1;      // Active Low
+      }
+
+      global.io.emit('button_pressed', {
+        buttonId: id, 
+        relayState: id === 's01' ? global.RELAY1_STATE : global.RELAY2_STATE,
+      });
+
+      //=== 4.) ส่งผลลัพธ์กลับไป
+      res.send({
+        status: 'ok',
+        switchId: id,
+        relayState: id === 's01' ? global.RELAY1_STATE : global.RELAY2_STATE,
+      });
+    }else{
+      //=== ไม่มี GPIO
+      res.send({
+        status: 'no gpio',
+        switchId: id,
+        relayState: id === 's01' ? global.RELAY1_STATE : global.RELAY2_STATE,
       });
     }
   } catch (error) {
