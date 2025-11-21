@@ -33,8 +33,8 @@ router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
         const stat = fs.statSync(filePath);
         if (stat.isFile()) {
           videosFiles_mjpeg_all.push({  
-            name: file, // video_2025-11-19_17-45-20.mp4
-            time : file.slice(6, 25).replace('_', ' '),
+            name: file, // 2025-11-19_17-45-20.mp4
+            time : file.slice(0, 19).replace('_', ' '),
             size: (stat.size / (1024 * 1024)).toFixed(2) + ' MB',
           });
         }
