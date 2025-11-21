@@ -136,7 +136,6 @@ setInterval(() => {
         file: f,
         mtime: fs.statSync(path.join(extractDir, f)).mtime
       }));
-
     if (jpgObjs.length === 0) return;
 
     // ลบไฟล์ jpg ที่เกิน MAX_JPG (ลบเก่าสุด)
@@ -157,13 +156,6 @@ setInterval(() => {
               base64Image : base64Image
             }
           );
-
-          //=== ลบไฟล์ที่ emit ไปแล้ว เพื่อลดพื้นที่โฟลเดอร์
-          fs.unlink(imgPath, (err) => {
-            if(err) {
-              console.log('Error deleting emitted jpg:', err);
-            }
-          });                
         }
       }
     });
