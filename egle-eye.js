@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import fs from 'fs';
+import path from 'path';
 import express from 'express';
 import session from 'express-session'
 import { createServer } from 'node:http';
