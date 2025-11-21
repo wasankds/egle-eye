@@ -39,7 +39,7 @@ while true; do
   if [ -n "$LATEST_MP4" ]; then
     TS=$(date +%Y%m%d_%H%M%S)
     OUT_JPG="$EXTRACT_DIR/$TS.jpg"
-    ffmpeg -y -i "$LATEST_MP4" -vf "select=not(mod(n\,2)),scale=320:180" -vframes 1 "$OUT_JPG" >/dev/null 2>&1
+    ffmpeg -y -sseof -3 -i "$LATEST_MP4" -vf "scale=320:180" -vframes 1 "$OUT_JPG" >/dev/null 2>&1
   fi
   sleep 1
 done

@@ -135,11 +135,12 @@ setInterval(() => {
       mtime: fs.statSync(path.join(extractDir, f)).mtime
     })).sort((a, b) => b.mtime - a.mtime)[0].file;
     console.log('Latest extracted image:', latest);
+
     const imgPath = path.join(extractDir, latest);
     fs.readFile(imgPath, (err, data) => {
       if (!err && data) {
         const base64Image = data.toString('base64');
-        io.emit('camera_image', { image: base64Image });
+        io.emit('camera_image', base64Image);
       }
     });
   });
