@@ -17,7 +17,7 @@ tee \
       -c:v copy \
       -f segment -segment_time $SEGMENT_TIME -reset_timestamps 1 -strftime 1 "$VIDEO_DIR/%Y-%m-%d_%H-%M-%S.mp4" ) \
     | ffmpeg -y -f h264 -analyzeduration 10000000 -probesize 10000000 -i - \
-      -vf "fps=7,scale=320:180" -strftime 1 "$EXTRACT_DIR/%Y-%m-%d_%H-%M-%S_%03d.jpg"
+      -vf "fps=10,scale=720:480" -strftime 1 "$EXTRACT_DIR/%Y-%m-%d_%H-%M-%S_%03d.jpg"
 
 # 2. ลบไฟล์เก่าอัตโนมัติ (mp4/jpg)
 while true; do
