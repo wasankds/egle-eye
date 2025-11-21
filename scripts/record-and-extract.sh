@@ -18,7 +18,7 @@ tee \
       -c:v copy \
       -f segment -segment_time $SEGMENT_TIME -reset_timestamps 1 -strftime 1 "$VIDEO_DIR/%Y-%m-%d_%H-%M-%S.mp4" ) \
     | ffmpeg -y -f h264 -analyzeduration 10000000 -probesize 10000000 -i - \
-      -vf "fps=10,scale=720:480" -q:v 4 -strftime 1 "$EXTRACT_DIR/%Y-%m-%d_%H-%M-%S_%09d.jpg"
+      -vf "fps=10,scale=720:480" -q:v 4 -strftime 1 "$EXTRACT_DIR/%Y-%m-%d_%H-%M-%S_%03d.jpg"
 
 # 2. ลบไฟล์เก่าอัตโนมัติ (mp4/jpg)
 while true; do
@@ -27,10 +27,11 @@ while true; do
   if [ $COUNT -gt $MAX_VIDEO ]; then
     ls -1tr $VIDEO_DIR/*.mp4 | head -n $(($COUNT - $MAX_VIDEO)) | xargs rm -f
   fi
-  JPGS=($EXTRACT_DIR/*.jpg)
-  JPG_COUNT=${#JPGS[@]}
-  if [ $JPG_COUNT -gt $MAX_JPG ]; then
-    ls -1tr $EXTRACT_DIR/*.jpg | head -n $(($JPG_COUNT - $MAX_JPG)) | xargs rm -f
-  fi
-  sleep 10
+
+  # JPGS=($EXTRACT_DIR/*.jpg)
+  # JPG_COUNT=${#JPGS[@]}
+  # if [ $JPG_COUNT -gt $MAX_JPG ]; then
+  #   ls -1tr $EXTRACT_DIR/*.jpg | head -n $(($JPG_COUNT - $MAX_JPG)) | xargs rm -f
+  # fi
+  # sleep 1
 done
