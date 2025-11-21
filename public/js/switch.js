@@ -52,11 +52,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const map = { btn1: 's01', btn2: 's02' };
     const id = map[data.buttonId];
+    console.log('Updating switch ===> ', id);
     if (id) {
       const el = document.getElementById(id);
       const statusEl = document.getElementById(id + '-status');
       if (el && statusEl) {
         // Active Low
+        console.log(`Switch ${id} set to ${el.checked ? 'ON' : 'OFF'}`);
+
         el.checked = data.relayState === 0 ? true : false; 
         statusEl.textContent = data.relayState === 0 ? 'ON' : 'OFF';
         statusEl.style.color = data.relayState === 0 ? '#4CAF50' : '#2196F3';
