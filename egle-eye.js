@@ -121,17 +121,28 @@ server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
-// ส่งภาพ latest.jpg ไปยัง client ทุก 1 วินาที
+
+// อ่านภาพ jpg ล่าสุดจากโฟลเดอร์ videos-extract แล้วส่งไปยัง client ผ่าน socket.io ทุก 500ms
+const extractDir = path.join(global.PROJECT_DIR, 'videos-extract');
 setInterval(() => {
-  const imgPath = path.join(global.folderVideosExtract, 'latest.jpg');
-  fs.readFile(imgPath, (err, data) => {
-    if (!err && data) {
-      // ส่งเป็น base64 string
-      const base64Image = data.toString('base64');
-      io.emit('camera_image', { image: base64Image });
-    }
+  fs.readdir(extractDir, (err, files) => {
+    if (err) return;
+    // หาไฟล์ jpg ล่าสุด
+    const jpgs = files.filter(f => f.endsWith('.jpg'));
+    if (jpgs.length === 0) return;
+    const latest = jpgs.map(f => ({
+      file: f,
+      mtime: fs.statSync(path.join(extractDir, f)).mtime
+    })).sort((a, b) => b.mtime - a.mtime)[0].file;
+    const imgPath = path.join(extractDir, latest);
+    fs.readFile(imgPath, (err, data) => {
+      if (!err && data) {
+        const base64Image = data.toString('base64');
+        io.emit('camera_image', { image: base64Image });
+      }
+    });
   });
-}, 500);
+}, 1000);
 
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi

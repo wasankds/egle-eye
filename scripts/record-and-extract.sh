@@ -18,17 +18,28 @@ ffmpeg -y -f h264 -analyzeduration 10000000 -probesize 10000000 -i - \
 FFMPEG_PID=$!
 
 
-# 2. extract jpg จากวิดีโอล่าสุด (เขียนทับ latest.jpg ตลอด)
-sleep 10 # รอให้ไฟล์ mp4 แรกถูกสร้างและมีข้อมูลก่อน
+
+# 2. extract jpg จากวิดีโอล่าสุด (สร้างไฟล์ใหม่ตลอด, จำกัด 150 ภาพ)
+MAX_JPG=150
 while true; do
+  # ลบไฟล์วิดีโอเก่า
   FILES=($VIDEO_DIR/*.mp4)
   COUNT=${#FILES[@]}
   if [ $COUNT -gt $MAX_FILES ]; then
     ls -1tr $VIDEO_DIR/*.mp4 | head -n $(($COUNT - $MAX_FILES)) | xargs rm -f
   fi
-  LATEST_MP4=$(ls -1tr $VIDEO_DIR/*.mp4 2>/dev/null | tail -n 1)
+  # ลบไฟล์ jpg เก่า
+  JPGS=($EXTRACT_DIR/*.jpg)
+  JPG_COUNT=${#JPGS[@]}
+  if [ $JPG_COUNT -gt $MAX_JPG ]; then
+    ls -1tr $EXTRACT_DIR/*.jpg | head -n $(($JPG_COUNT - $MAX_JPG)) | xargs rm -f
+  fi
+  # extract jpg จากไฟล์ mp4 ล่าสุด (สร้างไฟล์ใหม่ตลอด)
+  LATEST_MP4=$(ls -1tr $VIDEO_DIR/*.mp4 2>/dev/null | tail -n 2 | head -n 1)
   if [ -n "$LATEST_MP4" ]; then
-    ffmpeg -y -i "$LATEST_MP4" -vf "select=not(mod(n\,2)),scale=320:180" -vframes 1 "$EXTRACT_FILE" >/dev/null 2>&1
+    TS=$(date +%Y%m%d_%H%M%S)
+    OUT_JPG="$EXTRACT_DIR/$TS.jpg"
+    ffmpeg -y -i "$LATEST_MP4" -vf "select=not(mod(n\,2)),scale=320:180" -vframes 1 "$OUT_JPG" >/dev/null 2>&1
   fi
   sleep 1
 done
