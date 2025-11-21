@@ -14,7 +14,6 @@ import { Server } from 'socket.io'
 // import { createClient } from 'redis';
 // // redis adapter - end
 import flash from 'connect-flash'
-import e from 'connect-flash';
 const { pigpio } = await import('pigpio-client');
 global.dbName = process.env.DB_NAME
 global.dbUrl = process.env.DB_URL
@@ -36,12 +35,12 @@ if(process.platform === 'linux') {
 const app = express();
 const server = createServer(app)
 const io = new Server(server)
-// // redis adapter - start
-// const pubClient = createClient({ url: 'redis://localhost:6379' });
-// const subClient = pubClient.duplicate();
-// await pubClient.connect();
-// await subClient.connect();
-// io.adapter(createAdapter(pubClient, subClient));
+// redis adapter - start
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+await pubClient.connect();
+await subClient.connect();
+io.adapter(createAdapter(pubClient, subClient));
 // redis adapter - end
 global.io = io;
 //===
@@ -160,8 +159,6 @@ setInterval(() => {
     });
   });
 }, intervalMs);
-
-
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
