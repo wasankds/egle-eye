@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
   socket.on('button_pressed', function(data) {
     console.log(data);
     // {buttonId: 's01', relayState: 0}
+    // {buttonId: 's02', relayState: 1}
 
-    const map = { btn1: 's01', btn2: 's02' };
-    const id = map[data.buttonId];
+    const id = data.buttonId;
     console.log('Updating switch ===> ', id);
     if (id) {
       const el = document.getElementById(id);
