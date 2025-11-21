@@ -123,7 +123,7 @@ server.listen(PORT, () => {
 
 
 // อ่านภาพ jpg ล่าสุดจากโฟลเดอร์ videos-extract แล้วส่งไปยัง client ผ่าน socket.io ทุก 500ms
-const extractDir = path.join(global.PROJECT_DIR, 'videos-extract');
+const extractDir = path.join(global.folderVideosExtract);
 setInterval(() => {
   fs.readdir(extractDir, (err, files) => {
     if (err) return;
