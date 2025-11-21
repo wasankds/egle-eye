@@ -1,5 +1,4 @@
 // import { createProxyMiddleware } from 'http-proxy-middleware';
-// import { createServer } from 'node:http';
 import 'dotenv/config'
 import { exec } from 'child_process';
 import { Low } from 'lowdb'
@@ -10,6 +9,7 @@ import express from 'express';
 import session from 'express-session'
 import { Server } from 'socket.io'
 // redis adapter - start
+import { createServer } from 'node:http';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createClient } from 'redis';
 // redis adapter - end
