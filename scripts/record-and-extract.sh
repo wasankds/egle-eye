@@ -11,6 +11,7 @@ mkdir -p "$EXTRACT_DIR"
 
 
 # 1. บันทึกวิดีโอ segment 10 นาที/ไฟล์ + extract jpg 5 fps สดจาก stream พร้อมกัน
+# q:v 4 คุณภาพดีขึ้น - ลดเป็น 2 ถ้าอยากได้คุณภาพสูงขึ้น
 rpicam-vid -t 0 -o - --width 720 --height 480 --framerate 10 --codec h264 | \
 tee \
   >(ffmpeg -y -f h264 -analyzeduration 10000000 -probesize 10000000 -i - \

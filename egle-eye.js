@@ -139,11 +139,13 @@ setInterval(() => {
     fs.readFile(imgPath, (err, data) => {
       if (!err && data) {
         const base64Image = data.toString('base64');
-        io.emit('camera_image', {
-            filename : latest,
-            base64Image : base64Image
-          }
-        );
+        if(base64Image.length > 10000) { // ตรวจสอบขนาดภาพ
+          io.emit('camera_image', {
+              filename : latest,
+              base64Image : base64Image
+            }
+          );
+        }
       }
     });
   });
