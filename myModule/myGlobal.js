@@ -130,7 +130,7 @@ global.NAV_LEFT = [
     path: '/videos',
     title: PAGE_VIDEOS,
     icon: 'fas fa-file-video',
-    menuColor : 'menu-green',
+    menuColor : 'menu-blue',
     userAuthorities: ['O','A','U'],
     separator: false,
   }
