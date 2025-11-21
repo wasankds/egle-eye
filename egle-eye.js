@@ -223,12 +223,9 @@ if (process.platform === 'linux') {
       // level === 0 คือ ปุ่มถูกกด (active low) 
       // level === 1 คือ ปุ่มปล่อย
       if (level === 0) {
-        // //=== เปิด/ปิด LED
-        // const newLedState = global.LED1_STATE === 1 ? 0 : 1;
-        // global.led1.write(newLedState);
-        // global.LED1_STATE = newLedState;
         //== เปิด/ปิด RELAY1
         const newRelayState = global.RELAY1_STATE === 1 ? 0 : 1;
+        console.log('Toggling RELAY1 to ', newRelayState == 0 ? '[ON]' : '[OFF]');
         global.relay1.write(newRelayState);
         global.RELAY1_STATE = newRelayState;
         // //=== เขียนลง LowDb - ยังไม่ใช้ ***
@@ -269,9 +266,11 @@ if (process.platform === 'linux') {
     });
     //=== subscribe notify - เมื่อมีการกดปุ่ม
     global.btn2.notify((level, tick) => {
+      console.log(`btn2 notify: level=${level}, tick=${tick}`);
       if (level === 0) {
         //== เปิด/ปิด RELAY2
         const newRelayState = global.RELAY2_STATE === 1 ? 0 : 1;
+        console.log('Toggling RELAY2 to ', newRelayState == 0 ? '[ON]' : '[OFF]');
         global.relay2.write(newRelayState);
         global.RELAY2_STATE = newRelayState;
         //=== boardcast ผ่าน socket.io

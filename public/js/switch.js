@@ -1,3 +1,7 @@
+
+//==============================================
+// สถานะสวิตช์ S01/S02 เมื่อโหดหน้าเว็บขึ้นมา
+// 
 document.addEventListener('DOMContentLoaded', function() {
 
   //=== จัดการสวิตช์ S01/S02 แบบรวม
@@ -43,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   const socket = io();
   socket.on('button_pressed', function(data) {
-    // console.log(data);
+    console.log(data);
     // {buttonId: 's01', relayState: 0}
 
     const map = { btn1: 's01', btn2: 's02' };
