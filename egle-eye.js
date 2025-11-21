@@ -32,21 +32,6 @@ if(process.platform === 'linux') {
   await import(`./${global.myModuleFolder}/myVideoProcess.js`) 
 }
 const app = express();
-//=== Proxy HLS ก่อน static และ router อื่นๆ =====
-app.use('/stream', (req, res, next) => {
-  console.log('Proxy /stream:', req.url);
-  next();
-  }, createProxyMiddleware({
-  target: 'http://localhost:8890',
-  changeOrigin: true
-  }));
-
-app.use('/video1_stream.m3u8', createProxyMiddleware({
-  target: 'http://localhost:8890',
-  changeOrigin: true,
-  pathRewrite: { '^/video1_stream.m3u8': '/stream/video1_stream.m3u8' }
-}));
-
 const server = createServer(app)
 const io = new Server(server)
 // // redis adapter - start
@@ -110,12 +95,12 @@ app.use((await import(`./${routesFolder}/videosRouter.js`)).default)
 //=== socket.io เชื่อมต่อกับ client
 io.on('connection', (socket) => {
   // console.log('🔗 New client connected:', socket.id);
-  // app.use('/videos', express.static(global.folderVideos));
-  // })
+
   socket.emit('button_pressed', {
     buttonId: 's01' ,
     relayState: global.RELAY1_STATE
   })
+
   socket.emit('button_pressed', {
     buttonId: 's02' ,
     relayState: global.RELAY2_STATE

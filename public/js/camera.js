@@ -7,6 +7,7 @@
     // 'btn-cam-home': 'home'
   };
 
+  
   Object.keys(camBtnMap).forEach(id => {
     const btn = document.getElementById(id);
     if (btn) {
