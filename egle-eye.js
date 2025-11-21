@@ -124,29 +124,29 @@ server.listen(PORT, () => {
 
 
 // อ่านภาพ jpg ล่าสุดจากโฟลเดอร์ videos-extract แล้วส่งไปยัง client ผ่าน socket.io ทุก 500ms
-const extractDir = path.join(global.folderVideosExtract);
 const MAX_JPG = 50; // กำหนดจำนวนสูงสุด
+const intervalMs = 1000 / global.VIDEO_EMIT_FRAMERATE;
 setInterval(() => {
-  fs.readdir(extractDir, (err, files) => {
+  fs.readdir(global.folderVideosExtract, (err, files) => {
     if (err) return;
 
     // หาไฟล์ jpg ทั้งหมด พร้อมเวลาแก้ไข
     const jpgObjs = files.filter(f => f.endsWith('.jpg'))
       .map(f => ({
         file: f,
-        mtime: fs.statSync(path.join(extractDir, f)).mtime
+        mtime: fs.statSync(path.join(global.folderVideosExtract, f)).mtime
       }));
     if (jpgObjs.length === 0) return;
 
     // ลบไฟล์ jpg ที่เกิน MAX_JPG (ลบเก่าสุด)
     if (jpgObjs.length > MAX_JPG) {
       const toDelete = jpgObjs.sort((a, b) => a.mtime - b.mtime).slice(0, jpgObjs.length - MAX_JPG);
-      toDelete.forEach(f => fs.unlink(path.join(extractDir, f.file), () => {}));
+      toDelete.forEach(f => fs.unlink(path.join(global.folderVideosExtract, f.file), () => {}));
     }
 
     // หาไฟล์ jpg ล่าสุด
     const latestObj = jpgObjs.sort((a, b) => b.mtime - a.mtime)[0];
-    const imgPath = path.join(extractDir, latestObj.file);
+    const imgPath = path.join(global.folderVideosExtract, latestObj.file);
     fs.readFile(imgPath, (err, data) => {
       if (!err && data) {
         const base64Image = data.toString('base64');
@@ -160,7 +160,8 @@ setInterval(() => {
       }
     });
   });
-}, 150); // 10ภาพต่อวินาที - ทุก 100ms
+}, intervalMs);
+
 
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi

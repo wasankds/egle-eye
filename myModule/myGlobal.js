@@ -38,6 +38,10 @@ global.dbName = process.env.DB_NAME
 // global.dbColl_sessions = 'sessions' // ไม่ได้ใช้แล้ว
 // global.dbColl_users = 'users'       // ไม่ได้ใช้แล้ว
 // global.dbColl_usersResetPassword = 'usersResetPassword'  // ไม่ได้ใช้แล้ว
+//=== Video
+global.VIDEO_EMIT_FRAMERATE = process.env.VIDEO_EMIT_FRAMERATE ? Number(process.env.VIDEO_EMIT_FRAMERATE) : 10;
+global.VIDEO_EMIT_WIDTH = process.env.VIDEO_EMIT_WIDTH ? Number(process.env.VIDEO_EMIT_WIDTH) : 720;
+global.VIDEO_EMIT_HEIGHT = process.env.VIDEO_EMIT_HEIGHT ? Number(process.env.VIDEO_EMIT_HEIGHT) : 480;
 // ระบบ
 global.PAGE_HOME = 'ตาเหยี่ยว'
 global.PAGE_TERM = 'ข้อกำหนดและเงื่อนไข'

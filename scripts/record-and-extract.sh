@@ -2,8 +2,8 @@
 
 VIDEO_DIR="videos"
 EXTRACT_DIR="videos-extract"
-SEGMENT_TIME=60 # 1 นาที (วินาที)
-MAX_VIDEO=100
+SEGMENT_TIME=600 # 10 นาที (วินาที)  
+MAX_VIDEO=500 #1
 MAX_JPG=50
 
 mkdir -p "$VIDEO_DIR"
@@ -14,13 +14,14 @@ rm -f "$EXTRACT_DIR"/*.jpg
 
 # 1. บันทึกวิดีโอ segment 10 นาที/ไฟล์ + extract jpg 5 fps สดจาก stream พร้อมกัน
 # q:v 4 คุณภาพดีขึ้น - ลดเป็น 2 ถ้าอยากได้คุณภาพสูงขึ้น
+# - fps=10 - ตั้งให้ตรงกับ node.js จะได้ emit ตรงกัน
 rpicam-vid -t 0 -o - --width 720 --height 480 --framerate 10 --codec h264 | \
 tee \
   >(ffmpeg -y -f h264 -analyzeduration 10000000 -probesize 10000000 -i - \
       -c:v copy \
       -f segment -segment_time $SEGMENT_TIME -reset_timestamps 1 -strftime 1 "$VIDEO_DIR/%Y-%m-%d_%H-%M-%S.mp4" ) \
     | ffmpeg -y -f h264 -analyzeduration 10000000 -probesize 10000000 -i - \
-      -vf "fps=10,scale=720:480" -q:v 4 -strftime 1 "$EXTRACT_DIR/%Y-%m-%d_%H-%M-%S_%03d.jpg"
+      -vf "fps=5,scale=720:480" -q:v 4 -strftime 1 "$EXTRACT_DIR/%Y-%m-%d_%H-%M-%S_%03d.jpg"
 
 # 2. ลบไฟล์เก่าอัตโนมัติ (mp4/jpg)
 while true; do
