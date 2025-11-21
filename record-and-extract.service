@@ -1,0 +1,14 @@
+[Unit]
+Description=Record and Extract Video/Images
+After=network.target
+
+[Service]
+Type=simple
+User=wasankds
+WorkingDirectory=/home/wasankds/egle-eye/scripts
+ExecStart=/bin/bash /home/wasankds/egle-eye/scripts/record-and-extract.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
