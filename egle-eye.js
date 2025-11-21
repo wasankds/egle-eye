@@ -135,7 +135,9 @@ setInterval(() => {
       .map(f => ({
         file: f,
         mtime: fs.statSync(path.join(extractDir, f)).mtime
-      })).sort((a, b) => a.mtime - b.mtime);
+      }))
+      .sort((a, b) => a.mtime - b.mtime);
+
     if (jpgs.length > MAX_JPG) {
       const toDelete = jpgs.slice(0, jpgs.length - MAX_JPG);
       toDelete.forEach(f => fs.unlink(path.join(extractDir, f.file), () => {}));
