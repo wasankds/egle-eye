@@ -74,7 +74,7 @@
     const socket = io();
     const img = document.getElementById('camera-img');
     socket.on('camera_image', (data) => {
-      console.log('filename ===>' + data.filename, ' size ===>' + data.base64Image.length);
+      // console.log('filename ===>' + data.filename, ' size ===>' + data.base64Image.length);
       img.src = 'data:image/jpeg;base64,' + data.base64Image;
     });
   </script> 

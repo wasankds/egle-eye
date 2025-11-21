@@ -207,8 +207,7 @@ if (process.platform === 'linux') {
       global.gpio.gpio(global.STEPPER1_PIN2),
       global.gpio.gpio(global.STEPPER1_PIN3),
       global.gpio.gpio(global.STEPPER1_PIN4)
-    ];
-    
+    ];    
 
     //=== ตรวจสอบค่าปุ่ม 1 - รอบแรก
     global.btn1.read().then( val => {
@@ -218,7 +217,7 @@ if (process.platform === 'linux') {
     });
     //=== subscribe notify - เมื่อมีการกดปุ่ม
     global.btn1.notify((level, tick) => {
-      // console.log(`btn1 notify: level=${level}, tick=${tick}`);
+      console.log(`btn1 notify: level=${level}, tick=${tick}`);
       // btn1 notify: level=1, tick=1777072481
       // push switch - กดติด ปล่อยดับ
       // level === 0 คือ ปุ่มถูกกด (active low) 

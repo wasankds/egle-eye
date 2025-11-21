@@ -1,7 +1,3 @@
-// const { addMjpegClient } = await import(`../${global.myModuleFolder}/myVideoProcess.js`);
-// const myServo = await import(`../${global.myModuleFolder}/myServo.js`)
-// ไม่ต้อง spawn process เอง ใช้ relay จาก myVideoProcess.js
-// const PATH_STREAM = `${PATH_MAIN}/stream`
 import express from 'express'
 const router = express.Router()
 import mainAuth from "../authorize/mainAuth.js" 
@@ -13,29 +9,12 @@ const PATH_MAIN = '/camera'
 const PREFIX = PATH_MAIN.replace(/\//g,"_") 
 const PATH_REQUEST = `${PATH_MAIN}/request`
 
-// //=============================================
-// // 
-// // router.get(PATH_STREAM, mainAuth.isOA, (req, res) => {
-// router.get(PATH_STREAM, (req, res) => {
-//   if(process.platform !== 'linux') return;
-//   res.writeHead(200, {
-//     'Content-Type': 'multipart/x-mixed-replace; boundary=frame',
-//     'Cache-Control': 'no-cache',
-//     'Connection': 'close',
-//     'Pragma': 'no-cache'
-//   });
-//   addMjpegClient(res);
-// });
-
 //=============================================
 //
 // router.get(PATH_MAIN, mainAuth.isOA, async (req, res) => {
 router.get(PATH_MAIN, async (req, res) => {
-  console.log(`---- ${req.originalUrl} ----`)
-
+  // console.log(`---- ${req.originalUrl} ----`)
   try {
-
-
     const html = await myGeneral.renderView('camera_socket', res, {
       title: global.PAGE_CAMERA ,
       time : myDateTime.getDate(),
@@ -46,8 +25,6 @@ router.get(PATH_MAIN, async (req, res) => {
       PREFIX,
       PATH_MAIN,
       PATH_REQUEST,
-      // IS_STREAM  :  process.platform === 'linux'
-      // PATH_STREAM ,
     })
     res.send(html)
   } catch (error) {
@@ -57,15 +34,10 @@ router.get(PATH_MAIN, async (req, res) => {
 })
 
 
-let VER = 90
-let HOR = 90
-
-
 //=============================================
 // เมื่อกดสวิตช์บนเว็บ
 //
-// router.post(PATH_REQUEST, mainAuth.isOA, async (req, res) => {
-router.post(PATH_REQUEST,  async (req, res) => {
+router.post(PATH_REQUEST, mainAuth.isOA, async (req, res) => {
   // console.log(`-----------------${req.originalUrl}----------------------`)
   // console.log("req.body ===> " , req.body)
   // req.body ===>  { action: 'move', direction: 'right' }

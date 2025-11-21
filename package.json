@@ -36,7 +36,7 @@
     "git1": "git add . && git commit -m \"%date% %time%\" && git push origin main",
     "git-force-pull": "git reset --hard HEAD && git clean -fd && git pull",
     "git-gc": "git gc",
-    "count-images": "ls  ./videos-extract/ -1 | wc -l"
+    "count-images": "ls  /home/wasankds/videos-extract/ -1 | wc -l"
   },
   "dependencies": {
     "archiver": "^7.0.1",
