@@ -51,7 +51,7 @@
       </div>
     </section>
     
-    <img id="stream" width="640" height="480" />
+    <img id="camera-img" width="640" height="480"  />
 
 
   </main>  
@@ -67,10 +67,10 @@
 
   <script>
     const socket = io();
-    const img = document.getElementById('stream');
-    socket.on('frame', (data) => {
+    const img = document.getElementById('camera-img');
+    socket.on('camera_image', (data) => {
       console.log("Received frame", data.length);
-      img.src = 'data:image/jpeg;base64,' + data;
+      img.src = 'data:image/jpeg;base64,' + data.image;
     });
   </script> 
 

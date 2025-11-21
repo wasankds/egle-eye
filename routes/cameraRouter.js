@@ -35,11 +35,8 @@ router.get(PATH_MAIN, async (req, res) => {
 
   try {
 
-    // const real = 1
-    // const viewname = real == 1 ? 'camera_hls_domain' : 'camera_hls_local'
-    // console.log("viewname ===> " , viewname)
 
-    const html = await myGeneral.renderView('camera_hls_local', res, {
+    const html = await myGeneral.renderView('camera_socket', res, {
       title: global.PAGE_CAMERA ,
       time : myDateTime.getDate(),
       msg: req.flash('msg'),

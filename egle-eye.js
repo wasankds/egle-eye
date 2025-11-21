@@ -120,6 +120,18 @@ server.listen(PORT, () => {
   console.log(`🌐 Web Server 1 : ${global.DOMAIN_ALLOW}`);
 });
 
+// ส่งภาพ latest.jpg ไปยัง client ทุก 1 วินาที
+setInterval(() => {
+  const imgPath = path.join(global.PROJECT_DIR, 'videos-extract', 'latest.jpg');
+  fs.readFile(imgPath, (err, data) => {
+    if (!err && data) {
+      // ส่งเป็น base64 string
+      const base64Image = data.toString('base64');
+      io.emit('camera_image', { image: base64Image });
+    }
+  });
+}, 500);
+
 
 //=== ตั้งค่าการใช้งาน GPIO บน Raspberry Pi
 if (process.platform === 'linux') {
