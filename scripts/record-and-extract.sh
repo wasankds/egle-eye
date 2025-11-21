@@ -27,11 +27,11 @@ while true; do
   if [ $COUNT -gt $MAX_VIDEO ]; then
     ls -1tr $VIDEO_DIR/*.mp4 | head -n $(($COUNT - $MAX_VIDEO)) | xargs rm -f
   fi
-
-  # JPGS=($EXTRACT_DIR/*.jpg)
-  # JPG_COUNT=${#JPGS[@]}
-  # if [ $JPG_COUNT -gt $MAX_JPG ]; then
-  #   ls -1tr $EXTRACT_DIR/*.jpg | head -n $(($JPG_COUNT - $MAX_JPG)) | xargs rm -f
-  # fi
-  # sleep 1
+  
+  JPGS=($EXTRACT_DIR/*.jpg)
+  JPG_COUNT=${#JPGS[@]}
+  if [ $JPG_COUNT -gt $MAX_JPG ]; then
+    ls -1tr $EXTRACT_DIR/*.jpg | head -n $(($JPG_COUNT - $MAX_JPG)) | xargs rm -f
+  fi
+  sleep 1
 done
