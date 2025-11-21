@@ -149,7 +149,6 @@ setInterval(() => {
     const latestObj = jpgObjs.sort((a, b) => b.mtime - a.mtime)[0];
     const imgPath = path.join(extractDir, latestObj.file);
     fs.readFile(imgPath, (err, data) => {
-      if(err) return;
       if (!err && data) {
         const base64Image = data.toString('base64');
         if(base64Image.length > 10000) { // ตรวจสอบขนาดภาพ
@@ -158,6 +157,13 @@ setInterval(() => {
               base64Image : base64Image
             }
           );
+
+          //=== ลบไฟล์ที่ emit ไปแล้ว เพื่อลดพื้นที่โฟลเดอร์
+          fs.unlink(imgPath, (err) => {
+            if(err) {
+              console.log('Error deleting emitted jpg:', err);
+            }
+          });                
         }
       }
     });

@@ -9,6 +9,8 @@ MAX_JPG=50
 mkdir -p "$VIDEO_DIR"
 mkdir -p "$EXTRACT_DIR"
 
+# ลบไฟล์ใน EXTRACT_DIR ทั้งหมดตอนเริ่มต้น
+rm -f "$EXTRACT_DIR"/*.jpg
 
 # 1. บันทึกวิดีโอ segment 10 นาที/ไฟล์ + extract jpg 5 fps สดจาก stream พร้อมกัน
 # q:v 4 คุณภาพดีขึ้น - ลดเป็น 2 ถ้าอยากได้คุณภาพสูงขึ้น
